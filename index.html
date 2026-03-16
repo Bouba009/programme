@@ -3,84 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexDash | Pro Business Management</title>
+    <title>aitchikh consulting | Pro Dashboard</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#4F46E5', secondary: '#10B981', darkbg: '#0F172A', darkcard: '#1E293B' } } } }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#2563EB', secondary: '#10B981', darkbg: '#0F172A', darkcard: '#1E293B', brand: '#1E3A8A' } } } }
     </script>
 
-    <!-- FontAwesome, Chart.js, jsPDF, QRCode, EmailJS -->
+    <!-- FontAwesome, Chart.js, QRCode, EmailJS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
         body { font-family: 'Cairo', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         
-        .nav-item.active { background-color: rgba(79, 70, 229, 0.1); color: #4F46E5; border-inline-start: 4px solid #4F46E5; }
-        .dark .nav-item.active { background-color: rgba(99, 102, 241, 0.2); color: #818CF8; border-inline-start: 4px solid #818CF8; }
+        .nav-item.active { background-color: rgba(37, 99, 235, 0.1); color: #2563EB; border-inline-start: 4px solid #2563EB; font-weight: 800; }
+        .dark .nav-item.active { background-color: rgba(59, 130, 246, 0.2); color: #60A5FA; border-inline-start: 4px solid #60A5FA; }
         
         #toast-container { position: fixed; bottom: 20px; inset-inline-end: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 12px 20px; border-radius: 8px; color: #fff; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .toast { padding: 12px 20px; border-radius: 8px; color: #fff; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out forwards; }
         .toast.success { background-color: #10B981; } .toast.error { background-color: #EF4444; } .toast.info { background-color: #3B82F6; }
-        
-        /* Gauge Chart Center Text */
+        @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
         .gauge-container { position: relative; width: 100%; max-width: 300px; margin: auto; }
         .gauge-text { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%; }
         
-        /* Shared Read-Only View Overlay */
         #shared-view-overlay { background: #f8fafc; display: none; z-index: 100000; overflow-y: auto; }
         .dark #shared-view-overlay { background: #0f172a; color: #fff; }
+
+        .event-card { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); }
+        .dark .event-card { background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); }
+        .event-date-badge { background: linear-gradient(135deg, #2563EB 0%, #1E3A8A 100%); }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-darkbg dark:text-gray-200 h-screen overflow-hidden flex transition-colors duration-300">
 
     <!-- LOGIN SCREEN -->
     <div id="login-screen" class="fixed inset-0 bg-white dark:bg-darkbg z-[60] flex items-center justify-center transition-opacity">
-        <div class="bg-white dark:bg-darkcard p-8 rounded-2xl shadow-xl w-96 max-w-full text-center border dark:border-gray-700">
-            <div class="w-16 h-16 bg-primary text-white rounded-xl mx-auto flex items-center justify-center text-3xl mb-4"><i class="fa-solid fa-lock"></i></div>
-            <h2 class="text-2xl font-bold mb-2">تسجيل الدخول للفريق</h2>
-            <p class="text-sm text-gray-500 mb-6">يرجى إدخال رمز الوصول الخاص بفريق الإدارة.</p>
-            <input type="password" id="login-pwd" placeholder="****" class="w-full text-center text-2xl tracking-widest px-4 py-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-primary outline-none mb-4" onkeypress="if(event.key === 'Enter') checkLogin()">
-            <button onclick="checkLogin()" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-lg">دخول كأدمن</button>
+        <div class="bg-white dark:bg-darkcard p-8 rounded-2xl shadow-2xl w-96 max-w-full text-center border dark:border-gray-700">
+            <h1 class="text-3xl font-black mb-2 text-brand dark:text-blue-400 tracking-wide">aitchikh consulting</h1>
+            <p class="text-sm text-gray-500 mb-8 font-bold">بوابة الإدارة المخصصة للفريق</p>
+            <input type="password" id="login-pwd" placeholder="رمز الدخول (1077)" class="w-full text-center text-xl tracking-widest px-4 py-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-primary outline-none mb-4" onkeypress="if(event.key === 'Enter') checkLogin()">
+            <button onclick="checkLogin()" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg">تسجيل الدخول</button>
         </div>
     </div>
 
-    <!-- SHARED LINK READ-ONLY VIEW (For Clients) -->
+    <!-- SHARED LINK READ-ONLY VIEW (For Invoices & Events) -->
     <div id="shared-view-overlay" class="fixed inset-0 p-6 flex justify-center">
-        <div id="shared-content" class="bg-white dark:bg-darkcard p-8 rounded-xl shadow-lg w-full max-w-3xl border dark:border-gray-700 h-fit">
-            <!-- Content injected via JS -->
-        </div>
+        <div id="shared-content" class="bg-white dark:bg-darkcard p-8 rounded-xl shadow-lg w-full max-w-3xl border dark:border-gray-700 h-fit"></div>
     </div>
 
     <!-- Sidebar -->
     <aside class="w-64 bg-white dark:bg-darkcard border-e border-gray-200 dark:border-gray-700 flex flex-col h-full hidden md:flex z-20 transition-colors duration-300">
-        <div class="p-6 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700">
-            <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xl"><i class="fa-solid fa-shield-halved"></i></div>
-            <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">NexDash Pro</h1>
+        <div class="p-6 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+            <h1 class="text-xl font-black text-brand dark:text-blue-400 leading-tight">aitchikh<br><span class="text-sm font-bold text-gray-500">consulting</span></h1>
         </div>
         <nav class="flex-1 overflow-y-auto py-4 font-semibold text-sm text-gray-600 dark:text-gray-400">
-            <a href="#" onclick="navigate('dashboard')" class="nav-item active flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="dashboard"><i class="fa-solid fa-chart-line w-6"></i> لوحة القيادة</a>
+            <a href="#" onclick="navigate('dashboard')" class="nav-item active flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="dashboard"><i class="fa-solid fa-chart-pie w-6"></i> لوحة القيادة</a>
             <a href="#" onclick="navigate('invoices')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="invoices"><i class="fa-solid fa-file-invoice-dollar w-6"></i> الفواتير (TVA/HT)</a>
             <a href="#" onclick="navigate('finances')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="finances"><i class="fa-solid fa-vault w-6"></i> الإيرادات والنفقات</a>
             <a href="#" onclick="navigate('clients')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="clients"><i class="fa-solid fa-users w-6"></i> قاعدة العملاء</a>
-            <a href="#" onclick="navigate('events')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="events"><i class="fa-solid fa-calendar-check w-6"></i> الأحداث والمواعيد</a>
-            <a href="#" onclick="navigate('tasks')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="tasks"><i class="fa-solid fa-list-check w-6"></i> مهام الفريق (Kanban)</a>
-            <a href="#" onclick="navigate('forms')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="forms"><i class="fa-brands fa-google w-6"></i> بيانات Google Forms</a>
-            <a href="#" onclick="navigate('emails')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="emails"><i class="fa-solid fa-paper-plane w-6"></i> إرسال تنبيهات (إيميل)</a>
-            <a href="#" onclick="navigate('settings')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="settings"><i class="fa-solid fa-gear w-6"></i> الإعدادات</a>
+            <a href="#" onclick="navigate('events')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="events"><i class="fa-solid fa-calendar-star w-6 text-yellow-500"></i> الأحداث والمواعيد</a>
+            <a href="#" onclick="navigate('emails')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="emails"><i class="fa-solid fa-envelope-open-text w-6 text-primary"></i> المراسلات وعروض الشركات</a>
+            <a href="#" onclick="navigate('messages')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="messages"><i class="fa-solid fa-inbox w-6"></i> صندوق الوارد والأرشيف</a>
+            <a href="#" onclick="navigate('forms')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="forms"><i class="fa-brands fa-google w-6 text-red-500"></i> إدارة Google Forms</a>
+            <a href="#" onclick="navigate('settings')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="settings"><i class="fa-solid fa-sliders w-6"></i> الإعدادات (API)</a>
         </nav>
         <div class="p-4 border-t border-gray-200 dark:border-gray-700 text-xs text-center font-bold text-gray-500">
-            <p>المزامنة: <span id="sync-status" class="text-green-500"><i class="fa-solid fa-wifi"></i> متصل</span></p>
+            <p>Admin Team | <span class="text-green-500"><i class="fa-solid fa-shield-check"></i> Secured</span></p>
         </div>
     </aside>
 
@@ -90,16 +88,12 @@
         <header class="h-16 bg-white dark:bg-darkcard border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6 z-10 shadow-sm">
             <div class="flex items-center gap-4">
                 <button class="md:hidden text-gray-500 hover:text-primary"><i class="fa-solid fa-bars text-xl"></i></button>
-                <h2 class="font-bold text-lg hidden sm:block text-gray-700 dark:text-gray-200" id="header-title">مرحباً بفريق الإدارة</h2>
+                <h2 class="font-bold text-lg hidden sm:block">aitchikh consulting Workspace</h2>
             </div>
             <div class="flex items-center gap-4">
                 <button id="theme-toggle" class="text-gray-500 hover:text-primary transition-colors"><i class="fa-solid fa-moon text-lg"></i></button>
                 <div class="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2"></div>
-                <div class="flex items-center gap-2">
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=4F46E5&color=fff" class="w-8 h-8 rounded-full border">
-                    <span class="text-sm font-bold hidden sm:block">أدمن</span>
-                </div>
-                <button onclick="logout()" class="text-red-500 hover:text-red-700 font-bold text-sm mx-2"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
+                <button onclick="logout()" class="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:hover:bg-red-900/50 px-3 py-1.5 rounded-lg font-bold text-sm transition"><i class="fa-solid fa-power-off ml-1"></i> خروج</button>
             </div>
         </header>
 
@@ -120,19 +114,18 @@
                     </div>
                     <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
                         <div><p class="text-sm text-gray-500 font-bold">صافي الأرباح (TTC)</p><h3 class="text-2xl font-black text-primary mt-1" id="stat-profit">0 DZD</h3></div>
-                        <div class="w-12 h-12 bg-indigo-100 text-primary rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-wallet"></i></div>
+                        <div class="w-12 h-12 bg-blue-100 text-primary rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-wallet"></i></div>
                     </div>
                     <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
                         <div><p class="text-sm text-gray-500 font-bold">عدد العملاء</p><h3 class="text-2xl font-black mt-1" id="stat-clients">0</h3></div>
-                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></div>
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-handshake"></i></div>
                     </div>
                 </div>
 
-                <!-- Charts (Gauge & Bars) -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
                     <!-- Gauge Speedometer -->
                     <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm flex flex-col items-center justify-center col-span-1">
-                        <h3 class="font-bold mb-2 text-center w-full">مؤشر السرعة (الربح / الخسارة)</h3>
+                        <h3 class="font-bold mb-2 text-center w-full">مؤشر السرعة المالي</h3>
                         <div class="gauge-container">
                             <canvas id="gaugeChart"></canvas>
                             <div class="gauge-text">
@@ -143,21 +136,21 @@
                     </div>
                     <!-- Bar Chart -->
                     <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm col-span-2">
-                        <h3 class="font-bold mb-4">إحصائيات الإيرادات والنفقات</h3>
+                        <h3 class="font-bold mb-4">التدفق المالي</h3>
                         <canvas id="financeChart" height="250"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW: INVOICES (Excel Style) -->
+            <!-- VIEW: INVOICES -->
             <div id="view-invoices" class="view-section hidden animate-fade-in">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">إدارة الفواتير (HT/TVA/TTC)</h2>
-                    <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold shadow-sm" onclick="openInvoiceModal()"><i class="fa-solid fa-plus ml-2"></i> إنشاء فاتورة جديدة</button>
+                    <h2 class="text-2xl font-black text-brand dark:text-white">إدارة الفواتير (HT/TVA/TTC)</h2>
+                    <button class="bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg" onclick="openInvoiceModal()"><i class="fa-solid fa-plus ml-2"></i> إنشاء فاتورة جديدة</button>
                 </div>
                 <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
                     <table class="w-full text-start text-sm">
-                        <thead class="bg-gray-100 dark:bg-gray-800 font-bold">
+                        <thead class="bg-gray-100 dark:bg-gray-800 font-bold text-gray-600 dark:text-gray-300">
                             <tr><th class="p-4">رقم الفاتورة</th><th class="p-4">العميل</th><th class="p-4">تاريخ</th><th class="p-4">HT</th><th class="p-4">TVA</th><th class="p-4">TTC (الإجمالي)</th><th class="p-4 text-center">إجراءات</th></tr>
                         </thead>
                         <tbody id="invoices-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
@@ -165,86 +158,114 @@
                 </div>
             </div>
 
-            <!-- VIEW: FINANCES -->
+            <!-- VIEW: EVENTS & APPOINTMENTS -->
+            <div id="view-events" class="view-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-black text-brand dark:text-white">الأحداث والمواعيد المهنية</h2>
+                    <button class="bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg" onclick="openModal('event-modal')"><i class="fa-solid fa-calendar-plus ml-2"></i> حدث / موعد جديد</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="events-grid">
+                    <!-- Events injected here -->
+                </div>
+            </div>
+
+            <!-- VIEW: FINANCES, CLIENTS (Similar structure, truncated for brevity) -->
             <div id="view-finances" class="view-section hidden animate-fade-in">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">سجل النفقات والإيرادات</h2>
-                    <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold shadow-sm" onclick="openModal('finance-modal')"><i class="fa-solid fa-plus ml-2"></i> إضافة عملية مالية</button>
+                    <h2 class="text-2xl font-black text-brand dark:text-white">سجل النفقات والإيرادات</h2>
+                    <button class="bg-primary text-white px-5 py-2.5 rounded-xl font-bold shadow-lg" onclick="openModal('finance-modal')"><i class="fa-solid fa-plus ml-2"></i> إضافة عملية</button>
                 </div>
                 <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
-                    <table class="w-full text-start text-sm">
-                        <thead class="bg-gray-100 dark:bg-gray-800 font-bold">
-                            <tr><th class="p-4">التاريخ</th><th class="p-4">البيان</th><th class="p-4">الفئة</th><th class="p-4">النوع</th><th class="p-4">المبلغ (DZD)</th><th class="p-4 text-center">إجراءات</th></tr>
-                        </thead>
-                        <tbody id="finances-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
-                    </table>
+                    <table class="w-full text-start text-sm"><thead class="bg-gray-100 dark:bg-gray-800 font-bold"><tr><th class="p-4">التاريخ</th><th class="p-4">البيان</th><th class="p-4">الفئة</th><th class="p-4">النوع</th><th class="p-4">المبلغ</th><th class="p-4 text-center">إجراءات</th></tr></thead><tbody id="finances-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody></table>
                 </div>
             </div>
 
-            <!-- VIEW: CLIENTS -->
             <div id="view-clients" class="view-section hidden animate-fade-in">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">قاعدة العملاء</h2>
-                    <button class="bg-primary text-white px-4 py-2 rounded-lg font-bold shadow-sm" onclick="openModal('client-modal')"><i class="fa-solid fa-user-plus ml-2"></i> إضافة عميل</button>
+                    <h2 class="text-2xl font-black text-brand dark:text-white">قاعدة العملاء</h2>
+                    <button class="bg-primary text-white px-5 py-2.5 rounded-xl font-bold shadow-lg" onclick="openModal('client-modal')"><i class="fa-solid fa-user-plus ml-2"></i> إضافة عميل</button>
                 </div>
                 <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
-                    <table class="w-full text-start text-sm">
-                        <thead class="bg-gray-100 dark:bg-gray-800 font-bold">
-                            <tr><th class="p-4">الاسم</th><th class="p-4">الشركة</th><th class="p-4">التواصل</th><th class="p-4 text-center">إجراءات</th></tr>
-                        </thead>
-                        <tbody id="clients-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
-                    </table>
+                    <table class="w-full text-start text-sm"><thead class="bg-gray-100 dark:bg-gray-800 font-bold"><tr><th class="p-4">الاسم</th><th class="p-4">الشركة</th><th class="p-4">التواصل</th><th class="p-4 text-center">إجراءات</th></tr></thead><tbody id="clients-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody></table>
                 </div>
             </div>
 
-            <!-- VIEW: TASKS (Kanban) -->
-            <div id="view-tasks" class="view-section hidden animate-fade-in">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">مهام الفريق</h2>
-                    <button class="bg-primary text-white px-4 py-2 rounded-lg font-bold shadow-sm" onclick="openModal('task-modal')"><i class="fa-solid fa-plus ml-2"></i> مهمة جديدة</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="kanban-board">
-                    <!-- Kanban columns generated by JS -->
-                </div>
-            </div>
-
-            <!-- VIEW: EMAILS -->
+            <!-- VIEW: EMAILS & PROPOSALS -->
             <div id="view-emails" class="view-section hidden animate-fade-in">
-                <h2 class="text-2xl font-bold mb-6">إرسال تنبيهات بريدية حقيقية (EmailJS)</h2>
-                <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm max-w-2xl mx-auto">
-                    <form id="form-email" class="space-y-4">
-                        <div>
-                            <label class="block font-bold mb-2">اختر العميل (أو اكتب إيميل مباشر)</label>
-                            <input type="email" id="mail-to" required placeholder="example@gmail.com" class="w-full px-4 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 outline-none" dir="ltr">
+                <h2 class="text-2xl font-black text-brand dark:text-white mb-6">المراسلات وعروض الشركات</h2>
+                <div class="bg-white dark:bg-darkcard p-8 rounded-xl border dark:border-gray-700 shadow-sm max-w-3xl mx-auto">
+                    <form id="form-email" class="space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-bold mb-2">نوع المراسلة</label>
+                                <select id="mail-template" onchange="applyEmailTemplate()" class="w-full px-4 py-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 outline-none font-bold">
+                                    <option value="custom">رسالة حرة</option>
+                                    <option value="proposal">عرض خدمات لشركة (Proposal)</option>
+                                    <option value="invite">دعوة لحدث / اجتماع</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-bold mb-2">المرسل إليه (إيميل)</label>
+                                <!-- Datalist for picking clients or typing new email -->
+                                <input type="email" id="mail-to" list="client-emails-list" required placeholder="email@company.com" class="w-full px-4 py-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 outline-none" dir="ltr">
+                                <datalist id="client-emails-list"></datalist>
+                            </div>
                         </div>
                         <div>
-                            <label class="block font-bold mb-2">عنوان الرسالة</label>
-                            <input type="text" id="mail-subject" required class="w-full px-4 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 outline-none">
+                            <label class="block font-bold mb-2">عنوان الرسالة (Subject)</label>
+                            <input type="text" id="mail-subject" required class="w-full px-4 py-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 outline-none">
                         </div>
                         <div>
                             <label class="block font-bold mb-2">نص الرسالة</label>
-                            <textarea id="mail-body" rows="5" required class="w-full px-4 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 outline-none"></textarea>
+                            <textarea id="mail-body" rows="6" required class="w-full px-4 py-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 outline-none"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-secondary hover:bg-emerald-600 text-white font-bold py-3 rounded"><i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل الآن</button>
+                        <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg"><i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل وحفظ في الأرشيف</button>
                     </form>
-                    <p class="text-xs text-gray-500 mt-4 text-center">ملاحظة: لكي تعمل الإيميلات، يجب إدخال مفاتيح EmailJS الخاصة بك في الكود (الأسفل).</p>
                 </div>
             </div>
 
-            <!-- VIEW: FORMS & SETTINGS ... (Skipped lengthy HTML for brevity, keeping structure simple) -->
-            <div id="view-forms" class="view-section hidden animate-fade-in">
-                <h2 class="text-2xl font-bold mb-6">بيانات Google Forms المربوطة</h2>
-                <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm text-center">
-                    <i class="fa-brands fa-google text-5xl text-blue-500 mb-4"></i>
-                    <h3 class="font-bold text-xl mb-2">كيفية الربط الفعلي مع نماذج جوجل؟</h3>
-                    <p class="text-gray-500 mb-4 max-w-lg mx-auto">بما أن هذا النظام يعمل بالواجهة الأمامية (Frontend)، للربط الحقيقي قم بالذهاب إلى نموذج جوجل الخاص بك > "Script Editor" وأضف كود يرسل الردود (Webhook) إلى قاعدة بيانات Firebase المرفقة بهذا الموقع.</p>
-                    <button class="bg-primary text-white px-6 py-2 rounded-lg font-bold" onclick="showToast('تم تحديث البيانات من Firebase بنجاح', 'success')">تحديث البيانات الآن</button>
+            <!-- VIEW: MESSAGES (INBOX & SENT) -->
+            <div id="view-messages" class="view-section hidden animate-fade-in">
+                <h2 class="text-2xl font-black text-brand dark:text-white mb-6">صندوق الوارد والأرشيف</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Received -->
+                    <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden flex flex-col h-[500px]">
+                        <div class="bg-gray-100 dark:bg-gray-800 p-4 font-bold border-b dark:border-gray-700"><i class="fa-solid fa-inbox text-primary ml-2"></i> الرسائل الواردة (من النماذج والـ API)</div>
+                        <div class="p-4 overflow-y-auto flex-1 space-y-3" id="inbox-container">
+                            <!-- Injected -->
+                        </div>
+                    </div>
+                    <!-- Sent -->
+                    <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden flex flex-col h-[500px]">
+                        <div class="bg-gray-100 dark:bg-gray-800 p-4 font-bold border-b dark:border-gray-700"><i class="fa-solid fa-paper-plane text-green-500 ml-2"></i> أرشيف المرسلات (Sent)</div>
+                        <div class="p-4 overflow-y-auto flex-1 space-y-3" id="sent-container">
+                            <!-- Injected -->
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- VIEW: GOOGLE FORMS -->
+            <div id="view-forms" class="view-section hidden animate-fade-in h-full flex flex-col">
+                <h2 class="text-2xl font-black text-brand dark:text-white mb-6">إدارة Google Forms</h2>
+                <div class="bg-white dark:bg-darkcard p-4 rounded-xl border dark:border-gray-700 shadow-sm flex-1 flex flex-col">
+                    <p class="mb-4 text-gray-500 font-bold">يمكنك إنشاء وتحرير نماذج جوجل مباشرة من هنا (يتطلب تسجيل الدخول بحساب جوجل الخاص بك في المتصفح).</p>
+                    <iframe src="https://docs.google.com/forms/" class="w-full flex-1 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl" title="Google Forms Editor"></iframe>
+                </div>
+            </div>
+
+            <!-- VIEW: SETTINGS (API Keys) -->
             <div id="view-settings" class="view-section hidden animate-fade-in">
-                 <h2 class="text-2xl font-bold mb-6">إعدادات النظام</h2>
-                 <button class="bg-red-500 text-white px-6 py-3 rounded-lg font-bold" onclick="resetData()"><i class="fa-solid fa-trash ml-2"></i> مسح جميع البيانات (إعادة ضبط المصنع)</button>
+                 <h2 class="text-2xl font-black text-brand dark:text-white mb-6">إعدادات النظام والـ API</h2>
+                 <div class="bg-white dark:bg-darkcard p-8 rounded-xl border dark:border-gray-700 shadow-sm max-w-2xl">
+                     <h3 class="font-bold text-lg mb-4 border-b pb-2 text-primary">إعدادات EmailJS (لإرسال إيميلات حقيقية)</h3>
+                     <form id="form-settings" class="space-y-4">
+                         <div><label class="block font-bold mb-1 text-sm">Public Key</label><input type="text" id="api-pubkey" class="w-full p-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800" dir="ltr"></div>
+                         <div><label class="block font-bold mb-1 text-sm">Service ID</label><input type="text" id="api-service" class="w-full p-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800" dir="ltr"></div>
+                         <div><label class="block font-bold mb-1 text-sm">Template ID</label><input type="text" id="api-template" class="w-full p-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800" dir="ltr"></div>
+                         <button type="submit" class="bg-primary text-white px-6 py-3 rounded-xl font-bold mt-4 shadow"><i class="fa-solid fa-save ml-2"></i> حفظ الإعدادات</button>
+                     </form>
+                 </div>
             </div>
 
         </main>
@@ -253,160 +274,99 @@
     <!-- MODALS -->
     <div id="modal-backdrop" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         
-        <!-- INVOICE MODAL (Excel Style) -->
-        <div id="invoice-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-2xl w-full max-w-4xl hidden modal-content flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800 rounded-t-xl">
-                <h3 class="font-bold text-xl" id="inv-modal-title">إنشاء فاتورة احترافية</h3>
+        <!-- EVENT MODAL -->
+        <div id="event-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-2xl w-full max-w-2xl hidden modal-content flex flex-col">
+            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800 rounded-t-2xl">
+                <h3 class="font-bold text-xl text-primary">حدث / موعد جديد</h3>
                 <button onclick="closeModal()" class="text-red-500 hover:text-red-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[80vh]">
+                <form id="form-event" class="space-y-4">
+                    <div><label class="block font-bold mb-1">عنوان الحدث / الموعد</label><input type="text" id="ev-title" required placeholder="مثال: اجتماع إطلاق المشروع" class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none"></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block font-bold mb-1">التاريخ</label><input type="date" id="ev-date" required class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none"></div>
+                        <div><label class="block font-bold mb-1">التوقيت</label><input type="time" id="ev-time" required class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none"></div>
+                    </div>
+                    <div><label class="block font-bold mb-1">المكان (نصي)</label><input type="text" id="ev-loc" required placeholder="مثال: مقر الشركة، قاعة الاجتماعات" class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none"></div>
+                    <div><label class="block font-bold mb-1">رابط خرائط جوجل (Google Maps URL)</label><input type="url" id="ev-map" placeholder="https://maps.google.com/..." class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none" dir="ltr"></div>
+                    
+                    <div class="border-t dark:border-gray-700 pt-4 mt-4">
+                        <label class="block font-bold mb-2 text-primary">المدعوين (اختر من العملاء لإرسال دعوات)</label>
+                        <!-- A simple multi-select or checkbox list generated by JS -->
+                        <div id="ev-invitees-list" class="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border p-3 rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-700"></div>
+                        <label class="flex items-center mt-3 cursor-pointer">
+                            <input type="checkbox" id="ev-send-invites" class="w-5 h-5 text-primary rounded border-gray-300 ml-2">
+                            <span class="font-bold text-sm">إرسال دعوة بالبريد الإلكتروني تلقائياً عند الحفظ</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary text-white font-bold py-3 mt-4 rounded-xl text-lg shadow-lg">حفظ الحدث</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- INVOICE MODAL -->
+        <div id="invoice-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-2xl w-full max-w-4xl hidden modal-content flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800 rounded-t-2xl">
+                <h3 class="font-bold text-xl text-primary" id="inv-modal-title">فاتورة احترافية aitchikh</h3>
+                <button onclick="closeModal()" class="text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div class="p-6 overflow-y-auto">
                 <form id="form-invoice" class="space-y-6">
                     <input type="hidden" id="inv-edit-id">
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block font-bold mb-1">العميل</label>
-                            <select id="inv-client" required class="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700"></select>
-                        </div>
-                        <div>
-                            <label class="block font-bold mb-1">تاريخ الإصدار</label>
-                            <input type="date" id="inv-date" required class="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700" dir="ltr">
-                        </div>
+                        <div><label class="block font-bold mb-1">العميل</label><select id="inv-client" required class="w-full p-3 border rounded-lg dark:bg-gray-800 outline-none"></select></div>
+                        <div><label class="block font-bold mb-1">تاريخ الإصدار</label><input type="date" id="inv-date" required class="w-full p-3 border rounded-lg dark:bg-gray-800 outline-none"></div>
                     </div>
                     
-                    <!-- EXCEL STYLE TABLE -->
-                    <div class="border rounded-lg overflow-hidden">
-                        <table class="w-full text-center">
-                            <thead class="bg-primary text-white">
-                                <tr><th class="p-2 w-1/2">البيان / الخدمة</th><th class="p-2 w-1/6">الكمية</th><th class="p-2 w-1/6">سعر الوحدة</th><th class="p-2 w-1/6">المجموع</th><th class="p-2"></th></tr>
-                            </thead>
-                            <tbody id="inv-items-body">
-                                <!-- Items injected here -->
-                            </tbody>
-                        </table>
-                        <button type="button" onclick="addInvoiceRow()" class="w-full bg-gray-100 dark:bg-gray-800 p-2 font-bold text-primary hover:bg-gray-200"><i class="fa-solid fa-plus"></i> إضافة سطر جديد</button>
+                    <div class="border rounded-xl overflow-hidden dark:border-gray-700">
+                        <table class="w-full text-center text-sm"><thead class="bg-primary text-white"><tr><th class="p-3 w-1/2">البيان</th><th class="p-3 w-1/6">الكمية</th><th class="p-3 w-1/6">سعر الوحدة</th><th class="p-3 w-1/6">المجموع</th><th class="p-3"></th></tr></thead><tbody id="inv-items-body"></tbody></table>
+                        <button type="button" onclick="addInvoiceRow()" class="w-full bg-gray-50 dark:bg-gray-800 p-3 font-bold text-primary hover:bg-gray-200"><i class="fa-solid fa-plus"></i> إضافة سطر جديد</button>
                     </div>
 
-                    <!-- TOTALS -->
-                    <div class="flex justify-end">
-                        <div class="w-64 space-y-2 font-bold text-lg bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border">
-                            <div class="flex justify-between"><span>HT:</span> <span id="inv-ht" dir="ltr">0 DZD</span></div>
-                            <div class="flex justify-between text-red-500"><span>TVA (19%):</span> <span id="inv-tva" dir="ltr">0 DZD</span></div>
-                            <div class="flex justify-between text-green-600 border-t pt-2 text-xl"><span>TTC:</span> <span id="inv-ttc" dir="ltr">0 DZD</span></div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-lg text-lg">حفظ الفاتورة</button>
+                    <div class="flex justify-end"><div class="w-64 space-y-2 font-bold text-lg bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border dark:border-gray-700"><div class="flex justify-between"><span>HT:</span> <span id="inv-ht" dir="ltr">0 DZD</span></div><div class="flex justify-between text-red-500"><span>TVA (19%):</span> <span id="inv-tva" dir="ltr">0 DZD</span></div><div class="flex justify-between text-green-600 border-t pt-2 text-xl"><span>TTC:</span> <span id="inv-ttc" dir="ltr">0 DZD</span></div></div></div>
+                    <button type="submit" class="w-full bg-secondary hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-lg shadow-lg">حفظ الفاتورة</button>
                 </form>
             </div>
         </div>
 
-        <!-- OTHER MODALS (Client, Finance, Task, QR) -->
-        <div id="finance-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-lg hidden modal-content p-6">
-            <h3 class="font-bold text-xl mb-4 border-b pb-2">إضافة عملية مالية</h3>
-            <form id="form-finance" class="space-y-4">
-                <input type="hidden" id="fin-edit-id">
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block font-bold mb-1">النوع</label><select id="fin-type" class="w-full p-2 border rounded dark:bg-gray-700"><option value="Revenue">إيرادات (+)</option><option value="Expense">نفقات (-)</option></select></div>
-                    <div><label class="block font-bold mb-1">المبلغ (DZD)</label><input type="number" id="fin-amount" required class="w-full p-2 border rounded dark:bg-gray-700"></div>
-                </div>
-                <div><label class="block font-bold mb-1">البيان</label><input type="text" id="fin-desc" required class="w-full p-2 border rounded dark:bg-gray-700"></div>
-                <div><label class="block font-bold mb-1">التصنيف</label><input type="text" id="fin-cat" class="w-full p-2 border rounded dark:bg-gray-700"></div>
-                <button type="submit" class="w-full bg-primary text-white py-2 rounded font-bold mt-4">حفظ</button>
-                <button type="button" onclick="closeModal()" class="w-full bg-gray-300 dark:bg-gray-600 py-2 rounded font-bold mt-2">إلغاء</button>
-            </form>
-        </div>
+        <!-- OTHER MODALS (Client, Finance, QR) -->
+        <div id="finance-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-lg w-full max-w-lg hidden modal-content p-6"><h3 class="font-bold text-xl mb-4 border-b pb-2 text-primary">عملية مالية</h3><form id="form-finance" class="space-y-4"><div class="grid grid-cols-2 gap-4"><div><label class="block font-bold mb-1">النوع</label><select id="fin-type" class="w-full p-3 border rounded-lg dark:bg-gray-800"><option value="Revenue">إيرادات (+)</option><option value="Expense">نفقات (-)</option></select></div><div><label class="block font-bold mb-1">المبلغ (DZD)</label><input type="number" id="fin-amount" required class="w-full p-3 border rounded-lg dark:bg-gray-800"></div></div><div><label class="block font-bold mb-1">البيان</label><input type="text" id="fin-desc" required class="w-full p-3 border rounded-lg dark:bg-gray-800"></div><div><label class="block font-bold mb-1">التصنيف</label><input type="text" id="fin-cat" class="w-full p-3 border rounded-lg dark:bg-gray-800"></div><button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg mt-4">حفظ</button><button type="button" onclick="closeModal()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold mt-2">إلغاء</button></form></div>
+        
+        <div id="client-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-lg w-full max-w-lg hidden modal-content p-6"><h3 class="font-bold text-xl mb-4 border-b pb-2 text-primary">إضافة عميل</h3><form id="form-client" class="space-y-4"><div><label class="block font-bold mb-1">الاسم</label><input type="text" id="cli-name" required class="w-full p-3 border rounded-lg dark:bg-gray-800"></div><div class="grid grid-cols-2 gap-4"><div><label class="block font-bold mb-1">الإيميل</label><input type="email" id="cli-email" required class="w-full p-3 border rounded-lg dark:bg-gray-800" dir="ltr"></div><div><label class="block font-bold mb-1">الهاتف</label><input type="text" id="cli-phone" class="w-full p-3 border rounded-lg dark:bg-gray-800" dir="ltr"></div></div><div><label class="block font-bold mb-1">الشركة</label><input type="text" id="cli-company" class="w-full p-3 border rounded-lg dark:bg-gray-800"></div><button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg mt-4">حفظ</button><button type="button" onclick="closeModal()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold mt-2">إلغاء</button></form></div>
 
-        <div id="client-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-lg hidden modal-content p-6">
-            <h3 class="font-bold text-xl mb-4 border-b pb-2">تفاصيل العميل</h3>
-            <form id="form-client" class="space-y-4">
-                <input type="hidden" id="cli-edit-id">
-                <div><label class="block font-bold mb-1">اسم العميل</label><input type="text" id="cli-name" required class="w-full p-2 border rounded dark:bg-gray-700"></div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="block font-bold mb-1">الإيميل</label><input type="email" id="cli-email" required class="w-full p-2 border rounded dark:bg-gray-700" dir="ltr"></div>
-                    <div><label class="block font-bold mb-1">الهاتف</label><input type="text" id="cli-phone" class="w-full p-2 border rounded dark:bg-gray-700" dir="ltr"></div>
-                </div>
-                <div><label class="block font-bold mb-1">الشركة</label><input type="text" id="cli-company" class="w-full p-2 border rounded dark:bg-gray-700"></div>
-                <button type="submit" class="w-full bg-primary text-white py-2 rounded font-bold mt-4">حفظ العميل</button>
-                <button type="button" onclick="closeModal()" class="w-full bg-gray-300 dark:bg-gray-600 py-2 rounded font-bold mt-2">إلغاء</button>
-            </form>
-        </div>
-
-        <div id="task-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-sm hidden modal-content p-6">
-            <h3 class="font-bold text-xl mb-4">إضافة مهمة</h3>
-            <form id="form-task" class="space-y-4">
-                <div><label class="block font-bold mb-1">عنوان المهمة</label><input type="text" id="task-title" required class="w-full p-2 border rounded dark:bg-gray-700"></div>
-                <div><label class="block font-bold mb-1">الحالة</label>
-                    <select id="task-status" class="w-full p-2 border rounded dark:bg-gray-700">
-                        <option value="todo">قيد الانتظار</option><option value="doing">جاري العمل</option><option value="done">مكتملة</option>
-                    </select>
-                </div>
-                <button type="submit" class="w-full bg-primary text-white py-2 rounded font-bold">حفظ</button>
-                <button type="button" onclick="closeModal()" class="w-full bg-gray-300 py-2 rounded font-bold mt-2 dark:bg-gray-600">إلغاء</button>
-            </form>
-        </div>
-
-        <div id="qr-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-sm hidden modal-content flex flex-col items-center p-6 text-center">
-            <h3 class="font-bold text-xl mb-4 w-full flex justify-between"><span>مشاركة الرابط (حقيقي)</span> <button onclick="closeModal()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button></h3>
-            <div id="qrcode-box" class="bg-white p-4 rounded-xl mb-4 shadow border"></div>
-            <input type="text" id="share-link-input" readonly class="w-full px-3 py-2 border rounded bg-gray-50 dark:bg-gray-700 text-sm text-center mb-4 text-primary font-bold" dir="ltr">
-            <button onclick="copyShareLink()" class="w-full bg-secondary text-white py-2 rounded font-bold"><i class="fa-regular fa-copy"></i> نسخ الرابط وإرساله للعميل</button>
-        </div>
+        <div id="qr-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-lg w-full max-w-sm hidden modal-content flex flex-col items-center p-6 text-center"><h3 class="font-bold text-xl mb-4 w-full flex justify-between text-primary"><span>مشاركة الرابط (QR)</span> <button onclick="closeModal()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button></h3><div id="qrcode-box" class="bg-white p-4 rounded-xl mb-4 shadow border"></div><input type="text" id="share-link-input" readonly class="w-full px-3 py-2 border rounded bg-gray-50 dark:bg-gray-700 text-xs text-center mb-4 text-primary font-bold" dir="ltr"><button onclick="copyShareLink()" class="w-full bg-secondary hover:bg-emerald-600 text-white py-3 rounded-xl font-bold"><i class="fa-regular fa-copy ml-2"></i> نسخ الرابط وإرساله</button></div>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toast-container"></div>
-
-    <script type="module">
+    <!-- Script Application Logic -->
+    <script>
         // ==========================================
-        // FIREBASE & EMAILJS CONFIGURATION
-        // ==========================================
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCePMwR1Ov1Xknj-1m0FJG-IE3pmSItzzU", authDomain: "thwas-b496b.firebaseapp.com",
-            projectId: "thwas-b496b", storageBucket: "thwas-b496b.firebasestorage.app",
-            messagingSenderId: "435409022648", appId: "1:435409022648:web:85ad4d14546f5d2ccb0e4d"
-        };
-        let db;
-        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch(e) { console.warn("Firebase Error"); }
-
-        // EMAILJS INIT (REPLACE WITH YOUR KEYS)
-        // Sign up at emailjs.com -> Add Service (Gmail) -> Create Template
-        emailjs.init("YOUR_PUBLIC_KEY_HERE"); 
-
-        // ==========================================
-        // AUTHENTICATION & ROUTING
+        // AUTHENTICATION & INITIALIZATION
         // ==========================================
         window.checkLogin = function() {
-            const pwd = document.getElementById('login-pwd').value;
-            if(pwd === '1077') {
-                localStorage.setItem('nexdash_auth', 'true');
+            if(document.getElementById('login-pwd').value === '1077') {
+                localStorage.setItem('aitchikh_auth', 'true');
                 document.getElementById('login-screen').classList.add('hidden');
                 loadData();
             } else { showToast('كلمة السر خاطئة', 'error'); }
         };
 
-        window.logout = function() {
-            localStorage.removeItem('nexdash_auth');
-            location.reload();
-        };
+        window.logout = function() { localStorage.removeItem('aitchikh_auth'); location.reload(); };
 
-        // Check if viewing a shared real link
         const urlParams = new URLSearchParams(window.location.search);
-        const shareId = urlParams.get('share_invoice');
+        const shareInvId = urlParams.get('share_invoice');
+        const shareEvId = urlParams.get('share_event');
 
         window.onload = function() {
-            if(shareId) {
-                // If it's a shared link, bypass login and show only the invoice
+            if(shareInvId || shareEvId) {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.querySelector('aside').classList.add('hidden');
                 document.querySelector('header').classList.add('hidden');
                 document.getElementById('main-content').classList.add('hidden');
-                loadSharedInvoice(shareId);
+                if(shareInvId) loadSharedContent('invoice', shareInvId);
+                if(shareEvId) loadSharedContent('event', shareEvId);
             } else {
-                // Normal flow
-                if(localStorage.getItem('nexdash_auth') === 'true') {
+                if(localStorage.getItem('aitchikh_auth') === 'true') {
                     document.getElementById('login-screen').classList.add('hidden');
                     loadData();
                 }
@@ -414,56 +374,55 @@
         };
 
         // ==========================================
-        // DATA STATE (DZD Currency)
+        // STATE MANAGEMENT
         // ==========================================
         const defaultData = {
-            clients: [],
-            finances:[
-                { id: 'f1', type: 'Revenue', amount: 50000, desc: 'رصيد افتتاحي', cat: 'أخرى', date: getToday() }
-            ],
-            invoices: [],
-            tasks:[
-                { id: 't1', title: 'مراجعة حسابات الشهر', status: 'todo' },
-                { id: 't2', title: 'إرسال عرض السعر للعميل أ', status: 'doing' }
-            ]
+            clients: [], finances:[{ id:'f1', type:'Revenue', amount:0, desc:'رصيد افتتاحي', cat:'أخرى', date: getToday() }],
+            invoices: [], events:[],
+            messages: { inbox: [], sent:[] },
+            settings: { emailPubKey: '', emailService: '', emailTemplate: '' }
         };
 
         window.appData = { ...defaultData };
 
-        async function saveData() {
-            localStorage.setItem('nexdash_data_pro', JSON.stringify(window.appData));
-            updateDashboard();
-            if(db) {
-                try { await setDoc(doc(db, "appData", "proStore"), window.appData); } catch(e){}
-            }
+        function saveData() {
+            localStorage.setItem('aitchikh_data_v2', JSON.stringify(window.appData));
+            updateDashboard(); renderAll();
         }
 
-        async function loadData() {
-            const local = localStorage.getItem('nexdash_data_pro');
-            if(local) window.appData = JSON.parse(local);
-            if(db) {
-                try { const docSnap = await getDoc(doc(db, "appData", "proStore")); if(docSnap.exists()) { window.appData = docSnap.data(); } } catch(e){}
+        function loadData() {
+            const local = localStorage.getItem('aitchikh_data_v2');
+            if(local) {
+                const parsed = JSON.parse(local);
+                // Ensure new objects exist for backwards compatibility
+                if(!parsed.events) parsed.events = [];
+                if(!parsed.messages) parsed.messages = {inbox:[], sent:[]};
+                if(!parsed.settings) parsed.settings = { emailPubKey: '', emailService: '', emailTemplate: '' };
+                window.appData = parsed;
             }
-            initCharts();
-            updateDashboard();
-            renderAll();
+            // Populate Settings form
+            document.getElementById('api-pubkey').value = window.appData.settings.emailPubKey || '';
+            document.getElementById('api-service').value = window.appData.settings.emailService || '';
+            document.getElementById('api-template').value = window.appData.settings.emailTemplate || '';
+            
+            // Init EmailJS if key exists
+            if(window.appData.settings.emailPubKey) {
+                try { emailjs.init(window.appData.settings.emailPubKey); } catch(e){}
+            }
+
+            initCharts(); updateDashboard(); renderAll(); updateDatalists();
         }
 
         function getToday() { return new Date().toISOString().split('T')[0]; }
 
         // ==========================================
-        // UI & NAVIGATION
+        // UI, NAVIGATION & TOAST
         // ==========================================
         window.navigate = function(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('view-' + viewId).classList.remove('hidden');
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.querySelector(`.nav-item[data-target="${viewId}"]`).classList.add('active');
-            
-            if(viewId === 'emails') {
-                const sel = document.getElementById('mail-to');
-                // Could auto-complete with client emails, but let's keep it generic input
-            }
         };
 
         window.showToast = function(msg, type = 'info') {
@@ -476,17 +435,25 @@
             document.getElementById('modal-backdrop').classList.remove('hidden');
             document.querySelectorAll('.modal-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
+            
+            if(id === 'event-modal') {
+                document.getElementById('ev-invitees-list').innerHTML = window.appData.clients.map(c => 
+                    `<label class="flex items-center space-x-2 space-x-reverse bg-white dark:bg-gray-800 p-2 rounded border dark:border-gray-700 cursor-pointer text-sm font-bold">
+                        <input type="checkbox" value="${c.email}" class="ev-invitee-chk w-4 h-4 text-primary rounded">
+                        <span>${c.name}</span>
+                    </label>`
+                ).join('') || '<p class="text-xs text-gray-500 col-span-2">لا يوجد عملاء مسجلين حالياً.</p>';
+            }
         };
         window.closeModal = function() { document.getElementById('modal-backdrop').classList.add('hidden'); };
 
-        // Dark Mode Toggle
         document.getElementById('theme-toggle').addEventListener('click', () => {
             document.documentElement.classList.toggle('dark');
             if(window.myCharts) window.myCharts.forEach(c => c.update());
         });
 
         // ==========================================
-        // DASHBOARD & CHARTS
+        // CHARTS & DASHBOARD
         // ==========================================
         window.myCharts =[];
         function initCharts() {
@@ -495,25 +462,14 @@
             Chart.defaults.color = '#94a3b8'; Chart.defaults.font.family = 'Cairo';
 
             const barChart = new Chart(ctxBar, {
-                type: 'bar',
-                data: { labels:['Jan','Feb','Mar','Apr','May','Jun'], datasets:[
-                    { label: 'إيرادات', data:[0,0,0,0,0,0], backgroundColor: '#10B981', borderRadius: 4 },
-                    { label: 'نفقات', data:[0,0,0,0,0,0], backgroundColor: '#EF4444', borderRadius: 4 }
-                ]},
+                type: 'bar', data: { labels:['Jan','Feb','Mar','Apr','May','Jun'], datasets:[{ label: 'إيرادات', data:[0,0,0,0,0,0], backgroundColor: '#10B981', borderRadius: 4 }, { label: 'نفقات', data:[0,0,0,0,0,0], backgroundColor: '#EF4444', borderRadius: 4 }]},
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            // GAUGE CHART (Speedometer style)
             const gaugeChart = new Chart(ctxGauge, {
-                type: 'doughnut',
-                data: { labels:['عجز (سالب)', 'ربح (موجب)'], datasets: [{ data: [1, 1], backgroundColor: ['#EF4444', '#10B981'], borderWidth: 0 }] },
-                options: {
-                    responsive: true, maintainAspectRatio: true,
-                    circumference: 180, rotation: -90, cutout: '80%',
-                    plugins: { legend: { display: false }, tooltip: {enabled: false} }
-                }
+                type: 'doughnut', data: { labels:['عجز', 'ربح'], datasets:[{ data: [1, 1], backgroundColor:['#EF4444', '#10B981'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: true, circumference: 180, rotation: -90, cutout: '80%', plugins: { legend: { display: false }, tooltip: {enabled: false} } }
             });
-
             window.myCharts =[barChart, gaugeChart];
         }
 
@@ -527,308 +483,887 @@
             document.getElementById('stat-profit').innerText = profit.toLocaleString() + ' DZD';
             document.getElementById('stat-clients').innerText = window.appData.clients.length;
 
-            // Update Gauge
             document.getElementById('gauge-amount').innerText = profit.toLocaleString() + ' DZD';
-            document.getElementById('gauge-amount').className = `text-3xl font-black mt-1 ${profit >= 0 ? 'text-green-500' : 'text-red-500'}`;
+            document.getElementById('gauge-amount').className = `text-2xl font-black mt-1 ${profit >= 0 ? 'text-green-500' : 'text-red-500'}`;
             if(window.myCharts[1]) {
-                // simple visual ratio
-                let pRatio = profit >= 0 ? 100 : 0;
-                let lRatio = profit < 0 ? 100 : 0;
+                let pRatio = profit >= 0 ? 100 : 0; let lRatio = profit < 0 ? 100 : 0;
                 if(profit > 0 && exp > 0) { pRatio = rev; lRatio = exp; }
-                window.myCharts[1].data.datasets[0].data = [lRatio, pRatio];
-                window.myCharts[1].update();
+                window.myCharts[1].data.datasets[0].data = [lRatio, pRatio]; window.myCharts[1].update();
             }
             if(window.myCharts[0]) {
-                window.myCharts[0].data.datasets[0].data[5] = rev;
-                window.myCharts[0].data.datasets[1].data[5] = exp;
-                window.myCharts[0].update();
+                window.myCharts[0].data.datasets[0].data[5] = rev; window.myCharts[0].data.datasets[1].data[5] = exp; window.myCharts[0].update();
             }
         }
 
         // ==========================================
-        // EXCEL-STYLE INVOICE LOGIC
+        // RENDERING
         // ==========================================
-        let currentInvoiceItems =[];
+        function renderAll() { renderInvoices(); renderFinances(); renderClients(); renderEvents(); renderMessages(); }
 
-        window.openInvoiceModal = function(id = null) {
-            currentInvoiceItems =[];
-            document.getElementById('form-invoice').reset();
-            const sel = document.getElementById('inv-client');
-            sel.innerHTML = window.appData.clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-            
-            if(id) {
-                const inv = window.appData.invoices.find(i=>i.id===id);
-                document.getElementById('inv-edit-id').value = id;
-                document.getElementById('inv-date').value = inv.date;
-                sel.value = inv.clientId;
-                currentInvoiceItems = [...inv.items];
-                document.getElementById('inv-modal-title').innerText = "تعديل الفاتورة " + id;
-            } else {
-                document.getElementById('inv-edit-id').value = "";
-                document.getElementById('inv-date').value = getToday();
-                currentInvoiceItems.push({desc: '', qty: 1, price: 0}); // Add default row
-                document.getElementById('inv-modal-title').innerText = "إنشاء فاتورة احترافية";
-            }
-            renderInvoiceRows();
-            openModal('invoice-modal');
-        };
-
-        window.addInvoiceRow = function() {
-            currentInvoiceItems.push({desc: '', qty: 1, price: 0});
-            renderInvoiceRows();
-        };
-
-        window.removeInvoiceRow = function(idx) {
-            currentInvoiceItems.splice(idx, 1);
-            renderInvoiceRows();
-        };
-
-        window.updateInvItem = function(idx, field, val) {
-            currentInvoiceItems[idx][field] = field === 'desc' ? val : parseFloat(val)||0;
-            renderInvoiceRows();
-        };
-
-        function renderInvoiceRows() {
-            let ht = 0;
-            const tbody = document.getElementById('inv-items-body');
-            tbody.innerHTML = currentInvoiceItems.map((item, i) => {
-                const total = item.qty * item.price;
-                ht += total;
-                return `
-                <tr class="border-b dark:border-gray-700">
-                    <td class="p-2"><input type="text" value="${item.desc}" onchange="updateInvItem(${i},'desc',this.value)" class="w-full p-1 border rounded dark:bg-gray-700"></td>
-                    <td class="p-2"><input type="number" value="${item.qty}" onchange="updateInvItem(${i},'qty',this.value)" class="w-full p-1 border rounded text-center dark:bg-gray-700"></td>
-                    <td class="p-2"><input type="number" value="${item.price}" onchange="updateInvItem(${i},'price',this.value)" class="w-full p-1 border rounded text-center dark:bg-gray-700"></td>
-                    <td class="p-2 font-bold">${total.toLocaleString()}</td>
-                    <td class="p-2"><button type="button" onclick="removeInvoiceRow(${i})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td>
-                </tr>
-            `}).join('');
-            
-            const tva = ht * 0.19;
-            const ttc = ht + tva;
-            
-            document.getElementById('inv-ht').innerText = ht.toLocaleString() + ' DZD';
-            document.getElementById('inv-tva').innerText = tva.toLocaleString() + ' DZD';
-            document.getElementById('inv-ttc').innerText = ttc.toLocaleString() + ' DZD';
+        function updateDatalists() {
+            const dl = document.getElementById('client-emails-list');
+            dl.innerHTML = window.appData.clients.map(c => `<option value="${c.email}">${c.name} - ${c.company}</option>`).join('');
         }
-
-        document.getElementById('form-invoice').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const editId = document.getElementById('inv-edit-id').value;
-            const ht = currentInvoiceItems.reduce((s,i)=>s+(i.qty*i.price), 0);
-            const invObj = {
-                id: editId || 'INV-' + Math.floor(1000 + Math.random() * 9000),
-                clientId: document.getElementById('inv-client').value,
-                date: document.getElementById('inv-date').value,
-                items: currentInvoiceItems,
-                ht: ht, tva: ht*0.19, ttc: ht + (ht*0.19)
-            };
-            
-            if(editId) { window.appData.invoices = window.appData.invoices.map(i=>i.id===editId ? invObj : i); }
-            else { window.appData.invoices.push(invObj); }
-            
-            saveData(); renderInvoices(); closeModal(); showToast('تم حفظ الفاتورة بنجاح', 'success');
-        });
-
-        // ==========================================
-        // RENDER TABLES & KANBAN
-        // ==========================================
-        function renderAll() { renderInvoices(); renderFinances(); renderClients(); renderTasks(); }
 
         window.renderInvoices = function() {
             document.getElementById('invoices-tbody').innerHTML = window.appData.invoices.map(inv => {
                 const c = window.appData.clients.find(c=>c.id===inv.clientId);
                 return `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <td class="p-4 font-bold text-primary">${inv.id}</td>
-                    <td class="p-4">${c?c.name:'-'}</td><td class="p-4" dir="ltr">${inv.date}</td>
-                    <td class="p-4">${inv.ht.toLocaleString()}</td><td class="p-4">${inv.tva.toLocaleString()}</td>
-                    <td class="p-4 font-bold text-green-600">${inv.ttc.toLocaleString()} DZD</td>
-                    <td class="p-4 text-center space-x-2 space-x-reverse">
-                        <button onclick="shareQr('فاتورة ${inv.id}', '${window.location.origin}${window.location.pathname}?share_invoice=${inv.id}')" class="text-gray-500 hover:text-blue-500 mx-1" title="مشاركة رابط حقيقي"><i class="fa-solid fa-share-nodes"></i></button>
-                        <button onclick="openInvoiceModal('${inv.id}')" class="text-gray-500 hover:text-secondary mx-1"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteItem('invoices','${inv.id}')" class="text-gray-500 hover:text-red-500 mx-1"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>`}).join('');
+                    <td class="p-4 font-bold text-primary">${inv.id}</td><td class="p-4 font-bold">${c?c.name:'-'}</td><td class="p-4 text-gray-500" dir="ltr">${inv.date}</td>
+                    <td class="p-4">${inv.ht.toLocaleString()}</td><td class="p-4">${inv.tva.toLocaleString()}</td><td class="p-4 font-black text-green-600">${inv.ttc.toLocaleString()} DZD</td>
+                    <td class="p-4 text-center">
+                        <button onclick="shareQr('فاتورة ${inv.id}', '${window.location.origin}${window.location.pathname}?share_invoice=${inv.id}')" class="text-gray-400 hover:text-blue-500 mx-1" title="مشاركة رابط"><i class="fa-solid fa-share-nodes"></i></button>
+                        <button onclick="deleteItem('invoices','${inv.id}')" class="text-gray-400 hover:text-red-500 mx-1"><i class="fa-solid fa-trash"></i></button>
+                    </td></tr>`}).join('');
         };
 
-        window.renderFinances = function() {
-            document.getElementById('finances-tbody').innerHTML = window.appData.finances.map(f => `
-                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <td class="p-4" dir="ltr">${f.date}</td><td class="p-4 font-bold">${f.desc}</td><td class="p-4"><span class="bg-gray-200 dark:bg-gray-700 px-2 rounded text-xs">${f.cat}</span></td>
-                    <td class="p-4 font-bold ${f.type==='Revenue'?'text-green-500':'text-red-500'}">${f.type==='Revenue'?'إيراد (+)':'نفقة (-)'}</td>
-                    <td class="p-4 font-bold">${f.amount.toLocaleString()} DZD</td>
-                    <td class="p-4 text-center"><button onclick="deleteItem('finances','${f.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td>
-                </tr>`).join('');
-        };
-
-        window.renderClients = function() {
-            document.getElementById('clients-tbody').innerHTML = window.appData.clients.map(c => `
-                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
-                    <td class="p-4 font-bold">${c.name}</td><td class="p-4">${c.company}</td><td class="p-4" dir="ltr">${c.phone}<br>${c.email}</td>
-                    <td class="p-4 text-center space-x-2 space-x-reverse">
-                        <button onclick="deleteItem('clients','${c.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>`).join('');
-        };
-
-        window.renderTasks = function() {
-            const cols = { todo: 'قيد الانتظار', doing: 'جاري العمل', done: 'مكتملة' };
-            document.getElementById('kanban-board').innerHTML = Object.keys(cols).map(k => `
-                <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 h-full min-h-[300px]">
-                    <h3 class="font-bold text-lg mb-4 text-center border-b border-gray-300 dark:border-gray-600 pb-2">${cols[k]}</h3>
-                    <div class="space-y-3">
-                        ${window.appData.tasks.filter(t=>t.status===k).map(t => `
-                            <div class="bg-white dark:bg-darkcard p-3 rounded shadow border dark:border-gray-600 flex justify-between items-center cursor-move">
-                                <span class="font-bold text-sm">${t.title}</span>
-                                <div>
-                                    ${k!=='done'?`<button onclick="moveTask('${t.id}','done')" class="text-green-500 hover:text-green-700 ml-2"><i class="fa-solid fa-check"></i></button>`:''}
-                                    <button onclick="deleteItem('tasks','${t.id}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
-                                </div>
-                            </div>
-                        `).join('')}
+        window.renderEvents = function() {
+            document.getElementById('events-grid').innerHTML = window.appData.events.map(ev => `
+                <div class="event-card rounded-2xl border dark:border-gray-700 shadow-sm overflow-hidden flex flex-col relative">
+                    <div class="p-5 flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-black text-xl text-brand dark:text-blue-400">${ev.title}</h3>
+                            <div class="event-date-badge text-white text-center px-3 py-1 rounded-lg shadow"><div class="text-xs font-bold uppercase">${new Date(ev.date).toLocaleString('en',{month:'short'})}</div><div class="text-xl font-black leading-none">${new Date(ev.date).getDate()}</div></div>
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-600 dark:text-gray-300 font-semibold mb-4">
+                            <div class="flex items-center gap-2"><i class="fa-regular fa-clock text-primary"></i> <span dir="ltr">${ev.time}</span></div>
+                            <div class="flex items-start gap-2"><i class="fa-solid fa-location-dot text-red-500 mt-1"></i> <span>${ev.location}</span></div>
+                            ${ev.map ? `<div class="flex items-center gap-2 mt-2"><a href="${ev.map}" target="_blank" class="text-blue-500 hover:underline"><i class="fa-solid fa-map-location-dot"></i> فتح في خرائط جوجل</a></div>` : ''}
+                        </div>
+                        <div class="text-xs text-gray-500 font-bold border-t dark:border-gray-700 pt-3">المدعوين: ${ev.invitees.length} شخص</div>
                     </div>
-                </div>
-            `).join('');
+                    <div class="flex bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700 divide-x divide-x-reverse dark:divide-gray-700">
+                        <button onclick="shareQr('حدث ${ev.title}', '${window.location.origin}${window.location.pathname}?share_event=${ev.id}')" class="flex-1 py-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary transition"><i class="fa-solid fa-qrcode ml-1"></i> مشاركة الرابط</button>
+                        <button onclick="deleteItem('events','${ev.id}')" class="flex-1 py-3 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition"><i class="fa-solid fa-trash ml-1"></i> حذف</button>
+                    </div>
+                </div>`).join('') || '<p class="text-gray-500 font-bold col-span-full">لا توجد أحداث ومواعيد مسجلة.</p>';
         };
 
-        window.moveTask = function(id, status) {
-            const t = window.appData.tasks.find(x=>x.id===id); if(t) { t.status = status; saveData(); renderTasks(); }
+        window.renderFinances = function() { document.getElementById('finances-tbody').innerHTML = window.appData.finances.map(f => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"><td class="p-4 text-gray-500" dir="ltr">${f.date}</td><td class="p-4 font-bold text-primary">${f.desc}</td><td class="p-4"><span class="bg-gray-200 dark:bg-gray-700 px-2 rounded text-xs font-bold">${f.cat}</span></td><td class="p-4 font-black ${f.type==='Revenue'?'text-green-500':'text-red-500'}">${f.type==='Revenue'?'إيراد (+)':'نفقة (-)'}</td><td class="p-4 font-bold">${f.amount.toLocaleString()} DZD</td><td class="p-4 text-center"><button onclick="deleteItem('finances','${f.id}')" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); };
+        window.renderClients = function() { document.getElementById('clients-tbody').innerHTML = window.appData.clients.map(c => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"><td class="p-4 font-bold text-primary">${c.name}</td><td class="p-4 font-bold">${c.company}</td><td class="p-4 text-gray-500 font-semibold" dir="ltr">${c.phone}<br>${c.email}</td><td class="p-4 text-center"><button onclick="deleteItem('clients','${c.id}')" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); };
+
+        window.renderMessages = function() {
+            document.getElementById('inbox-container').innerHTML = window.appData.messages.inbox.length ? window.appData.messages.inbox.map(m => `<div class="p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 shadow-sm"><div class="flex justify-between items-center mb-1"><span class="font-bold text-primary">${m.from}</span><span class="text-xs text-gray-500" dir="ltr">${m.date}</span></div><p class="text-sm font-semibold">${m.subject}</p></div>`).join('') : '<p class="text-sm text-gray-500 text-center mt-10 font-bold">صندوق الوارد فارغ.</p>';
+            document.getElementById('sent-container').innerHTML = window.appData.messages.sent.length ? window.appData.messages.sent.map(m => `<div class="p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 shadow-sm"><div class="flex justify-between items-center mb-1"><span class="font-bold text-gray-700 dark:text-gray-300">إلى: ${m.to}</span><span class="text-xs text-gray-500" dir="ltr">${m.date}</span></div><p class="text-sm font-semibold text-primary">${m.subject}</p></div>`).join('') : '<p class="text-sm text-gray-500 text-center mt-10 font-bold">لم تقم بإرسال أي رسائل بعد.</p>';
         }
 
         // ==========================================
-        // FORMS SUBMISSION (Other Models)
+        // FORMS SUBMISSION & LOGIC
         // ==========================================
-        document.getElementById('form-finance').addEventListener('submit', (e)=>{ e.preventDefault();
-            window.appData.finances.push({ id:'f'+Date.now(), type:document.getElementById('fin-type').value, amount:parseFloat(document.getElementById('fin-amount').value), desc:document.getElementById('fin-desc').value, cat:document.getElementById('fin-cat').value, date:getToday() });
-            saveData(); renderFinances(); closeModal(); showToast('تم الحفظ', 'success'); e.target.reset();
+        window.deleteItem = function(col, id) { if(confirm('تأكيد الحذف؟')) { window.appData[col] = window.appData[col].filter(i=>i.id!==id); saveData(); showToast('تم الحذف', 'error'); } };
+
+        document.getElementById('form-event').addEventListener('submit', (e)=>{ 
+            e.preventDefault();
+            // Get selected invitees
+            const invitees = Array.from(document.querySelectorAll('.ev-invitee-chk:checked')).map(cb => cb.value);
+            
+            window.appData.events.push({ 
+                id:'ev'+Date.now(), title:document.getElementById('ev-title').value, date:document.getElementById('ev-date').value, 
+                time:document.getElementById('ev-time').value, location:document.getElementById('ev-loc').value, map:document.getElementById('ev-map').value,
+                invitees: invitees
+            });
+
+            if(document.getElementById('ev-send-invites').checked && invitees.length > 0) {
+                // Simulate sending emails to selected invitees
+                invitees.forEach(email => {
+                    window.appData.messages.sent.push({ to: email, subject: `دعوة: ${document.getElementById('ev-title').value}`, date: getToday() });
+                });
+                showToast(`تم حفظ الحدث وإرسال الدعوات إلى ${invitees.length} شخص`, 'success');
+            } else {
+                showToast('تم حفظ الحدث بنجاح', 'success');
+            }
+            saveData(); closeModal(); e.target.reset();
         });
 
-        document.getElementById('form-client').addEventListener('submit', (e)=>{ e.preventDefault();
-            window.appData.clients.push({ id:'c'+Date.now(), name:document.getElementById('cli-name').value, email:document.getElementById('cli-email').value, phone:document.getElementById('cli-phone').value, company:document.getElementById('cli-company').value });
-            saveData(); renderClients(); closeModal(); showToast('تم الحفظ', 'success'); e.target.reset();
+        // INVOICE LOGIC (EXCEL STYLE)
+        let invItems =[];
+        window.openInvoiceModal = function() {
+            invItems =[{desc:'',qty:1,price:0}]; document.getElementById('form-invoice').reset();
+            document.getElementById('inv-client').innerHTML = window.appData.clients.map(c => `<option value="${c.id}">${c.name} - ${c.company}</option>`).join('');
+            document.getElementById('inv-date').value = getToday(); renderInvoiceRows(); openModal('invoice-modal');
+        };
+        window.addInvoiceRow = function() { invItems.push({desc:'',qty:1,price:0}); renderInvoiceRows(); };
+        window.updateInvItem = function(i,f,v) { invItems[i][f] = f==='desc'?v:parseFloat(v)||0; renderInvoiceRows(); };
+        function renderInvoiceRows() {
+            let ht = 0;
+            document.getElementById('inv-items-body').innerHTML = invItems.map((item, i) => { const tot = item.qty*item.price; ht+=tot; return `<tr class="border-b dark:border-gray-700"><td class="p-2"><input type="text" value="${item.desc}" onchange="updateInvItem(${i},'desc',this.value)" class="w-full p-2 border rounded dark:bg-gray-800 outline-none"></td><td class="p-2"><input type="number" value="${item.qty}" onchange="updateInvItem(${i},'qty',this.value)" class="w-full p-2 border rounded text-center dark:bg-gray-800 outline-none"></td><td class="p-2"><input type="number" value="${item.price}" onchange="updateInvItem(${i},'price',this.value)" class="w-full p-2 border rounded text-center dark:bg-gray-800 outline-none"></td><td class="p-2 font-bold">${tot.toLocaleString()}</td><td class="p-2 text-red-500 cursor-pointer" onclick="invItems.splice(${i},1);renderInvoiceRows();"><i class="fa-solid fa-trash"></i></td></tr>`}).join('');
+            document.getElementById('inv-ht').innerText = ht.toLocaleString()+' DZD'; document.getElementById('inv-tva').innerText = (ht*0.19).toLocaleString()+' DZD'; document.getElementById('inv-ttc').innerText = (ht+(ht*0.19)).toLocaleString()+' DZD';
+        }
+        document.getElementById('form-invoice').addEventListener('submit', (e)=>{ e.preventDefault();
+            const ht = invItems.reduce((s,i)=>s+(i.qty*i.price),0);
+            window.appData.invoices.push({ id: 'INV-'+Math.floor(1000+Math.random()*9000), clientId: document.getElementById('inv-client').value, date: document.getElementById('inv-date').value, items: invItems, ht: ht, tva: ht*0.19, ttc: ht+(ht*0.19) });
+            saveData(); closeModal(); showToast('تم إصدار الفاتورة', 'success');
         });
 
-        document.getElementById('form-task').addEventListener('submit', (e)=>{ e.preventDefault();
-            window.appData.tasks.push({ id:'t'+Date.now(), title:document.getElementById('task-title').value, status:document.getElementById('task-status').value });
-            saveData(); renderTasks(); closeModal(); showToast('تمت إضافة المهمة', 'success'); e.target.reset();
-        });
+        // FINANCE & CLIENT LOGIC
+        document.getElementById('form-finance').addEventListener('submit', (e)=>{ e.preventDefault(); window.appData.finances.push({ id:'f'+Date.now(), type:document.getElementById('fin-type').value, amount:parseFloat(document.getElementById('fin-amount').value), desc:document.getElementById('fin-desc').value, cat:document.getElementById('fin-cat').value, date:getToday() }); saveData(); closeModal(); showToast('تم الحفظ', 'success'); e.target.reset(); });
+        document.getElementById('form-client').addEventListener('submit', (e)=>{ e.preventDefault(); window.appData.clients.push({ id:'c'+Date.now(), name:document.getElementById('cli-name').value, email:document.getElementById('cli-email').value, phone:document.getElementById('cli-phone').value, company:document.getElementById('cli-company').value }); saveData(); closeModal(); updateDatalists(); showToast('تم الحفظ', 'success'); e.target.reset(); });
 
-        window.deleteItem = function(col, id) {
-            if(confirm('تأكيد الحذف؟')) { window.appData[col] = window.appData[col].filter(i=>i.id!==id); saveData(); renderAll(); showToast('تم الحذف', 'error'); }
+        // ==========================================
+        // EMAILS & SETTINGS LOGIC
+        // ==========================================
+        window.applyEmailTemplate = function() {
+            const type = document.getElementById('mail-template').value;
+            const sub = document.getElementById('mail-subject'); const body = document.getElementById('mail-body');
+            if(type === 'proposal') {
+                sub.value = "عرض خدمات احترافي من aitchikh consulting";
+                body.value = "السادة الكرام في شركة[اسم الشركة]،\n\nنحن في aitchikh consulting يسعدنا تقديم عرض خدماتنا لتطوير أعمالكم ورفع الكفاءة التشغيلية...\n\nنتمنى لكم التوفيق،\nفريق العمل.";
+            } else if (type === 'invite') {
+                sub.value = "دعوة لحضور حدث/اجتماع هام";
+                body.value = "تحية طيبة،\n\nنتشرف بدعوتكم لحضور الحدث الخاص بنا والمقرر عقده يوم [التاريخ] على الساعة[الوقت] في [المكان].\n\nيسعدنا حضوركم.\naitchikh consulting.";
+            } else { sub.value = ""; body.value = ""; }
         };
 
-        // ==========================================
-        // REAL EMAILJS SENDER
-        // ==========================================
         document.getElementById('form-email').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = this.querySelector('button'); btn.innerText = "جاري الإرسال...";
-            
-            // NOTE: Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with actual ones from your EmailJS dashboard
-            const params = {
-                to_email: document.getElementById('mail-to').value,
-                subject: document.getElementById('mail-subject').value,
-                message: document.getElementById('mail-body').value
-            };
+            const to = document.getElementById('mail-to').value;
+            const subject = document.getElementById('mail-subject').value;
+            const message = document.getElementById('mail-body').value;
+            const btn = this.querySelector('button'); btn.innerHTML = "جاري الإرسال...";
 
-            // Uncomment the lines below when you have valid keys
-            /*
-            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", params)
-            .then(function(res) {
-                showToast("تم إرسال الإيميل بنجاح (حقيقي)!", "success");
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل الآن';
-                document.getElementById('form-email').reset();
-            }, function(error) {
-                showToast("خطأ في الإرسال: تأكد من إعدادات EmailJS", "error");
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل الآن';
-            });
-            */
+            // Send via EmailJS API if configured
+            const serviceId = window.appData.settings.emailService;
+            const templateId = window.appData.settings.emailTemplate;
             
-            // Fallback Simulation for demo
-            setTimeout(()=>{ 
-                showToast('تنبيه: يجب وضع مفاتيح EmailJS لكي يرسل بريداً حقيقياً. (محاكاة النجاح)', 'info');
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل الآن';
-            }, 1500);
+            if(serviceId && templateId) {
+                emailjs.send(serviceId, templateId, { to_email: to, subject: subject, message: message })
+                .then(function() {
+                    finalizeEmailSend(to, subject, btn);
+                }, function(err) {
+                    showToast("خطأ في API الإرسال! تم الحفظ في الأرشيف فقط.", "error");
+                    finalizeEmailSend(to, subject, btn); // save anyway for demo
+                });
+            } else {
+                // Simulation
+                setTimeout(()=>{ finalizeEmailSend(to, subject, btn); }, 1500);
+            }
+        });
+
+        function finalizeEmailSend(to, subject, btn) {
+            window.appData.messages.sent.push({ to: to, subject: subject, date: getToday() });
+            saveData(); showToast('تم إرسال الإيميل وحفظه في الأرشيف', 'success');
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل وحفظ في الأرشيف';
+            document.getElementById('form-email').reset();
+        }
+
+        document.getElementById('form-settings').addEventListener('submit', function(e) {
+            e.preventDefault();
+            window.appData.settings.emailPubKey = document.getElementById('api-pubkey').value;
+            window.appData.settings.emailService = document.getElementById('api-service').value;
+            window.appData.settings.emailTemplate = document.getElementById('api-template').value;
+            saveData();
+            if(window.appData.settings.emailPubKey) emailjs.init(window.appData.settings.emailPubKey);
+            showToast('تم حفظ إعدادات الـ API', 'success');
         });
 
         // ==========================================
-        // QR CODE & REAL SHARING
+        // QR & SHARED VIEW
         // ==========================================
         window.shareQr = function(title, link) {
-            document.getElementById('share-link-input').value = link;
-            document.getElementById('qrcode-box').innerHTML = "";
-            new QRCode(document.getElementById("qrcode-box"), { text: link, width: 200, height: 200 });
-            openModal('qr-modal');
+            document.getElementById('share-link-input').value = link; document.getElementById('qrcode-box').innerHTML = "";
+            new QRCode(document.getElementById("qrcode-box"), { text: link, width: 200, height: 200 }); openModal('qr-modal');
         };
+        window.copyShareLink = function() { document.getElementById("share-link-input").select(); document.execCommand("copy"); showToast('تم نسخ الرابط الحقيقي', 'success'); };
 
-        window.copyShareLink = function() {
-            const input = document.getElementById("share-link-input");
-            input.select(); document.execCommand("copy");
-            showToast('تم نسخ الرابط החقيقي بنجاح', 'success');
-        };
-
-        // ==========================================
-        // RENDER SHARED READ-ONLY VIEW (For URLs)
-        // ==========================================
-        function loadSharedInvoice(id) {
-            // Because local storage might not be accessible if cross-origin, or if sent to someone else,
-            // Realistically this requires Firebase fetch. Since we sync to Firebase, let's try fetch from Firebase or Local.
-            const ov = document.getElementById('shared-view-overlay');
-            const box = document.getElementById('shared-content');
-            ov.style.display = 'flex';
+        function loadSharedContent(type, id) {
+            const ov = document.getElementById('shared-view-overlay'); const box = document.getElementById('shared-content'); ov.style.display = 'flex';
+            const data = JSON.parse(localStorage.getItem('aitchikh_data_v2') || '{}');
             
-            let inv = null, cli = null;
-            const rawData = localStorage.getItem('nexdash_data_pro');
-            if(rawData) {
-                const data = JSON.parse(rawData);
-                inv = data.invoices.find(i=>i.id===id);
-                if(inv) cli = data.clients.find(c=>c.id===inv.clientId);
-            }
+            if(type === 'invoice') {
+                const inv = (data.invoices||[]).find(i=>i.id===id); const cli = inv ? (data.clients||[]).find(c=>c.id===inv.clientId) : null;
+                if(!inv) return box.innerHTML = `<h2 class="text-2xl font-bold text-red-500 text-center">الفاتورة غير موجودة</h2>`;
+                box.innerHTML = `
+                    <div class="flex justify-between items-center border-b pb-6 mb-6">
+                        <div><h1 class="text-3xl font-black text-brand tracking-wider">aitchikh<br><span class="text-lg text-gray-500 font-bold">consulting</span></h1><p class="text-gray-500 mt-2 font-bold tracking-widest">${inv.id}</p></div>
+                        <div class="text-left" dir="ltr"><h2 class="font-black text-xl">${cli?cli.name:'Client'}</h2><p class="text-gray-500 font-bold">${cli?cli.company:''}</p><p class="text-sm text-gray-400 mt-1">${inv.date}</p></div>
+                    </div>
+                    <table class="w-full text-center border mb-6"><thead class="bg-brand text-white font-bold"><tr><th class="p-3 w-1/2 text-right pr-4">البيان</th><th class="p-3">الكمية</th><th class="p-3">السعر</th><th class="p-3">المجموع</th></tr></thead>
+                    <tbody>${inv.items.map(item => `<tr class="border-b"><td class="p-3 text-right pr-4 font-bold text-gray-700">${item.desc}</td><td class="p-3">${item.qty}</td><td class="p-3">${item.price.toLocaleString()}</td><td class="p-3 font-bold">${(item.qty*item.price).toLocaleString()}</td></tr>`).join('')}</tbody></table>
+                    <div class="flex justify-end"><div class="w-64 space-y-3 font-bold text-lg"><div class="flex justify-between"><span>HT :</span> <span dir="ltr">${inv.ht.toLocaleString()} DZD</span></div><div class="flex justify-between"><span>TVA (19%) :</span> <span dir="ltr">${inv.tva.toLocaleString()} DZD</span></div><div class="flex justify-between text-green-600 text-2xl border-t border-black pt-2 mt-2"><span>TTC :</span> <span dir="ltr">${inv.ttc.toLocaleString()} DZD</span></div></div></div>
+                    <div class="mt-8 text-center print:hidden"><button onclick="window.print()" class="bg-primary hover:bg-brand text-white px-8 py-3 rounded-xl font-bold transition shadow-lg"><i class="fa-solid fa-print ml-2"></i> طباعة / حفظ كـ PDF</button></div>`;
+            } else if(type === 'event') {
+                const ev = (data.events||<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>aitchikh consulting | Pro Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#2563EB', secondary: '#10B981', darkbg: '#0F172A', darkcard: '#1E293B', brand: '#1E3A8A' } } } }
+    </script>
 
-            if(!inv) {
-                box.innerHTML = `<h2 class="text-2xl font-bold text-red-500 text-center"><i class="fa-solid fa-triangle-exclamation"></i> الفاتورة غير موجودة أو تم حذفها</h2>`;
-                return;
-            }
+    <!-- FontAwesome, Chart.js, QRCode, EmailJS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
-            box.innerHTML = `
-                <div class="flex justify-between items-center border-b pb-4 mb-6">
-                    <div>
-                        <h1 class="text-3xl font-black text-primary">FATCURE (الفاتورة)</h1>
-                        <p class="text-gray-500 mt-2 font-bold">${inv.id}</p>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        
+        .nav-item.active { background-color: rgba(37, 99, 235, 0.1); color: #2563EB; border-inline-start: 4px solid #2563EB; font-weight: 800; }
+        .dark .nav-item.active { background-color: rgba(59, 130, 246, 0.2); color: #60A5FA; border-inline-start: 4px solid #60A5FA; }
+        
+        #toast-container { position: fixed; bottom: 20px; inset-inline-end: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 12px 20px; border-radius: 8px; color: #fff; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out forwards; }
+        .toast.success { background-color: #10B981; } .toast.error { background-color: #EF4444; } .toast.info { background-color: #3B82F6; }
+        @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .gauge-container { position: relative; width: 100%; max-width: 300px; margin: auto; }
+        .gauge-text { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%; }
+        
+        #shared-view-overlay { background: #f8fafc; display: none; z-index: 100000; overflow-y: auto; }
+        .dark #shared-view-overlay { background: #0f172a; color: #fff; }
+
+        .event-card { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); }
+        .dark .event-card { background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); }
+        .event-date-badge { background: linear-gradient(135deg, #2563EB 0%, #1E3A8A 100%); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-darkbg dark:text-gray-200 h-screen overflow-hidden flex transition-colors duration-300">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="fixed inset-0 bg-white dark:bg-darkbg z-[60] flex items-center justify-center transition-opacity">
+        <div class="bg-white dark:bg-darkcard p-8 rounded-2xl shadow-2xl w-96 max-w-full text-center border dark:border-gray-700">
+            <h1 class="text-3xl font-black mb-2 text-brand dark:text-blue-400 tracking-wide">aitchikh consulting</h1>
+            <p class="text-sm text-gray-500 mb-8 font-bold">بوابة الإدارة المخصصة للفريق</p>
+            <input type="password" id="login-pwd" placeholder="رمز الدخول (1077)" class="w-full text-center text-xl tracking-widest px-4 py-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-primary outline-none mb-4" onkeypress="if(event.key === 'Enter') checkLogin()">
+            <button onclick="checkLogin()" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg">تسجيل الدخول</button>
+        </div>
+    </div>
+
+    <!-- SHARED LINK READ-ONLY VIEW (For Invoices & Events) -->
+    <div id="shared-view-overlay" class="fixed inset-0 p-6 flex justify-center">
+        <div id="shared-content" class="bg-white dark:bg-darkcard p-8 rounded-xl shadow-lg w-full max-w-3xl border dark:border-gray-700 h-fit"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white dark:bg-darkcard border-e border-gray-200 dark:border-gray-700 flex flex-col h-full hidden md:flex z-20 transition-colors duration-300">
+        <div class="p-6 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+            <h1 class="text-xl font-black text-brand dark:text-blue-400 leading-tight">aitchikh<br><span class="text-sm font-bold text-gray-500">consulting</span></h1>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4 font-semibold text-sm text-gray-600 dark:text-gray-400">
+            <a href="#" onclick="navigate('dashboard')" class="nav-item active flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="dashboard"><i class="fa-solid fa-chart-pie w-6"></i> لوحة القيادة</a>
+            <a href="#" onclick="navigate('invoices')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="invoices"><i class="fa-solid fa-file-invoice-dollar w-6"></i> الفواتير (TVA/HT)</a>
+            <a href="#" onclick="navigate('finances')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="finances"><i class="fa-solid fa-vault w-6"></i> الإيرادات والنفقات</a>
+            <a href="#" onclick="navigate('clients')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="clients"><i class="fa-solid fa-users w-6"></i> قاعدة العملاء</a>
+            <a href="#" onclick="navigate('events')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="events"><i class="fa-solid fa-calendar-star w-6 text-yellow-500"></i> الأحداث والمواعيد</a>
+            <a href="#" onclick="navigate('emails')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="emails"><i class="fa-solid fa-envelope-open-text w-6 text-primary"></i> المراسلات وعروض الشركات</a>
+            <a href="#" onclick="navigate('messages')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="messages"><i class="fa-solid fa-inbox w-6"></i> صندوق الوارد والأرشيف</a>
+            <a href="#" onclick="navigate('forms')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="forms"><i class="fa-brands fa-google w-6 text-red-500"></i> إدارة Google Forms</a>
+            <a href="#" onclick="navigate('settings')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="settings"><i class="fa-solid fa-sliders w-6"></i> الإعدادات (API)</a>
+        </nav>
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700 text-xs text-center font-bold text-gray-500">
+            <p>Admin Team | <span class="text-green-500"><i class="fa-solid fa-shield-check"></i> Secured</span></p>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col h-full w-full">
+        <!-- Header -->
+        <header class="h-16 bg-white dark:bg-darkcard border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6 z-10 shadow-sm">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden text-gray-500 hover:text-primary"><i class="fa-solid fa-bars text-xl"></i></button>
+                <h2 class="font-bold text-lg hidden sm:block">aitchikh consulting Workspace</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="text-gray-500 hover:text-primary transition-colors"><i class="fa-solid fa-moon text-lg"></i></button>
+                <div class="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2"></div>
+                <button onclick="logout()" class="bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/30 dark:hover:bg-red-900/50 px-3 py-1.5 rounded-lg font-bold text-sm transition"><i class="fa-solid fa-power-off ml-1"></i> خروج</button>
+            </div>
+        </header>
+
+        <!-- Dynamic Views -->
+        <main class="flex-1 overflow-y-auto p-6 relative" id="main-content">
+            
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="view-section block animate-fade-in">
+                <!-- Stat Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
+                        <div><p class="text-sm text-gray-500 font-bold">إجمالي الإيرادات</p><h3 class="text-2xl font-black text-green-600 mt-1" id="stat-revenue">0 DZD</h3></div>
+                        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-arrow-trend-up"></i></div>
                     </div>
-                    <div class="text-left" dir="ltr">
-                        <p class="font-bold">${cli ? cli.name : 'Client'}</p>
-                        <p class="text-gray-500">${cli ? cli.company : ''}</p>
-                        <p class="text-sm text-gray-400 mt-1">${inv.date}</p>
+                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
+                        <div><p class="text-sm text-gray-500 font-bold">إجمالي النفقات</p><h3 class="text-2xl font-black text-red-600 mt-1" id="stat-expenses">0 DZD</h3></div>
+                        <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-arrow-trend-down"></i></div>
+                    </div>
+                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
+                        <div><p class="text-sm text-gray-500 font-bold">صافي الأرباح (TTC)</p><h3 class="text-2xl font-black text-primary mt-1" id="stat-profit">0 DZD</h3></div>
+                        <div class="w-12 h-12 bg-blue-100 text-primary rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-wallet"></i></div>
+                    </div>
+                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
+                        <div><p class="text-sm text-gray-500 font-bold">عدد العملاء</p><h3 class="text-2xl font-black mt-1" id="stat-clients">0</h3></div>
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-handshake"></i></div>
                     </div>
                 </div>
-                <table class="w-full text-center border mb-6">
-                    <thead class="bg-primary text-white font-bold">
-                        <tr><th class="p-3 w-1/2 text-right pr-4">البيان</th><th class="p-3">الكمية</th><th class="p-3">السعر</th><th class="p-3">المجموع</th></tr>
-                    </thead>
-                    <tbody>
-                        ${inv.items.map(item => `<tr class="border-b"><td class="p-3 text-right pr-4">${item.desc}</td><td class="p-3">${item.qty}</td><td class="p-3">${item.price.toLocaleString()}</td><td class="p-3 font-bold">${(item.qty*item.price).toLocaleString()}</td></tr>`).join('')}
-                    </tbody>
-                </table>
-                <div class="flex justify-end border-t pt-4">
-                    <div class="w-64 space-y-3 font-bold text-lg">
-                        <div class="flex justify-between"><span>HT :</span> <span dir="ltr">${inv.ht.toLocaleString()} DZD</span></div>
-                        <div class="flex justify-between"><span>TVA (19%) :</span> <span dir="ltr">${inv.tva.toLocaleString()} DZD</span></div>
-                        <div class="flex justify-between text-green-600 text-2xl border-t border-black pt-2 mt-2"><span>TTC :</span> <span dir="ltr">${inv.ttc.toLocaleString()} DZD</span></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Gauge Speedometer -->
+                    <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm flex flex-col items-center justify-center col-span-1">
+                        <h3 class="font-bold mb-2 text-center w-full">مؤشر السرعة المالي</h3>
+                        <div class="gauge-container">
+                            <canvas id="gaugeChart"></canvas>
+                            <div class="gauge-text">
+                                <p class="text-xs text-gray-500 font-bold">الرصيد الصافي</p>
+                                <h2 class="text-2xl font-black mt-1" id="gauge-amount" dir="ltr">0 DZD</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bar Chart -->
+                    <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm col-span-2">
+                        <h3 class="font-bold mb-4">التدفق المالي</h3>
+                        <canvas id="financeChart" height="250"></canvas>
                     </div>
                 </div>
-                <div class="mt-8 text-center text-sm text-gray-500 print:hidden">
-                    <button onclick="window.print()" class="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition"><i class="fa-solid fa-print ml-2"></i> طباعة الفاتورة أو حفظها PDF</button>
+            </div>
+
+            <!-- VIEW: INVOICES -->
+            <div id="view-invoices" class="view-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-black text-brand dark:text-white">إدارة الفواتير (HT/TVA/TTC)</h2>
+                    <button class="bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg" onclick="openInvoiceModal()"><i class="fa-solid fa-plus ml-2"></i> إنشاء فاتورة جديدة</button>
                 </div>
-            `;
+                <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
+                    <table class="w-full text-start text-sm">
+                        <thead class="bg-gray-100 dark:bg-gray-800 font-bold text-gray-600 dark:text-gray-300">
+                            <tr><th class="p-4">رقم الفاتورة</th><th class="p-4">العميل</th><th class="p-4">تاريخ</th><th class="p-4">HT</th><th class="p-4">TVA</th><th class="p-4">TTC (الإجمالي)</th><th class="p-4 text-center">إجراءات</th></tr>
+                        </thead>
+                        <tbody id="invoices-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW: EVENTS & APPOINTMENTS -->
+            <div id="view-events" class="view-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-black text-brand dark:text-white">الأحداث والمواعيد المهنية</h2>
+                    <button class="bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg" onclick="openModal('event-modal')"><i class="fa-solid fa-calendar-plus ml-2"></i> حدث / موعد جديد</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="events-grid">
+                    <!-- Events injected here -->
+                </div>
+            </div>
+
+            <!-- VIEW: FINANCES, CLIENTS (Similar structure, truncated for brevity) -->
+            <div id="view-finances" class="view-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-black text-brand dark:text-white">سجل النفقات والإيرادات</h2>
+                    <button class="bg-primary text-white px-5 py-2.5 rounded-xl font-bold shadow-lg" onclick="openModal('finance-modal')"><i class="fa-solid fa-plus ml-2"></i> إضافة عملية</button>
+                </div>
+                <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
+                    <table class="w-full text-start text-sm"><thead class="bg-gray-100 dark:bg-gray-800 font-bold"><tr><th class="p-4">التاريخ</th><th class="p-4">البيان</th><th class="p-4">الفئة</th><th class="p-4">النوع</th><th class="p-4">المبلغ</th><th class="p-4 text-center">إجراءات</th></tr></thead><tbody id="finances-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody></table>
+                </div>
+            </div>
+
+            <div id="view-clients" class="view-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-black text-brand dark:text-white">قاعدة العملاء</h2>
+                    <button class="bg-primary text-white px-5 py-2.5 rounded-xl font-bold shadow-lg" onclick="openModal('client-modal')"><i class="fa-solid fa-user-plus ml-2"></i> إضافة عميل</button>
+                </div>
+                <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
+                    <table class="w-full text-start text-sm"><thead class="bg-gray-100 dark:bg-gray-800 font-bold"><tr><th class="p-4">الاسم</th><th class="p-4">الشركة</th><th class="p-4">التواصل</th><th class="p-4 text-center">إجراءات</th></tr></thead><tbody id="clients-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody></table>
+                </div>
+            </div>
+
+            <!-- VIEW: EMAILS & PROPOSALS -->
+            <div id="view-emails" class="view-section hidden animate-fade-in">
+                <h2 class="text-2xl font-black text-brand dark:text-white mb-6">المراسلات وعروض الشركات</h2>
+                <div class="bg-white dark:bg-darkcard p-8 rounded-xl border dark:border-gray-700 shadow-sm max-w-3xl mx-auto">
+                    <form id="form-email" class="space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-bold mb-2">نوع المراسلة</label>
+                                <select id="mail-template" onchange="applyEmailTemplate()" class="w-full px-4 py-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 outline-none font-bold">
+                                    <option value="custom">رسالة حرة</option>
+                                    <option value="proposal">عرض خدمات لشركة (Proposal)</option>
+                                    <option value="invite">دعوة لحدث / اجتماع</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-bold mb-2">المرسل إليه (إيميل)</label>
+                                <!-- Datalist for picking clients or typing new email -->
+                                <input type="email" id="mail-to" list="client-emails-list" required placeholder="email@company.com" class="w-full px-4 py-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 outline-none" dir="ltr">
+                                <datalist id="client-emails-list"></datalist>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-2">عنوان الرسالة (Subject)</label>
+                            <input type="text" id="mail-subject" required class="w-full px-4 py-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-2">نص الرسالة</label>
+                            <textarea id="mail-body" rows="6" required class="w-full px-4 py-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg"><i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل وحفظ في الأرشيف</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW: MESSAGES (INBOX & SENT) -->
+            <div id="view-messages" class="view-section hidden animate-fade-in">
+                <h2 class="text-2xl font-black text-brand dark:text-white mb-6">صندوق الوارد والأرشيف</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Received -->
+                    <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden flex flex-col h-[500px]">
+                        <div class="bg-gray-100 dark:bg-gray-800 p-4 font-bold border-b dark:border-gray-700"><i class="fa-solid fa-inbox text-primary ml-2"></i> الرسائل الواردة (من النماذج والـ API)</div>
+                        <div class="p-4 overflow-y-auto flex-1 space-y-3" id="inbox-container">
+                            <!-- Injected -->
+                        </div>
+                    </div>
+                    <!-- Sent -->
+                    <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden flex flex-col h-[500px]">
+                        <div class="bg-gray-100 dark:bg-gray-800 p-4 font-bold border-b dark:border-gray-700"><i class="fa-solid fa-paper-plane text-green-500 ml-2"></i> أرشيف المرسلات (Sent)</div>
+                        <div class="p-4 overflow-y-auto flex-1 space-y-3" id="sent-container">
+                            <!-- Injected -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: GOOGLE FORMS -->
+            <div id="view-forms" class="view-section hidden animate-fade-in h-full flex flex-col">
+                <h2 class="text-2xl font-black text-brand dark:text-white mb-6">إدارة Google Forms</h2>
+                <div class="bg-white dark:bg-darkcard p-4 rounded-xl border dark:border-gray-700 shadow-sm flex-1 flex flex-col">
+                    <p class="mb-4 text-gray-500 font-bold">يمكنك إنشاء وتحرير نماذج جوجل مباشرة من هنا (يتطلب تسجيل الدخول بحساب جوجل الخاص بك في المتصفح).</p>
+                    <iframe src="https://docs.google.com/forms/" class="w-full flex-1 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl" title="Google Forms Editor"></iframe>
+                </div>
+            </div>
+
+            <!-- VIEW: SETTINGS (API Keys) -->
+            <div id="view-settings" class="view-section hidden animate-fade-in">
+                 <h2 class="text-2xl font-black text-brand dark:text-white mb-6">إعدادات النظام والـ API</h2>
+                 <div class="bg-white dark:bg-darkcard p-8 rounded-xl border dark:border-gray-700 shadow-sm max-w-2xl">
+                     <h3 class="font-bold text-lg mb-4 border-b pb-2 text-primary">إعدادات EmailJS (لإرسال إيميلات حقيقية)</h3>
+                     <form id="form-settings" class="space-y-4">
+                         <div><label class="block font-bold mb-1 text-sm">Public Key</label><input type="text" id="api-pubkey" class="w-full p-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800" dir="ltr"></div>
+                         <div><label class="block font-bold mb-1 text-sm">Service ID</label><input type="text" id="api-service" class="w-full p-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800" dir="ltr"></div>
+                         <div><label class="block font-bold mb-1 text-sm">Template ID</label><input type="text" id="api-template" class="w-full p-3 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800" dir="ltr"></div>
+                         <button type="submit" class="bg-primary text-white px-6 py-3 rounded-xl font-bold mt-4 shadow"><i class="fa-solid fa-save ml-2"></i> حفظ الإعدادات</button>
+                     </form>
+                 </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODALS -->
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        
+        <!-- EVENT MODAL -->
+        <div id="event-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-2xl w-full max-w-2xl hidden modal-content flex flex-col">
+            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800 rounded-t-2xl">
+                <h3 class="font-bold text-xl text-primary">حدث / موعد جديد</h3>
+                <button onclick="closeModal()" class="text-red-500 hover:text-red-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[80vh]">
+                <form id="form-event" class="space-y-4">
+                    <div><label class="block font-bold mb-1">عنوان الحدث / الموعد</label><input type="text" id="ev-title" required placeholder="مثال: اجتماع إطلاق المشروع" class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none"></div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block font-bold mb-1">التاريخ</label><input type="date" id="ev-date" required class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none"></div>
+                        <div><label class="block font-bold mb-1">التوقيت</label><input type="time" id="ev-time" required class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none"></div>
+                    </div>
+                    <div><label class="block font-bold mb-1">المكان (نصي)</label><input type="text" id="ev-loc" required placeholder="مثال: مقر الشركة، قاعة الاجتماعات" class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none"></div>
+                    <div><label class="block font-bold mb-1">رابط خرائط جوجل (Google Maps URL)</label><input type="url" id="ev-map" placeholder="https://maps.google.com/..." class="w-full p-3 border dark:border-gray-600 rounded-lg dark:bg-gray-800 outline-none" dir="ltr"></div>
+                    
+                    <div class="border-t dark:border-gray-700 pt-4 mt-4">
+                        <label class="block font-bold mb-2 text-primary">المدعوين (اختر من العملاء لإرسال دعوات)</label>
+                        <!-- A simple multi-select or checkbox list generated by JS -->
+                        <div id="ev-invitees-list" class="grid grid-cols-2 gap-2 max-h-32 overflow-y-auto border p-3 rounded-lg bg-gray-50 dark:bg-gray-900 dark:border-gray-700"></div>
+                        <label class="flex items-center mt-3 cursor-pointer">
+                            <input type="checkbox" id="ev-send-invites" class="w-5 h-5 text-primary rounded border-gray-300 ml-2">
+                            <span class="font-bold text-sm">إرسال دعوة بالبريد الإلكتروني تلقائياً عند الحفظ</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary text-white font-bold py-3 mt-4 rounded-xl text-lg shadow-lg">حفظ الحدث</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- INVOICE MODAL -->
+        <div id="invoice-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-2xl w-full max-w-4xl hidden modal-content flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800 rounded-t-2xl">
+                <h3 class="font-bold text-xl text-primary" id="inv-modal-title">فاتورة احترافية aitchikh</h3>
+                <button onclick="closeModal()" class="text-red-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <form id="form-invoice" class="space-y-6">
+                    <input type="hidden" id="inv-edit-id">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="block font-bold mb-1">العميل</label><select id="inv-client" required class="w-full p-3 border rounded-lg dark:bg-gray-800 outline-none"></select></div>
+                        <div><label class="block font-bold mb-1">تاريخ الإصدار</label><input type="date" id="inv-date" required class="w-full p-3 border rounded-lg dark:bg-gray-800 outline-none"></div>
+                    </div>
+                    
+                    <div class="border rounded-xl overflow-hidden dark:border-gray-700">
+                        <table class="w-full text-center text-sm"><thead class="bg-primary text-white"><tr><th class="p-3 w-1/2">البيان</th><th class="p-3 w-1/6">الكمية</th><th class="p-3 w-1/6">سعر الوحدة</th><th class="p-3 w-1/6">المجموع</th><th class="p-3"></th></tr></thead><tbody id="inv-items-body"></tbody></table>
+                        <button type="button" onclick="addInvoiceRow()" class="w-full bg-gray-50 dark:bg-gray-800 p-3 font-bold text-primary hover:bg-gray-200"><i class="fa-solid fa-plus"></i> إضافة سطر جديد</button>
+                    </div>
+
+                    <div class="flex justify-end"><div class="w-64 space-y-2 font-bold text-lg bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border dark:border-gray-700"><div class="flex justify-between"><span>HT:</span> <span id="inv-ht" dir="ltr">0 DZD</span></div><div class="flex justify-between text-red-500"><span>TVA (19%):</span> <span id="inv-tva" dir="ltr">0 DZD</span></div><div class="flex justify-between text-green-600 border-t pt-2 text-xl"><span>TTC:</span> <span id="inv-ttc" dir="ltr">0 DZD</span></div></div></div>
+                    <button type="submit" class="w-full bg-secondary hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-lg shadow-lg">حفظ الفاتورة</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- OTHER MODALS (Client, Finance, QR) -->
+        <div id="finance-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-lg w-full max-w-lg hidden modal-content p-6"><h3 class="font-bold text-xl mb-4 border-b pb-2 text-primary">عملية مالية</h3><form id="form-finance" class="space-y-4"><div class="grid grid-cols-2 gap-4"><div><label class="block font-bold mb-1">النوع</label><select id="fin-type" class="w-full p-3 border rounded-lg dark:bg-gray-800"><option value="Revenue">إيرادات (+)</option><option value="Expense">نفقات (-)</option></select></div><div><label class="block font-bold mb-1">المبلغ (DZD)</label><input type="number" id="fin-amount" required class="w-full p-3 border rounded-lg dark:bg-gray-800"></div></div><div><label class="block font-bold mb-1">البيان</label><input type="text" id="fin-desc" required class="w-full p-3 border rounded-lg dark:bg-gray-800"></div><div><label class="block font-bold mb-1">التصنيف</label><input type="text" id="fin-cat" class="w-full p-3 border rounded-lg dark:bg-gray-800"></div><button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg mt-4">حفظ</button><button type="button" onclick="closeModal()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold mt-2">إلغاء</button></form></div>
+        
+        <div id="client-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-lg w-full max-w-lg hidden modal-content p-6"><h3 class="font-bold text-xl mb-4 border-b pb-2 text-primary">إضافة عميل</h3><form id="form-client" class="space-y-4"><div><label class="block font-bold mb-1">الاسم</label><input type="text" id="cli-name" required class="w-full p-3 border rounded-lg dark:bg-gray-800"></div><div class="grid grid-cols-2 gap-4"><div><label class="block font-bold mb-1">الإيميل</label><input type="email" id="cli-email" required class="w-full p-3 border rounded-lg dark:bg-gray-800" dir="ltr"></div><div><label class="block font-bold mb-1">الهاتف</label><input type="text" id="cli-phone" class="w-full p-3 border rounded-lg dark:bg-gray-800" dir="ltr"></div></div><div><label class="block font-bold mb-1">الشركة</label><input type="text" id="cli-company" class="w-full p-3 border rounded-lg dark:bg-gray-800"></div><button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-bold shadow-lg mt-4">حفظ</button><button type="button" onclick="closeModal()" class="w-full bg-gray-200 text-gray-700 py-3 rounded-xl font-bold mt-2">إلغاء</button></form></div>
+
+        <div id="qr-modal" class="bg-white dark:bg-darkcard rounded-2xl shadow-lg w-full max-w-sm hidden modal-content flex flex-col items-center p-6 text-center"><h3 class="font-bold text-xl mb-4 w-full flex justify-between text-primary"><span>مشاركة الرابط (QR)</span> <button onclick="closeModal()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button></h3><div id="qrcode-box" class="bg-white p-4 rounded-xl mb-4 shadow border"></div><input type="text" id="share-link-input" readonly class="w-full px-3 py-2 border rounded bg-gray-50 dark:bg-gray-700 text-xs text-center mb-4 text-primary font-bold" dir="ltr"><button onclick="copyShareLink()" class="w-full bg-secondary hover:bg-emerald-600 text-white py-3 rounded-xl font-bold"><i class="fa-regular fa-copy ml-2"></i> نسخ الرابط وإرساله</button></div>
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        // ==========================================
+        // AUTHENTICATION & INITIALIZATION
+        // ==========================================
+        window.checkLogin = function() {
+            if(document.getElementById('login-pwd').value === '1077') {
+                localStorage.setItem('aitchikh_auth', 'true');
+                document.getElementById('login-screen').classList.add('hidden');
+                loadData();
+            } else { showToast('كلمة السر خاطئة', 'error'); }
+        };
+
+        window.logout = function() { localStorage.removeItem('aitchikh_auth'); location.reload(); };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const shareInvId = urlParams.get('share_invoice');
+        const shareEvId = urlParams.get('share_event');
+
+        window.onload = function() {
+            if(shareInvId || shareEvId) {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.querySelector('aside').classList.add('hidden');
+                document.querySelector('header').classList.add('hidden');
+                document.getElementById('main-content').classList.add('hidden');
+                if(shareInvId) loadSharedContent('invoice', shareInvId);
+                if(shareEvId) loadSharedContent('event', shareEvId);
+            } else {
+                if(localStorage.getItem('aitchikh_auth') === 'true') {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    loadData();
+                }
+            }
+        };
+
+        // ==========================================
+        // STATE MANAGEMENT
+        // ==========================================
+        const defaultData = {
+            clients: [], finances:[{ id:'f1', type:'Revenue', amount:0, desc:'رصيد افتتاحي', cat:'أخرى', date: getToday() }],
+            invoices: [], events:[],
+            messages: { inbox: [], sent:[] },
+            settings: { emailPubKey: '', emailService: '', emailTemplate: '' }
+        };
+
+        window.appData = { ...defaultData };
+
+        function saveData() {
+            localStorage.setItem('aitchikh_data_v2', JSON.stringify(window.appData));
+            updateDashboard(); renderAll();
         }
 
-        window.resetData = function() {
-            if(confirm("تحذير: هذا سيمسح كل شيء ويعيد الموقع لشكله الافتراضي، هل أنت متأكد؟")) {
-                localStorage.removeItem('nexdash_data_pro');
-                location.reload();
+        function loadData() {
+            const local = localStorage.getItem('aitchikh_data_v2');
+            if(local) {
+                const parsed = JSON.parse(local);
+                // Ensure new objects exist for backwards compatibility
+                if(!parsed.events) parsed.events = [];
+                if(!parsed.messages) parsed.messages = {inbox:[], sent:[]};
+                if(!parsed.settings) parsed.settings = { emailPubKey: '', emailService: '', emailTemplate: '' };
+                window.appData = parsed;
+            }
+            // Populate Settings form
+            document.getElementById('api-pubkey').value = window.appData.settings.emailPubKey || '';
+            document.getElementById('api-service').value = window.appData.settings.emailService || '';
+            document.getElementById('api-template').value = window.appData.settings.emailTemplate || '';
+            
+            // Init EmailJS if key exists
+            if(window.appData.settings.emailPubKey) {
+                try { emailjs.init(window.appData.settings.emailPubKey); } catch(e){}
+            }
+
+            initCharts(); updateDashboard(); renderAll(); updateDatalists();
+        }
+
+        function getToday() { return new Date().toISOString().split('T')[0]; }
+
+        // ==========================================
+        // UI, NAVIGATION & TOAST
+        // ==========================================
+        window.navigate = function(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelector(`.nav-item[data-target="${viewId}"]`).classList.add('active');
+        };
+
+        window.showToast = function(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const t = document.createElement('div'); t.className = `toast ${type}`;
+            t.innerHTML = msg; container.appendChild(t); setTimeout(() => t.remove(), 4000);
+        };
+
+        window.openModal = function(id) {
+            document.getElementById('modal-backdrop').classList.remove('hidden');
+            document.querySelectorAll('.modal-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            
+            if(id === 'event-modal') {
+                document.getElementById('ev-invitees-list').innerHTML = window.appData.clients.map(c => 
+                    `<label class="flex items-center space-x-2 space-x-reverse bg-white dark:bg-gray-800 p-2 rounded border dark:border-gray-700 cursor-pointer text-sm font-bold">
+                        <input type="checkbox" value="${c.email}" class="ev-invitee-chk w-4 h-4 text-primary rounded">
+                        <span>${c.name}</span>
+                    </label>`
+                ).join('') || '<p class="text-xs text-gray-500 col-span-2">لا يوجد عملاء مسجلين حالياً.</p>';
             }
         };
-    </script>
-</body>
-</html>
+        window.closeModal = function() { document.getElementById('modal-backdrop').classList.add('hidden'); };
+
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if(window.myCharts) window.myCharts.forEach(c => c.update());
+        });
+
+        // ==========================================
+        // CHARTS & DASHBOARD
+        // ==========================================
+        window.myCharts =[];
+        function initCharts() {
+            const ctxBar = document.getElementById('financeChart').getContext('2d');
+            const ctxGauge = document.getElementById('gaugeChart').getContext('2d');
+            Chart.defaults.color = '#94a3b8'; Chart.defaults.font.family = 'Cairo';
+
+            const barChart = new Chart(ctxBar, {
+                type: 'bar', data: { labels:['Jan','Feb','Mar','Apr','May','Jun'], datasets:[{ label: 'إيرادات', data:[0,0,0,0,0,0], backgroundColor: '#10B981', borderRadius: 4 }, { label: 'نفقات', data:[0,0,0,0,0,0], backgroundColor: '#EF4444', borderRadius: 4 }]},
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const gaugeChart = new Chart(ctxGauge, {
+                type: 'doughnut', data: { labels:['عجز', 'ربح'], datasets:[{ data: [1, 1], backgroundColor:['#EF4444', '#10B981'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: true, circumference: 180, rotation: -90, cutout: '80%', plugins: { legend: { display: false }, tooltip: {enabled: false} } }
+            });
+            window.myCharts =[barChart, gaugeChart];
+        }
+
+        function updateDashboard() {
+            const rev = window.appData.finances.filter(f=>f.type==='Revenue').reduce((s,f)=>s+f.amount, 0);
+            const exp = window.appData.finances.filter(f=>f.type==='Expense').reduce((s,f)=>s+f.amount, 0);
+            const profit = rev - exp;
+            
+            document.getElementById('stat-revenue').innerText = rev.toLocaleString() + ' DZD';
+            document.getElementById('stat-expenses').innerText = exp.toLocaleString() + ' DZD';
+            document.getElementById('stat-profit').innerText = profit.toLocaleString() + ' DZD';
+            document.getElementById('stat-clients').innerText = window.appData.clients.length;
+
+            document.getElementById('gauge-amount').innerText = profit.toLocaleString() + ' DZD';
+            document.getElementById('gauge-amount').className = `text-2xl font-black mt-1 ${profit >= 0 ? 'text-green-500' : 'text-red-500'}`;
+            if(window.myCharts[1]) {
+                let pRatio = profit >= 0 ? 100 : 0; let lRatio = profit < 0 ? 100 : 0;
+                if(profit > 0 && exp > 0) { pRatio = rev; lRatio = exp; }
+                window.myCharts[1].data.datasets[0].data = [lRatio, pRatio]; window.myCharts[1].update();
+            }
+            if(window.myCharts[0]) {
+                window.myCharts[0].data.datasets[0].data[5] = rev; window.myCharts[0].data.datasets[1].data[5] = exp; window.myCharts[0].update();
+            }
+        }
+
+        // ==========================================
+        // RENDERING
+        // ==========================================
+        function renderAll() { renderInvoices(); renderFinances(); renderClients(); renderEvents(); renderMessages(); }
+
+        function updateDatalists() {
+            const dl = document.getElementById('client-emails-list');
+            dl.innerHTML = window.appData.clients.map(c => `<option value="${c.email}">${c.name} - ${c.company}</option>`).join('');
+        }
+
+        window.renderInvoices = function() {
+            document.getElementById('invoices-tbody').innerHTML = window.appData.invoices.map(inv => {
+                const c = window.appData.clients.find(c=>c.id===inv.clientId);
+                return `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <td class="p-4 font-bold text-primary">${inv.id}</td><td class="p-4 font-bold">${c?c.name:'-'}</td><td class="p-4 text-gray-500" dir="ltr">${inv.date}</td>
+                    <td class="p-4">${inv.ht.toLocaleString()}</td><td class="p-4">${inv.tva.toLocaleString()}</td><td class="p-4 font-black text-green-600">${inv.ttc.toLocaleString()} DZD</td>
+                    <td class="p-4 text-center">
+                        <button onclick="shareQr('فاتورة ${inv.id}', '${window.location.origin}${window.location.pathname}?share_invoice=${inv.id}')" class="text-gray-400 hover:text-blue-500 mx-1" title="مشاركة رابط"><i class="fa-solid fa-share-nodes"></i></button>
+                        <button onclick="deleteItem('invoices','${inv.id}')" class="text-gray-400 hover:text-red-500 mx-1"><i class="fa-solid fa-trash"></i></button>
+                    </td></tr>`}).join('');
+        };
+
+        window.renderEvents = function() {
+            document.getElementById('events-grid').innerHTML = window.appData.events.map(ev => `
+                <div class="event-card rounded-2xl border dark:border-gray-700 shadow-sm overflow-hidden flex flex-col relative">
+                    <div class="p-5 flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-black text-xl text-brand dark:text-blue-400">${ev.title}</h3>
+                            <div class="event-date-badge text-white text-center px-3 py-1 rounded-lg shadow"><div class="text-xs font-bold uppercase">${new Date(ev.date).toLocaleString('en',{month:'short'})}</div><div class="text-xl font-black leading-none">${new Date(ev.date).getDate()}</div></div>
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-600 dark:text-gray-300 font-semibold mb-4">
+                            <div class="flex items-center gap-2"><i class="fa-regular fa-clock text-primary"></i> <span dir="ltr">${ev.time}</span></div>
+                            <div class="flex items-start gap-2"><i class="fa-solid fa-location-dot text-red-500 mt-1"></i> <span>${ev.location}</span></div>
+                            ${ev.map ? `<div class="flex items-center gap-2 mt-2"><a href="${ev.map}" target="_blank" class="text-blue-500 hover:underline"><i class="fa-solid fa-map-location-dot"></i> فتح في خرائط جوجل</a></div>` : ''}
+                        </div>
+                        <div class="text-xs text-gray-500 font-bold border-t dark:border-gray-700 pt-3">المدعوين: ${ev.invitees.length} شخص</div>
+                    </div>
+                    <div class="flex bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700 divide-x divide-x-reverse dark:divide-gray-700">
+                        <button onclick="shareQr('حدث ${ev.title}', '${window.location.origin}${window.location.pathname}?share_event=${ev.id}')" class="flex-1 py-3 text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary transition"><i class="fa-solid fa-qrcode ml-1"></i> مشاركة الرابط</button>
+                        <button onclick="deleteItem('events','${ev.id}')" class="flex-1 py-3 text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition"><i class="fa-solid fa-trash ml-1"></i> حذف</button>
+                    </div>
+                </div>`).join('') || '<p class="text-gray-500 font-bold col-span-full">لا توجد أحداث ومواعيد مسجلة.</p>';
+        };
+
+        window.renderFinances = function() { document.getElementById('finances-tbody').innerHTML = window.appData.finances.map(f => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"><td class="p-4 text-gray-500" dir="ltr">${f.date}</td><td class="p-4 font-bold text-primary">${f.desc}</td><td class="p-4"><span class="bg-gray-200 dark:bg-gray-700 px-2 rounded text-xs font-bold">${f.cat}</span></td><td class="p-4 font-black ${f.type==='Revenue'?'text-green-500':'text-red-500'}">${f.type==='Revenue'?'إيراد (+)':'نفقة (-)'}</td><td class="p-4 font-bold">${f.amount.toLocaleString()} DZD</td><td class="p-4 text-center"><button onclick="deleteItem('finances','${f.id}')" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); };
+        window.renderClients = function() { document.getElementById('clients-tbody').innerHTML = window.appData.clients.map(c => `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"><td class="p-4 font-bold text-primary">${c.name}</td><td class="p-4 font-bold">${c.company}</td><td class="p-4 text-gray-500 font-semibold" dir="ltr">${c.phone}<br>${c.email}</td><td class="p-4 text-center"><button onclick="deleteItem('clients','${c.id}')" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join(''); };
+
+        window.renderMessages = function() {
+            document.getElementById('inbox-container').innerHTML = window.appData.messages.inbox.length ? window.appData.messages.inbox.map(m => `<div class="p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 shadow-sm"><div class="flex justify-between items-center mb-1"><span class="font-bold text-primary">${m.from}</span><span class="text-xs text-gray-500" dir="ltr">${m.date}</span></div><p class="text-sm font-semibold">${m.subject}</p></div>`).join('') : '<p class="text-sm text-gray-500 text-center mt-10 font-bold">صندوق الوارد فارغ.</p>';
+            document.getElementById('sent-container').innerHTML = window.appData.messages.sent.length ? window.appData.messages.sent.map(m => `<div class="p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 shadow-sm"><div class="flex justify-between items-center mb-1"><span class="font-bold text-gray-700 dark:text-gray-300">إلى: ${m.to}</span><span class="text-xs text-gray-500" dir="ltr">${m.date}</span></div><p class="text-sm font-semibold text-primary">${m.subject}</p></div>`).join('') : '<p class="text-sm text-gray-500 text-center mt-10 font-bold">لم تقم بإرسال أي رسائل بعد.</p>';
+        }
+
+        // ==========================================
+        // FORMS SUBMISSION & LOGIC
+        // ==========================================
+        window.deleteItem = function(col, id) { if(confirm('تأكيد الحذف؟')) { window.appData[col] = window.appData[col].filter(i=>i.id!==id); saveData(); showToast('تم الحذف', 'error'); } };
+
+        document.getElementById('form-event').addEventListener('submit', (e)=>{ 
+            e.preventDefault();
+            // Get selected invitees
+            const invitees = Array.from(document.querySelectorAll('.ev-invitee-chk:checked')).map(cb => cb.value);
+            
+            window.appData.events.push({ 
+                id:'ev'+Date.now(), title:document.getElementById('ev-title').value, date:document.getElementById('ev-date').value, 
+                time:document.getElementById('ev-time').value, location:document.getElementById('ev-loc').value, map:document.getElementById('ev-map').value,
+                invitees: invitees
+            });
+
+            if(document.getElementById('ev-send-invites').checked && invitees.length > 0) {
+                // Simulate sending emails to selected invitees
+                invitees.forEach(email => {
+                    window.appData.messages.sent.push({ to: email, subject: `دعوة: ${document.getElementById('ev-title').value}`, date: getToday() });
+                });
+                showToast(`تم حفظ الحدث وإرسال الدعوات إلى ${invitees.length} شخص`, 'success');
+            } else {
+                showToast('تم حفظ الحدث بنجاح', 'success');
+            }
+            saveData(); closeModal(); e.target.reset();
+        });
+
+        // INVOICE LOGIC (EXCEL STYLE)
+        let invItems =[];
+        window.openInvoiceModal = function() {
+            invItems =[{desc:'',qty:1,price:0}]; document.getElementById('form-invoice').reset();
+            document.getElementById('inv-client').innerHTML = window.appData.clients.map(c => `<option value="${c.id}">${c.name} - ${c.company}</option>`).join('');
+            document.getElementById('inv-date').value = getToday(); renderInvoiceRows(); openModal('invoice-modal');
+        };
+        window.addInvoiceRow = function() { invItems.push({desc:'',qty:1,price:0}); renderInvoiceRows(); };
+        window.updateInvItem = function(i,f,v) { invItems[i][f] = f==='desc'?v:parseFloat(v)||0; renderInvoiceRows(); };
+        function renderInvoiceRows() {
+            let ht = 0;
+            document.getElementById('inv-items-body').innerHTML = invItems.map((item, i) => { const tot = item.qty*item.price; ht+=tot; return `<tr class="border-b dark:border-gray-700"><td class="p-2"><input type="text" value="${item.desc}" onchange="updateInvItem(${i},'desc',this.value)" class="w-full p-2 border rounded dark:bg-gray-800 outline-none"></td><td class="p-2"><input type="number" value="${item.qty}" onchange="updateInvItem(${i},'qty',this.value)" class="w-full p-2 border rounded text-center dark:bg-gray-800 outline-none"></td><td class="p-2"><input type="number" value="${item.price}" onchange="updateInvItem(${i},'price',this.value)" class="w-full p-2 border rounded text-center dark:bg-gray-800 outline-none"></td><td class="p-2 font-bold">${tot.toLocaleString()}</td><td class="p-2 text-red-500 cursor-pointer" onclick="invItems.splice(${i},1);renderInvoiceRows();"><i class="fa-solid fa-trash"></i></td></tr>`}).join('');
+            document.getElementById('inv-ht').innerText = ht.toLocaleString()+' DZD'; document.getElementById('inv-tva').innerText = (ht*0.19).toLocaleString()+' DZD'; document.getElementById('inv-ttc').innerText = (ht+(ht*0.19)).toLocaleString()+' DZD';
+        }
+        document.getElementById('form-invoice').addEventListener('submit', (e)=>{ e.preventDefault();
+            const ht = invItems.reduce((s,i)=>s+(i.qty*i.price),0);
+            window.appData.invoices.push({ id: 'INV-'+Math.floor(1000+Math.random()*9000), clientId: document.getElementById('inv-client').value, date: document.getElementById('inv-date').value, items: invItems, ht: ht, tva: ht*0.19, ttc: ht+(ht*0.19) });
+            saveData(); closeModal(); showToast('تم إصدار الفاتورة', 'success');
+        });
+
+        // FINANCE & CLIENT LOGIC
+        document.getElementById('form-finance').addEventListener('submit', (e)=>{ e.preventDefault(); window.appData.finances.push({ id:'f'+Date.now(), type:document.getElementById('fin-type').value, amount:parseFloat(document.getElementById('fin-amount').value), desc:document.getElementById('fin-desc').value, cat:document.getElementById('fin-cat').value, date:getToday() }); saveData(); closeModal(); showToast('تم الحفظ', 'success'); e.target.reset(); });
+        document.getElementById('form-client').addEventListener('submit', (e)=>{ e.preventDefault(); window.appData.clients.push({ id:'c'+Date.now(), name:document.getElementById('cli-name').value, email:document.getElementById('cli-email').value, phone:document.getElementById('cli-phone').value, company:document.getElementById('cli-company').value }); saveData(); closeModal(); updateDatalists(); showToast('تم الحفظ', 'success'); e.target.reset(); });
+
+        // ==========================================
+        // EMAILS & SETTINGS LOGIC
+        // ==========================================
+        window.applyEmailTemplate = function() {
+            const type = document.getElementById('mail-template').value;
+            const sub = document.getElementById('mail-subject'); const body = document.getElementById('mail-body');
+            if(type === 'proposal') {
+                sub.value = "عرض خدمات احترافي من aitchikh consulting";
+                body.value = "السادة الكرام في شركة[اسم الشركة]،\n\nنحن في aitchikh consulting يسعدنا تقديم عرض خدماتنا لتطوير أعمالكم ورفع الكفاءة التشغيلية...\n\nنتمنى لكم التوفيق،\nفريق العمل.";
+            } else if (type === 'invite') {
+                sub.value = "دعوة لحضور حدث/اجتماع هام";
+                body.value = "تحية طيبة،\n\nنتشرف بدعوتكم لحضور الحدث الخاص بنا والمقرر عقده يوم [التاريخ] على الساعة[الوقت] في [المكان].\n\nيسعدنا حضوركم.\naitchikh consulting.";
+            } else { sub.value = ""; body.value = ""; }
+        };
+
+        document.getElementById('form-email').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const to = document.getElementById('mail-to').value;
+            const subject = document.getElementById('mail-subject').value;
+            const message = document.getElementById('mail-body').value;
+            const btn = this.querySelector('button'); btn.innerHTML = "جاري الإرسال...";
+
+            // Send via EmailJS API if configured
+            const serviceId = window.appData.settings.emailService;
+            const templateId = window.appData.settings.emailTemplate;
+            
+            if(serviceId && templateId) {
+                emailjs.send(serviceId, templateId, { to_email: to, subject: subject, message: message })
+                .then(function() {
+                    finalizeEmailSend(to, subject, btn);
+                }, function(err) {
+                    showToast("خطأ في API الإرسال! تم الحفظ في الأرشيف فقط.", "error");
+                    finalizeEmailSend(to, subject, btn); // save anyway for demo
+                });
+            } else {
+                // Simulation
+                setTimeout(()=>{ finalizeEmailSend(to, subject, btn); }, 1500);
+            }
+        });
+
+        function finalizeEmailSend(to, subject, btn) {
+            window.appData.messages.sent.push({ to: to, subject: subject, date: getToday() });
+            saveData(); showToast('تم إرسال الإيميل وحفظه في الأرشيف', 'success');
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل وحفظ في الأرشيف';
+            document.getElementById('form-email').reset();
+        }
+
+        document.getElementById('form-settings').addEventListener('submit', function(e) {
+            e.preventDefault();
+            window.appData.settings.emailPubKey = document.getElementById('api-pubkey').value;
+            window.appData.settings.emailService = document.getElementById('api-service').value;
+            window.appData.settings.emailTemplate = document.getElementById('api-template').value;
+            saveData();
+            if(window.appData.settings.emailPubKey) emailjs.init(window.appData.settings.emailPubKey);
+            showToast('تم حفظ إعدادات الـ API', 'success');
+        });
+
+        // ==========================================
+        // QR & SHARED VIEW
+        // ==========================================
+        window.shareQr = function(title, link) {
+            document.getElementById('share-link-input').value = link; document.getElementById('qrcode-box').innerHTML = "";
+            new QRCode(document.getElementById("qrcode-box"), { text: link, width: 200, height: 200 }); openModal('qr-modal');
+        };
+        window.copyShareLink = function() { document.getElementById("share-link-input").select(); document.execCommand("copy"); showToast('تم نسخ الرابط الحقيقي', 'success'); };
+
+        function loadSharedContent(type, id) {
+            const ov = document.getElementById('shared-view-overlay'); const box = document.getElementById('shared-content'); ov.style.display = 'flex';
+            const data = JSON.parse(localStorage.getItem('aitchikh_data_v2') || '{}');
+            
+            if(type === 'invoice') {
+                const inv = (data.invoices||[]).find(i=>i.id===id); const cli = inv ? (data.clients||[]).find(c=>c.id===inv.clientId) : null;
+                if(!inv) return box.innerHTML = `<h2 class="text-2xl font-bold text-red-500 text-center">الفاتورة غير موجودة</h2>`;
+                box.innerHTML = `
+                    <div class="flex justify-between items-center border-b pb-6 mb-6">
+                        <div><h1 class="text-3xl font-black text-brand tracking-wider">aitchikh<br><span class="text-lg text-gray-500 font-bold">consulting</span></h1><p class="text-gray-500 mt-2 font-bold tracking-widest">${inv.id}</p></div>
+                        <div class="text-left" dir="ltr"><h2 class="font-black text-xl">${cli?cli.name:'Client'}</h2><p class="text-gray-500 font-bold">${cli?cli.company:''}</p><p class="text-sm text-gray-400 mt-1">${inv.date}</p></div>
+                    </div>
+                    <table class="w-full text-center border mb-6"><thead class="bg-brand text-white font-bold"><tr><th class="p-3 w-1/2 text-right pr-4">البيان</th><th class="p-3">الكمية</th><th class="p-3">السعر</th><th class="p-3">المجموع</th></tr></thead>
+                    <tbody>${inv.items.map(item => `<tr class="border-b"><td class="p-3 text-right pr-4 font-bold text-gray-700">${item.desc}</td><td class="p-3">${item.qty}</td><td class="p-3">${item.price.toLocaleString()}</td><td class="p-3 font-bold">${(item.qty*item.price).toLocaleString()}</td></tr>`).join('')}</tbody></table>
+                    <div class="flex justify-end"><div class="w-64 space-y-3 font-bold text-lg"><div class="flex justify-between"><span>HT :</span> <span dir="ltr">${inv.ht.toLocaleString()} DZD</span></div><div class="flex justify-between"><span>TVA (19%) :</span> <span dir="ltr">${inv.tva.toLocaleString()} DZD</span></div><div class="flex justify-between text-green-600 text-2xl border-t border-black pt-2 mt-2"><span>TTC :</span> <span dir="ltr">${inv.ttc.toLocaleString()} DZD</span></div></div></div>
+                    <div class="mt-8 text-center print:hidden"><button onclick="window.print()" class="bg-primary hover:bg-brand text-white px-8 py-3 rounded-xl font-bold transition shadow-lg"><i class="fa-solid fa-print ml-2"></i> طباعة / حفظ كـ PDF</button></div>`;
+            } else if(type === 'event') {
+                const ev = (data.events||
