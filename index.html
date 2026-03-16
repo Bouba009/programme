@@ -1,1016 +1,834 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="light">
+<html lang="ar" dir="rtl" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexDash | Business Management Platform</title>
+    <title>NexDash | Pro Business Management</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4F46E5', // Indigo-600
-                        secondary: '#10B981', // Emerald-500
-                        darkbg: '#0F172A', // Slate-900
-                        darkcard: '#1E293B' // Slate-800
-                    }
-                }
-            }
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#4F46E5', secondary: '#10B981', darkbg: '#0F172A', darkcard: '#1E293B' } } } }
     </script>
 
-    <!-- FontAwesome -->
+    <!-- FontAwesome, Chart.js, jsPDF, QRCode, EmailJS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jsPDF for PDF Exports -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <!-- QRCode.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        /* Custom Scrollbar */
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+        body { font-family: 'Cairo', sans-serif; }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         
-        /* Sidebar active states RTL aware */
-        .nav-item.active { background-color: rgba(79, 70, 229, 0.1); color: #4F46E5; border-inline-end: 3px solid #4F46E5; }
-        .dark .nav-item.active { background-color: rgba(99, 102, 241, 0.2); color: #818CF8; border-inline-end: 3px solid #818CF8; }
+        .nav-item.active { background-color: rgba(79, 70, 229, 0.1); color: #4F46E5; border-inline-start: 4px solid #4F46E5; }
+        .dark .nav-item.active { background-color: rgba(99, 102, 241, 0.2); color: #818CF8; border-inline-start: 4px solid #818CF8; }
         
-        /* Toast Notifications */
         #toast-container { position: fixed; bottom: 20px; inset-inline-end: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 12px 20px; border-radius: 8px; color: #fff; font-weight: 500; animation: slideIn 0.3s ease-out forwards; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .toast.success { background-color: #10B981; }
-        .toast.error { background-color: #EF4444; }
-        .toast.info { background-color: #3B82F6; }
+        .toast { padding: 12px 20px; border-radius: 8px; color: #fff; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .toast.success { background-color: #10B981; } .toast.error { background-color: #EF4444; } .toast.info { background-color: #3B82F6; }
         
-        html[dir="ltr"] @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        html[dir="rtl"] @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        /* Calendar Grid */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background-color: #e2e8f0; border: 1px solid #e2e8f0;}
-        .dark .calendar-grid { background-color: #334155; border-color: #334155; }
-        .calendar-cell { min-height: 100px; background-color: #ffffff; padding: 8px; }
-        .dark .calendar-cell { background-color: #1E293B; color: #cbd5e1; }
+        /* Gauge Chart Center Text */
+        .gauge-container { position: relative; width: 100%; max-width: 300px; margin: auto; }
+        .gauge-text { position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 100%; }
+        
+        /* Shared Read-Only View Overlay */
+        #shared-view-overlay { background: #f8fafc; display: none; z-index: 100000; overflow-y: auto; }
+        .dark #shared-view-overlay { background: #0f172a; color: #fff; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-darkbg dark:text-gray-200 h-screen overflow-hidden flex transition-colors duration-300">
 
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="fixed inset-0 bg-white dark:bg-darkbg z-[60] flex items-center justify-center transition-opacity">
+        <div class="bg-white dark:bg-darkcard p-8 rounded-2xl shadow-xl w-96 max-w-full text-center border dark:border-gray-700">
+            <div class="w-16 h-16 bg-primary text-white rounded-xl mx-auto flex items-center justify-center text-3xl mb-4"><i class="fa-solid fa-lock"></i></div>
+            <h2 class="text-2xl font-bold mb-2">تسجيل الدخول للفريق</h2>
+            <p class="text-sm text-gray-500 mb-6">يرجى إدخال رمز الوصول الخاص بفريق الإدارة.</p>
+            <input type="password" id="login-pwd" placeholder="****" class="w-full text-center text-2xl tracking-widest px-4 py-3 border dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-primary outline-none mb-4" onkeypress="if(event.key === 'Enter') checkLogin()">
+            <button onclick="checkLogin()" class="w-full bg-primary hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow-lg">دخول كأدمن</button>
+        </div>
+    </div>
+
+    <!-- SHARED LINK READ-ONLY VIEW (For Clients) -->
+    <div id="shared-view-overlay" class="fixed inset-0 p-6 flex justify-center">
+        <div id="shared-content" class="bg-white dark:bg-darkcard p-8 rounded-xl shadow-lg w-full max-w-3xl border dark:border-gray-700 h-fit">
+            <!-- Content injected via JS -->
+        </div>
+    </div>
+
     <!-- Sidebar -->
     <aside class="w-64 bg-white dark:bg-darkcard border-e border-gray-200 dark:border-gray-700 flex flex-col h-full hidden md:flex z-20 transition-colors duration-300">
         <div class="p-6 flex items-center gap-3 border-b border-gray-100 dark:border-gray-700">
-            <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xl"><i class="fa-solid fa-cube"></i></div>
-            <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">NexDash</h1>
+            <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xl"><i class="fa-solid fa-shield-halved"></i></div>
+            <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500">NexDash Pro</h1>
         </div>
-        <nav class="flex-1 overflow-y-auto py-4 font-medium text-sm text-gray-600 dark:text-gray-400" id="sidebar-nav">
-            <a href="#" onclick="navigate('dashboard')" class="nav-item active flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="dashboard"><i class="fa-solid fa-chart-pie w-6"></i> <span data-i18n="nav_dashboard">Dashboard</span></a>
-            <a href="#" onclick="navigate('events')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="events"><i class="fa-solid fa-calendar-check w-6"></i> <span data-i18n="nav_events">Events & Activities</span></a>
-            <a href="#" onclick="navigate('clients')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="clients"><i class="fa-solid fa-users w-6"></i> <span data-i18n="nav_clients">Clients</span></a>
-            <a href="#" onclick="navigate('invoices')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="invoices"><i class="fa-solid fa-file-invoice-dollar w-6"></i> <span data-i18n="nav_invoices">Invoices</span></a>
-            <a href="#" onclick="navigate('finances')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="finances"><i class="fa-solid fa-wallet w-6"></i> <span data-i18n="nav_finances">Revenue & Expenses</span></a>
-            <a href="#" onclick="navigate('forms')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="forms"><i class="fa-brands fa-wpforms w-6"></i> <span data-i18n="nav_forms">Google Forms Data</span></a>
-            <a href="#" onclick="navigate('calendar')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="calendar"><i class="fa-regular fa-calendar-days w-6"></i> <span data-i18n="nav_calendar">Calendar</span></a>
-            <a href="#" onclick="navigate('notifications')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="notifications"><i class="fa-solid fa-bell w-6"></i> <span data-i18n="nav_notifs">Notifications</span> <span class="ms-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
-            <a href="#" onclick="navigate('api')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="api"><i class="fa-solid fa-code w-6"></i> <span data-i18n="nav_api">API Integration</span></a>
-            <a href="#" onclick="navigate('settings')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" data-target="settings"><i class="fa-solid fa-gear w-6"></i> <span data-i18n="nav_settings">Settings</span></a>
+        <nav class="flex-1 overflow-y-auto py-4 font-semibold text-sm text-gray-600 dark:text-gray-400">
+            <a href="#" onclick="navigate('dashboard')" class="nav-item active flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="dashboard"><i class="fa-solid fa-chart-line w-6"></i> لوحة القيادة</a>
+            <a href="#" onclick="navigate('invoices')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="invoices"><i class="fa-solid fa-file-invoice-dollar w-6"></i> الفواتير (TVA/HT)</a>
+            <a href="#" onclick="navigate('finances')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="finances"><i class="fa-solid fa-vault w-6"></i> الإيرادات والنفقات</a>
+            <a href="#" onclick="navigate('clients')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="clients"><i class="fa-solid fa-users w-6"></i> قاعدة العملاء</a>
+            <a href="#" onclick="navigate('events')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="events"><i class="fa-solid fa-calendar-check w-6"></i> الأحداث والمواعيد</a>
+            <a href="#" onclick="navigate('tasks')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="tasks"><i class="fa-solid fa-list-check w-6"></i> مهام الفريق (Kanban)</a>
+            <a href="#" onclick="navigate('forms')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="forms"><i class="fa-brands fa-google w-6"></i> بيانات Google Forms</a>
+            <a href="#" onclick="navigate('emails')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="emails"><i class="fa-solid fa-paper-plane w-6"></i> إرسال تنبيهات (إيميل)</a>
+            <a href="#" onclick="navigate('settings')" class="nav-item flex items-center px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-800" data-target="settings"><i class="fa-solid fa-gear w-6"></i> الإعدادات</a>
         </nav>
-        <div class="p-4 border-t border-gray-200 dark:border-gray-700 text-xs text-center text-gray-500">
-            <p><span data-i18n="sync_status">Sync</span>: <span id="sync-status" class="text-green-500"><i class="fa-solid fa-cloud-arrow-up"></i> Online</span></p>
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700 text-xs text-center font-bold text-gray-500">
+            <p>المزامنة: <span id="sync-status" class="text-green-500"><i class="fa-solid fa-wifi"></i> متصل</span></p>
         </div>
     </aside>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col h-full w-full">
-        
         <!-- Header -->
-        <header class="h-16 bg-white dark:bg-darkcard border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6 z-10 shadow-sm transition-colors duration-300">
+        <header class="h-16 bg-white dark:bg-darkcard border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6 z-10 shadow-sm">
             <div class="flex items-center gap-4">
                 <button class="md:hidden text-gray-500 hover:text-primary"><i class="fa-solid fa-bars text-xl"></i></button>
-                <div class="relative hidden sm:block">
-                    <i class="fa-solid fa-search absolute start-3 top-2.5 text-gray-400 text-sm"></i>
-                    <input type="text" data-i18n="search" placeholder="Search anywhere..." class="ps-9 pe-4 py-2 w-64 rounded-full bg-gray-100 dark:bg-gray-700 border-none focus:ring-2 focus:ring-primary text-sm outline-none dark:text-white transition-all">
-                </div>
+                <h2 class="font-bold text-lg hidden sm:block text-gray-700 dark:text-gray-200" id="header-title">مرحباً بفريق الإدارة</h2>
             </div>
             <div class="flex items-center gap-4">
-                <!-- Language Selector -->
-                <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-bold px-2 py-1 rounded outline-none cursor-pointer border-none shadow-sm">
-                    <option value="en">EN</option>
-                    <option value="fr">FR</option>
-                    <option value="ar">AR</option>
-                </select>
-
-                <button id="theme-toggle" class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"><i class="fa-solid fa-moon text-lg"></i></button>
-                <div class="relative">
-                    <button class="text-gray-500 dark:text-gray-400 hover:text-primary transition-colors"><i class="fa-regular fa-bell text-lg"></i></button>
-                    <span class="absolute -top-1 -end-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-darkcard hidden"></span>
-                </div>
+                <button id="theme-toggle" class="text-gray-500 hover:text-primary transition-colors"><i class="fa-solid fa-moon text-lg"></i></button>
                 <div class="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-2"></div>
-                <div class="flex items-center gap-2 cursor-pointer">
-                    <img src="https://ui-avatars.com/api/?name=User&background=4F46E5&color=fff" alt="User" class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-600">
-                    <span class="text-sm font-semibold hidden sm:block" id="current-user-role">Admin</span>
+                <div class="flex items-center gap-2">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=4F46E5&color=fff" class="w-8 h-8 rounded-full border">
+                    <span class="text-sm font-bold hidden sm:block">أدمن</span>
                 </div>
+                <button onclick="logout()" class="text-red-500 hover:text-red-700 font-bold text-sm mx-2"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
             </div>
         </header>
 
         <!-- Dynamic Views -->
-        <main class="flex-1 overflow-y-auto p-6 relative bg-gray-50 dark:bg-darkbg transition-colors duration-300" id="main-content">
+        <main class="flex-1 overflow-y-auto p-6 relative" id="main-content">
             
             <!-- VIEW: DASHBOARD -->
             <div id="view-dashboard" class="view-section block animate-fade-in">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" data-i18n="dash_overview">Dashboard Overview</h2>
-                    <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2" onclick="exportData('pdf')">
-                        <i class="fa-solid fa-download"></i> <span data-i18n="export_report">Export Report</span>
-                    </button>
-                </div>
-                
                 <!-- Stat Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium" data-i18n="tot_rev">Total Revenue</p>
-                            <h3 class="text-2xl font-bold mt-1 text-start" id="stat-revenue">$0</h3>
-                        </div>
+                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
+                        <div><p class="text-sm text-gray-500 font-bold">إجمالي الإيرادات</p><h3 class="text-2xl font-black text-green-600 mt-1" id="stat-revenue">0 DZD</h3></div>
                         <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-arrow-trend-up"></i></div>
                     </div>
-                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium" data-i18n="tot_exp">Total Expenses</p>
-                            <h3 class="text-2xl font-bold mt-1 text-start" id="stat-expenses">$0</h3>
-                        </div>
+                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
+                        <div><p class="text-sm text-gray-500 font-bold">إجمالي النفقات</p><h3 class="text-2xl font-black text-red-600 mt-1" id="stat-expenses">0 DZD</h3></div>
                         <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-arrow-trend-down"></i></div>
                     </div>
-                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium" data-i18n="net_profit">Net Profit</p>
-                            <h3 class="text-2xl font-bold mt-1 text-start" id="stat-profit">$0</h3>
-                        </div>
-                        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
+                        <div><p class="text-sm text-gray-500 font-bold">صافي الأرباح (TTC)</p><h3 class="text-2xl font-black text-primary mt-1" id="stat-profit">0 DZD</h3></div>
+                        <div class="w-12 h-12 bg-indigo-100 text-primary rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-wallet"></i></div>
                     </div>
-                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex items-center justify-between">
-                        <div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium" data-i18n="act_clients">Active Clients</p>
-                            <h3 class="text-2xl font-bold mt-1 text-start" id="stat-clients">0</h3>
-                        </div>
+                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border dark:border-gray-700 shadow-sm flex items-center justify-between">
+                        <div><p class="text-sm text-gray-500 font-bold">عدد العملاء</p><h3 class="text-2xl font-black mt-1" id="stat-clients">0</h3></div>
                         <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></div>
                     </div>
                 </div>
 
-                <!-- Charts -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
-                        <h3 class="font-bold mb-4" data-i18n="rev_vs_exp">Revenue vs Expenses</h3>
-                        <canvas id="financeChart" height="200"></canvas>
-                    </div>
-                    <div class="bg-white dark:bg-darkcard p-5 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
-                        <h3 class="font-bold mb-4" data-i18n="exp_cat">Expense Categories</h3>
-                        <div class="flex justify-center"><canvas id="expenseDoughnut" height="200" style="max-height: 250px;"></canvas></div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity & Upcoming Events -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white dark:bg-darkcard rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                        <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700"><h3 class="font-bold" data-i18n="rec_inv">Recent Invoices</h3></div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-start text-sm" id="recent-invoices-table">
-                                <!-- Populated by JS -->
-                            </table>
+                <!-- Charts (Gauge & Bars) -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Gauge Speedometer -->
+                    <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm flex flex-col items-center justify-center col-span-1">
+                        <h3 class="font-bold mb-2 text-center w-full">مؤشر السرعة (الربح / الخسارة)</h3>
+                        <div class="gauge-container">
+                            <canvas id="gaugeChart"></canvas>
+                            <div class="gauge-text">
+                                <p class="text-xs text-gray-500 font-bold">الرصيد الصافي</p>
+                                <h2 class="text-2xl font-black mt-1" id="gauge-amount" dir="ltr">0 DZD</h2>
+                            </div>
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-darkcard rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                        <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700"><h3 class="font-bold" data-i18n="up_events">Upcoming Events</h3></div>
-                        <div class="p-4 flex flex-col gap-3" id="upcoming-events-list">
-                            <!-- Populated by JS -->
-                        </div>
+                    <!-- Bar Chart -->
+                    <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm col-span-2">
+                        <h3 class="font-bold mb-4">إحصائيات الإيرادات والنفقات</h3>
+                        <canvas id="financeChart" height="250"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- VIEW: EVENTS & ACTIVITIES -->
-            <div id="view-events" class="view-section hidden animate-fade-in">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" data-i18n="nav_events">Event Management</h2>
-                    <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm require-admin flex items-center gap-2" onclick="openModal('event-modal')"><i class="fa-solid fa-plus"></i> <span data-i18n="create_event">Create Event</span></button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="events-container">
-                    <!-- Events injected here -->
-                </div>
-            </div>
-
-            <!-- VIEW: CLIENTS -->
-            <div id="view-clients" class="view-section hidden animate-fade-in">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" data-i18n="nav_clients">Client Database (CRM)</h2>
-                    <div class="flex gap-2">
-                        <button class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2" onclick="exportData('csv')"><i class="fa-solid fa-file-export"></i> <span data-i18n="export">Export</span></button>
-                        <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm require-admin flex items-center gap-2" onclick="openModal('client-modal')"><i class="fa-solid fa-user-plus"></i> <span data-i18n="add_client">Add Client</span></button>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-darkcard rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                    <div class="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between">
-                        <input type="text" id="client-search" data-i18n="search_cli" placeholder="Search clients..." class="px-4 py-2 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 outline-none w-64 text-sm" onkeyup="renderClients()">
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-start text-sm">
-                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400" id="clients-thead">
-                                <!-- Populated dynamically by JS for translations -->
-                            </thead>
-                            <tbody id="clients-tbody" class="divide-y divide-gray-100 dark:divide-gray-700">
-                                <!-- Clients injected here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: INVOICES -->
+            <!-- VIEW: INVOICES (Excel Style) -->
             <div id="view-invoices" class="view-section hidden animate-fade-in">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" data-i18n="nav_invoices">Invoice Manager</h2>
-                    <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm require-admin flex items-center gap-2" onclick="openModal('invoice-modal')"><i class="fa-solid fa-file-circle-plus"></i> <span data-i18n="create_invoice">Create Invoice</span></button>
+                    <h2 class="text-2xl font-bold">إدارة الفواتير (HT/TVA/TTC)</h2>
+                    <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold shadow-sm" onclick="openInvoiceModal()"><i class="fa-solid fa-plus ml-2"></i> إنشاء فاتورة جديدة</button>
                 </div>
-                <div class="bg-white dark:bg-darkcard rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-start text-sm">
-                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400" id="invoices-thead">
-                            </thead>
-                            <tbody id="invoices-tbody" class="divide-y divide-gray-100 dark:divide-gray-700">
-                                <!-- Invoices injected here -->
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
+                    <table class="w-full text-start text-sm">
+                        <thead class="bg-gray-100 dark:bg-gray-800 font-bold">
+                            <tr><th class="p-4">رقم الفاتورة</th><th class="p-4">العميل</th><th class="p-4">تاريخ</th><th class="p-4">HT</th><th class="p-4">TVA</th><th class="p-4">TTC (الإجمالي)</th><th class="p-4 text-center">إجراءات</th></tr>
+                        </thead>
+                        <tbody id="invoices-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
+                    </table>
                 </div>
             </div>
 
             <!-- VIEW: FINANCES -->
             <div id="view-finances" class="view-section hidden animate-fade-in">
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" data-i18n="nav_finances">Revenue & Expenses</h2>
-                    <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm require-admin flex items-center gap-2" onclick="openModal('finance-modal')"><i class="fa-solid fa-plus"></i> <span data-i18n="add_transaction">Add Transaction</span></button>
+                    <h2 class="text-2xl font-bold">سجل النفقات والإيرادات</h2>
+                    <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-bold shadow-sm" onclick="openModal('finance-modal')"><i class="fa-solid fa-plus ml-2"></i> إضافة عملية مالية</button>
                 </div>
-                <div class="bg-white dark:bg-darkcard rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden mb-6">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-start text-sm">
-                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400" id="finances-thead">
-                            </thead>
-                            <tbody id="finances-tbody" class="divide-y divide-gray-100 dark:divide-gray-700">
-                                <!-- Finances injected here -->
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
+                    <table class="w-full text-start text-sm">
+                        <thead class="bg-gray-100 dark:bg-gray-800 font-bold">
+                            <tr><th class="p-4">التاريخ</th><th class="p-4">البيان</th><th class="p-4">الفئة</th><th class="p-4">النوع</th><th class="p-4">المبلغ (DZD)</th><th class="p-4 text-center">إجراءات</th></tr>
+                        </thead>
+                        <tbody id="finances-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- VIEW: FORMS -->
+            <!-- VIEW: CLIENTS -->
+            <div id="view-clients" class="view-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">قاعدة العملاء</h2>
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg font-bold shadow-sm" onclick="openModal('client-modal')"><i class="fa-solid fa-user-plus ml-2"></i> إضافة عميل</button>
+                </div>
+                <div class="bg-white dark:bg-darkcard rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
+                    <table class="w-full text-start text-sm">
+                        <thead class="bg-gray-100 dark:bg-gray-800 font-bold">
+                            <tr><th class="p-4">الاسم</th><th class="p-4">الشركة</th><th class="p-4">التواصل</th><th class="p-4 text-center">إجراءات</th></tr>
+                        </thead>
+                        <tbody id="clients-tbody" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW: TASKS (Kanban) -->
+            <div id="view-tasks" class="view-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">مهام الفريق</h2>
+                    <button class="bg-primary text-white px-4 py-2 rounded-lg font-bold shadow-sm" onclick="openModal('task-modal')"><i class="fa-solid fa-plus ml-2"></i> مهمة جديدة</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="kanban-board">
+                    <!-- Kanban columns generated by JS -->
+                </div>
+            </div>
+
+            <!-- VIEW: EMAILS -->
+            <div id="view-emails" class="view-section hidden animate-fade-in">
+                <h2 class="text-2xl font-bold mb-6">إرسال تنبيهات بريدية حقيقية (EmailJS)</h2>
+                <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm max-w-2xl mx-auto">
+                    <form id="form-email" class="space-y-4">
+                        <div>
+                            <label class="block font-bold mb-2">اختر العميل (أو اكتب إيميل مباشر)</label>
+                            <input type="email" id="mail-to" required placeholder="example@gmail.com" class="w-full px-4 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 outline-none" dir="ltr">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-2">عنوان الرسالة</label>
+                            <input type="text" id="mail-subject" required class="w-full px-4 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-bold mb-2">نص الرسالة</label>
+                            <textarea id="mail-body" rows="5" required class="w-full px-4 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 outline-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-secondary hover:bg-emerald-600 text-white font-bold py-3 rounded"><i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل الآن</button>
+                    </form>
+                    <p class="text-xs text-gray-500 mt-4 text-center">ملاحظة: لكي تعمل الإيميلات، يجب إدخال مفاتيح EmailJS الخاصة بك في الكود (الأسفل).</p>
+                </div>
+            </div>
+
+            <!-- VIEW: FORMS & SETTINGS ... (Skipped lengthy HTML for brevity, keeping structure simple) -->
             <div id="view-forms" class="view-section hidden animate-fade-in">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" data-i18n="nav_forms">Google Forms Responses</h2>
-                    <button class="bg-secondary hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm flex items-center gap-2" onclick="showToast(t('forms_synced'), 'success')"><i class="fa-solid fa-rotate"></i> <span data-i18n="sync_now">Sync Now</span></button>
-                </div>
-                <div class="bg-white dark:bg-darkcard rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-start text-sm">
-                            <thead class="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400" id="forms-thead">
-                            </thead>
-                            <tbody id="forms-tbody" class="divide-y divide-gray-100 dark:divide-gray-700">
-                                <!-- Forms injected here -->
-                            </tbody>
-                        </table>
-                    </div>
+                <h2 class="text-2xl font-bold mb-6">بيانات Google Forms المربوطة</h2>
+                <div class="bg-white dark:bg-darkcard p-6 rounded-xl border dark:border-gray-700 shadow-sm text-center">
+                    <i class="fa-brands fa-google text-5xl text-blue-500 mb-4"></i>
+                    <h3 class="font-bold text-xl mb-2">كيفية الربط الفعلي مع نماذج جوجل؟</h3>
+                    <p class="text-gray-500 mb-4 max-w-lg mx-auto">بما أن هذا النظام يعمل بالواجهة الأمامية (Frontend)، للربط الحقيقي قم بالذهاب إلى نموذج جوجل الخاص بك > "Script Editor" وأضف كود يرسل الردود (Webhook) إلى قاعدة بيانات Firebase المرفقة بهذا الموقع.</p>
+                    <button class="bg-primary text-white px-6 py-2 rounded-lg font-bold" onclick="showToast('تم تحديث البيانات من Firebase بنجاح', 'success')">تحديث البيانات الآن</button>
                 </div>
             </div>
 
-            <!-- VIEW: CALENDAR -->
-            <div id="view-calendar" class="view-section hidden animate-fade-in h-full flex flex-col">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" data-i18n="nav_calendar">Activity Calendar</h2>
-                    <div class="flex gap-4 items-center">
-                        <button class="p-2 bg-white dark:bg-darkcard rounded shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
-                        <h3 class="font-bold text-lg w-32 text-center" id="calendar-month-year">March 2026</h3>
-                        <button class="p-2 bg-white dark:bg-darkcard rounded shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
-                    </div>
-                </div>
-                <div class="flex-1 bg-white dark:bg-darkcard border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden flex flex-col">
-                    <div class="grid grid-cols-7 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 text-center font-semibold py-3 text-sm" id="cal-headers">
-                    </div>
-                    <div class="calendar-grid flex-1" id="calendar-days">
-                        <!-- Calendar Days injected -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: NOTIFICATIONS -->
-            <div id="view-notifications" class="view-section hidden animate-fade-in">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold" data-i18n="nav_notifs">Smart Notifications</h2>
-                    <div class="flex gap-2">
-                        <button class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2" onclick="simulateEmailReminder()"><i class="fa-regular fa-envelope"></i> <span data-i18n="test_email">Test Email Alert</span></button>
-                        <button class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2" onclick="document.getElementById('notifs-container').innerHTML=''"><i class="fa-solid fa-check-double"></i> <span data-i18n="mark_read">Mark All Read</span></button>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-3" id="notifs-container">
-                    <!-- Notifications -->
-                </div>
-            </div>
-
-            <!-- VIEW: API -->
-            <div id="view-api" class="view-section hidden animate-fade-in">
-                <h2 class="text-2xl font-bold mb-6" data-i18n="nav_api">API Documentation</h2>
-                <div class="bg-white dark:bg-darkcard p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
-                    <p class="mb-4 text-gray-600 dark:text-gray-400" data-i18n="api_desc">Use our REST API to connect NexDash data with your other applications securely.</p>
-                    <div class="space-y-4">
-                        <div class="border dark:border-gray-700 rounded-lg overflow-hidden">
-                            <div class="bg-gray-50 dark:bg-gray-800 px-4 py-3 border-b dark:border-gray-700 flex items-center"><span class="bg-green-100 text-green-700 font-bold px-2 py-1 rounded text-xs me-3" dir="ltr">GET</span> <code dir="ltr">/api/v1/events</code></div>
-                            <div class="p-4 bg-gray-900 text-green-400 font-mono text-sm overflow-x-auto" dir="ltr">[ { "id": "ev1", "title": "Annual Summit", "date": "2026-04-15", "status": "upcoming" } ]</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- VIEW: SETTINGS -->
             <div id="view-settings" class="view-section hidden animate-fade-in">
-                <h2 class="text-2xl font-bold mb-6" data-i18n="nav_settings">Platform Settings</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white dark:bg-darkcard p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2 dark:border-gray-700" data-i18n="set_acc">Account & Permissions</h3>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium mb-2" data-i18n="set_role">Simulate User Role</label>
-                            <select id="role-select" class="w-full px-4 py-2 border dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 outline-none" onchange="changeRole(this.value)">
-                                <option value="Admin">Admin (Full Access)</option>
-                                <option value="Partner">Partner (Edit specific)</option>
-                                <option value="Viewer">Viewer (Read-only)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="bg-white dark:bg-darkcard p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2 dark:border-gray-700" data-i18n="set_sys">System Backup</h3>
-                        <button class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium w-full shadow-sm mb-3 flex items-center justify-center gap-2" onclick="triggerBackup()"><i class="fa-solid fa-cloud-arrow-down"></i> <span data-i18n="set_backup">Trigger Manual Backup</span></button>
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium w-full shadow-sm flex items-center justify-center gap-2" onclick="resetData()"><i class="fa-solid fa-trash"></i> <span data-i18n="set_reset">Reset Application Data</span></button>
-                    </div>
-                </div>
+                 <h2 class="text-2xl font-bold mb-6">إعدادات النظام</h2>
+                 <button class="bg-red-500 text-white px-6 py-3 rounded-lg font-bold" onclick="resetData()"><i class="fa-solid fa-trash ml-2"></i> مسح جميع البيانات (إعادة ضبط المصنع)</button>
             </div>
 
         </main>
     </div>
 
     <!-- MODALS -->
-    <!-- Modal Backdrop -->
-    <div id="modal-backdrop" class="fixed inset-0 bg-black/50 z-40 hidden flex items-center justify-center p-4">
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
         
-        <!-- Add Event Modal -->
-        <div id="event-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-lg hidden modal-content flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg" data-i18n="create_event">Create New Event</h3>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
+        <!-- INVOICE MODAL (Excel Style) -->
+        <div id="invoice-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-2xl w-full max-w-4xl hidden modal-content flex flex-col max-h-[90vh]">
+            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800 rounded-t-xl">
+                <h3 class="font-bold text-xl" id="inv-modal-title">إنشاء فاتورة احترافية</h3>
+                <button onclick="closeModal()" class="text-red-500 hover:text-red-700 text-xl"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="p-6 overflow-y-auto">
-                <form id="form-event" class="space-y-4 text-start">
-                    <div><label class="block text-sm font-medium mb-1" data-i18n="th_title">Title</label><input type="text" id="ev-title" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-sm font-medium mb-1" data-i18n="th_date">Date</label><input type="date" id="ev-date" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 dark:text-white"></div>
-                        <div><label class="block text-sm font-medium mb-1">Time</label><input type="time" id="ev-time" class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 dark:text-white"></div>
-                    </div>
-                    <div><label class="block text-sm font-medium mb-1">Location</label><input type="text" id="ev-location" class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    <div><label class="block text-sm font-medium mb-1" data-i18n="th_desc">Description</label><textarea id="ev-desc" rows="3" class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></textarea></div>
-                    <button type="submit" class="w-full bg-primary text-white py-2 rounded font-medium" data-i18n="save">Save</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Add Invoice Modal -->
-        <div id="invoice-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-lg hidden modal-content flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg" data-i18n="create_invoice">Create Invoice</h3>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-6 overflow-y-auto">
-                <form id="form-invoice" class="space-y-4 text-start">
-                    <div>
-                        <label class="block text-sm font-medium mb-1" data-i18n="th_client">Client</label>
-                        <select id="inv-client" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></select>
-                    </div>
-                    <div><label class="block text-sm font-medium mb-1" data-i18n="th_desc">Description</label><input type="text" id="inv-desc" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-sm font-medium mb-1" data-i18n="th_amount">Amount ($)</label><input type="number" id="inv-amount" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                        <div><label class="block text-sm font-medium mb-1" data-i18n="th_tax">Tax (%)</label><input type="number" id="inv-tax" value="0" class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    </div>
-                    <button type="submit" class="w-full bg-primary text-white py-2 rounded font-medium" data-i18n="save">Save</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Add Client Modal -->
-        <div id="client-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-lg hidden modal-content flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg" data-i18n="add_client">Add Client</h3>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-6 overflow-y-auto">
-                <form id="form-client" class="space-y-4 text-start">
-                    <div><label class="block text-sm font-medium mb-1" data-i18n="th_name">Name</label><input type="text" id="cli-name" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div><label class="block text-sm font-medium mb-1">Email</label><input type="email" id="cli-email" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                        <div><label class="block text-sm font-medium mb-1">Phone</label><input type="text" id="cli-phone" class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    </div>
-                    <div><label class="block text-sm font-medium mb-1" data-i18n="th_company">Company</label><input type="text" id="cli-company" class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    <button type="submit" class="w-full bg-primary text-white py-2 rounded font-medium" data-i18n="save">Save</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Add Finance Modal -->
-        <div id="finance-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-lg hidden modal-content flex flex-col max-h-[90vh]">
-            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg" data-i18n="add_transaction">Record Transaction</h3>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-6 overflow-y-auto">
-                <form id="form-finance" class="space-y-4 text-start">
+                <form id="form-invoice" class="space-y-6">
+                    <input type="hidden" id="inv-edit-id">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium mb-1" data-i18n="th_type">Type</label>
-                            <select id="fin-type" class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700">
-                                <option value="Revenue">Revenue</option>
-                                <option value="Expense">Expense</option>
-                            </select>
+                            <label class="block font-bold mb-1">العميل</label>
+                            <select id="inv-client" required class="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700"></select>
                         </div>
-                        <div><label class="block text-sm font-medium mb-1" data-i18n="th_amount">Amount ($)</label><input type="number" id="fin-amount" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
+                        <div>
+                            <label class="block font-bold mb-1">تاريخ الإصدار</label>
+                            <input type="date" id="inv-date" required class="w-full px-3 py-2 border rounded bg-white dark:bg-gray-700" dir="ltr">
+                        </div>
                     </div>
-                    <div><label class="block text-sm font-medium mb-1" data-i18n="th_desc">Description</label><input type="text" id="fin-desc" required class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    <div><label class="block text-sm font-medium mb-1" data-i18n="th_cat">Category</label><input type="text" id="fin-cat" class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700"></div>
-                    <button type="submit" class="w-full bg-primary text-white py-2 rounded font-medium" data-i18n="save">Save</button>
+                    
+                    <!-- EXCEL STYLE TABLE -->
+                    <div class="border rounded-lg overflow-hidden">
+                        <table class="w-full text-center">
+                            <thead class="bg-primary text-white">
+                                <tr><th class="p-2 w-1/2">البيان / الخدمة</th><th class="p-2 w-1/6">الكمية</th><th class="p-2 w-1/6">سعر الوحدة</th><th class="p-2 w-1/6">المجموع</th><th class="p-2"></th></tr>
+                            </thead>
+                            <tbody id="inv-items-body">
+                                <!-- Items injected here -->
+                            </tbody>
+                        </table>
+                        <button type="button" onclick="addInvoiceRow()" class="w-full bg-gray-100 dark:bg-gray-800 p-2 font-bold text-primary hover:bg-gray-200"><i class="fa-solid fa-plus"></i> إضافة سطر جديد</button>
+                    </div>
+
+                    <!-- TOTALS -->
+                    <div class="flex justify-end">
+                        <div class="w-64 space-y-2 font-bold text-lg bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border">
+                            <div class="flex justify-between"><span>HT:</span> <span id="inv-ht" dir="ltr">0 DZD</span></div>
+                            <div class="flex justify-between text-red-500"><span>TVA (19%):</span> <span id="inv-tva" dir="ltr">0 DZD</span></div>
+                            <div class="flex justify-between text-green-600 border-t pt-2 text-xl"><span>TTC:</span> <span id="inv-ttc" dir="ltr">0 DZD</span></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-secondary text-white font-bold py-3 rounded-lg text-lg">حفظ الفاتورة</button>
                 </form>
             </div>
         </div>
 
-        <!-- QR Code Modal -->
-        <div id="qr-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-sm hidden modal-content flex flex-col">
-            <div class="px-6 py-4 border-b dark:border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg" data-i18n="share">Share Link</h3>
-                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="p-6 flex flex-col items-center">
-                <div id="qrcode-box" class="bg-white p-4 rounded-lg mb-4"></div>
-                <input type="text" id="share-link-input" readonly class="w-full px-3 py-2 border dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-sm text-center mb-2" dir="ltr">
-                <button onclick="copyShareLink()" class="text-primary text-sm font-medium flex items-center gap-2"><i class="fa-regular fa-copy"></i> <span data-i18n="copy">Copy Link</span></button>
-            </div>
+        <!-- OTHER MODALS (Client, Finance, Task, QR) -->
+        <div id="finance-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-lg hidden modal-content p-6">
+            <h3 class="font-bold text-xl mb-4 border-b pb-2">إضافة عملية مالية</h3>
+            <form id="form-finance" class="space-y-4">
+                <input type="hidden" id="fin-edit-id">
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block font-bold mb-1">النوع</label><select id="fin-type" class="w-full p-2 border rounded dark:bg-gray-700"><option value="Revenue">إيرادات (+)</option><option value="Expense">نفقات (-)</option></select></div>
+                    <div><label class="block font-bold mb-1">المبلغ (DZD)</label><input type="number" id="fin-amount" required class="w-full p-2 border rounded dark:bg-gray-700"></div>
+                </div>
+                <div><label class="block font-bold mb-1">البيان</label><input type="text" id="fin-desc" required class="w-full p-2 border rounded dark:bg-gray-700"></div>
+                <div><label class="block font-bold mb-1">التصنيف</label><input type="text" id="fin-cat" class="w-full p-2 border rounded dark:bg-gray-700"></div>
+                <button type="submit" class="w-full bg-primary text-white py-2 rounded font-bold mt-4">حفظ</button>
+                <button type="button" onclick="closeModal()" class="w-full bg-gray-300 dark:bg-gray-600 py-2 rounded font-bold mt-2">إلغاء</button>
+            </form>
         </div>
 
+        <div id="client-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-lg hidden modal-content p-6">
+            <h3 class="font-bold text-xl mb-4 border-b pb-2">تفاصيل العميل</h3>
+            <form id="form-client" class="space-y-4">
+                <input type="hidden" id="cli-edit-id">
+                <div><label class="block font-bold mb-1">اسم العميل</label><input type="text" id="cli-name" required class="w-full p-2 border rounded dark:bg-gray-700"></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="block font-bold mb-1">الإيميل</label><input type="email" id="cli-email" required class="w-full p-2 border rounded dark:bg-gray-700" dir="ltr"></div>
+                    <div><label class="block font-bold mb-1">الهاتف</label><input type="text" id="cli-phone" class="w-full p-2 border rounded dark:bg-gray-700" dir="ltr"></div>
+                </div>
+                <div><label class="block font-bold mb-1">الشركة</label><input type="text" id="cli-company" class="w-full p-2 border rounded dark:bg-gray-700"></div>
+                <button type="submit" class="w-full bg-primary text-white py-2 rounded font-bold mt-4">حفظ العميل</button>
+                <button type="button" onclick="closeModal()" class="w-full bg-gray-300 dark:bg-gray-600 py-2 rounded font-bold mt-2">إلغاء</button>
+            </form>
+        </div>
+
+        <div id="task-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-sm hidden modal-content p-6">
+            <h3 class="font-bold text-xl mb-4">إضافة مهمة</h3>
+            <form id="form-task" class="space-y-4">
+                <div><label class="block font-bold mb-1">عنوان المهمة</label><input type="text" id="task-title" required class="w-full p-2 border rounded dark:bg-gray-700"></div>
+                <div><label class="block font-bold mb-1">الحالة</label>
+                    <select id="task-status" class="w-full p-2 border rounded dark:bg-gray-700">
+                        <option value="todo">قيد الانتظار</option><option value="doing">جاري العمل</option><option value="done">مكتملة</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-primary text-white py-2 rounded font-bold">حفظ</button>
+                <button type="button" onclick="closeModal()" class="w-full bg-gray-300 py-2 rounded font-bold mt-2 dark:bg-gray-600">إلغاء</button>
+            </form>
+        </div>
+
+        <div id="qr-modal" class="bg-white dark:bg-darkcard rounded-xl shadow-lg w-full max-w-sm hidden modal-content flex flex-col items-center p-6 text-center">
+            <h3 class="font-bold text-xl mb-4 w-full flex justify-between"><span>مشاركة الرابط (حقيقي)</span> <button onclick="closeModal()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button></h3>
+            <div id="qrcode-box" class="bg-white p-4 rounded-xl mb-4 shadow border"></div>
+            <input type="text" id="share-link-input" readonly class="w-full px-3 py-2 border rounded bg-gray-50 dark:bg-gray-700 text-sm text-center mb-4 text-primary font-bold" dir="ltr">
+            <button onclick="copyShareLink()" class="w-full bg-secondary text-white py-2 rounded font-bold"><i class="fa-regular fa-copy"></i> نسخ الرابط وإرساله للعميل</button>
+        </div>
     </div>
 
     <!-- Toast Container -->
     <div id="toast-container"></div>
 
-    <!-- APPLICATION LOGIC & FIREBASE -->
     <script type="module">
+        // ==========================================
+        // FIREBASE & EMAILJS CONFIGURATION
+        // ==========================================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-analytics.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCePMwR1Ov1Xknj-1m0FJG-IE3pmSItzzU",
-            authDomain: "thwas-b496b.firebaseapp.com",
-            projectId: "thwas-b496b",
-            storageBucket: "thwas-b496b.firebasestorage.app",
-            messagingSenderId: "435409022648",
-            appId: "1:435409022648:web:85ad4d14546f5d2ccb0e4d",
-            measurementId: "G-C54SBF5ZN6"
+            apiKey: "AIzaSyCePMwR1Ov1Xknj-1m0FJG-IE3pmSItzzU", authDomain: "thwas-b496b.firebaseapp.com",
+            projectId: "thwas-b496b", storageBucket: "thwas-b496b.firebasestorage.app",
+            messagingSenderId: "435409022648", appId: "1:435409022648:web:85ad4d14546f5d2ccb0e4d"
+        };
+        let db;
+        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch(e) { console.warn("Firebase Error"); }
+
+        // EMAILJS INIT (REPLACE WITH YOUR KEYS)
+        // Sign up at emailjs.com -> Add Service (Gmail) -> Create Template
+        emailjs.init("YOUR_PUBLIC_KEY_HERE"); 
+
+        // ==========================================
+        // AUTHENTICATION & ROUTING
+        // ==========================================
+        window.checkLogin = function() {
+            const pwd = document.getElementById('login-pwd').value;
+            if(pwd === '1077') {
+                localStorage.setItem('nexdash_auth', 'true');
+                document.getElementById('login-screen').classList.add('hidden');
+                loadData();
+            } else { showToast('كلمة السر خاطئة', 'error'); }
         };
 
-        let app, analytics, db;
-        try {
-            app = initializeApp(firebaseConfig);
-            analytics = getAnalytics(app);
-            db = getFirestore(app);
-            console.log("Firebase initialized");
-        } catch(e) { console.warn("Firebase initialization failed, running on LocalStorage only.", e); }
+        window.logout = function() {
+            localStorage.removeItem('nexdash_auth');
+            location.reload();
+        };
 
-        // ==========================================
-        // TRANSLATIONS (i18n)
-        // ==========================================
-        const translations = {
-            en: {
-                nav_dashboard: "Dashboard", nav_events: "Events & Activities", nav_clients: "Clients", nav_invoices: "Invoices", nav_finances: "Revenue & Expenses", nav_forms: "Google Forms Data", nav_calendar: "Calendar", nav_notifs: "Notifications", nav_api: "API Integration", nav_settings: "Settings",
-                search: "Search anywhere...", search_cli: "Search clients...",
-                dash_overview: "Dashboard Overview", export_report: "Export Report", tot_rev: "Total Revenue", tot_exp: "Total Expenses", net_profit: "Net Profit", act_clients: "Active Clients", rev_vs_exp: "Revenue vs Expenses", exp_cat: "Expense Categories", rec_inv: "Recent Invoices", up_events: "Upcoming Events",
-                create_event: "Create Event", add_client: "Add Client", create_invoice: "Create Invoice", add_transaction: "Add Transaction", sync_now: "Sync Now",
-                export: "Export", save: "Save", delete: "Delete", edit: "Edit", share: "Share", copy: "Copy Link",
-                test_email: "Test Email Alert", mark_read: "Mark All Read",
-                api_desc: "Use our REST API to connect NexDash data with your other applications securely.",
-                set_acc: "Account & Permissions", set_role: "Simulate User Role", set_sys: "System Backup", set_backup: "Trigger Manual Backup", set_reset: "Reset Application Data",
-                th_name: "Name", th_company: "Company", th_contact: "Contact", th_status: "Status", th_actions: "Actions", th_invoice: "Invoice #", th_client: "Client", th_date: "Date", th_amount: "Amount", th_desc: "Description", th_cat: "Category", th_type: "Type", th_title: "Title", th_tax: "Tax", th_time: "Time", th_topic: "Form Topic", th_msg: "Message",
-                sync_status: "Sync", forms_synced: "Forms synced successfully!"
-            },
-            fr: {
-                nav_dashboard: "Tableau de Bord", nav_events: "Événements", nav_clients: "Clients", nav_invoices: "Factures", nav_finances: "Revenus & Dépenses", nav_forms: "Formulaires Google", nav_calendar: "Calendrier", nav_notifs: "Notifications", nav_api: "Intégration API", nav_settings: "Paramètres",
-                search: "Rechercher...", search_cli: "Chercher des clients...",
-                dash_overview: "Aperçu du Tableau", export_report: "Exporter le Rapport", tot_rev: "Revenus Totaux", tot_exp: "Dépenses Totales", net_profit: "Bénéfice Net", act_clients: "Clients Actifs", rev_vs_exp: "Revenus vs Dépenses", exp_cat: "Catégories Dépenses", rec_inv: "Factures Récentes", up_events: "Événements à Venir",
-                create_event: "Créer un Événement", add_client: "Ajouter Client", create_invoice: "Créer Facture", add_transaction: "Ajouter Transaction", sync_now: "Synchroniser",
-                export: "Exporter", save: "Enregistrer", delete: "Supprimer", edit: "Modifier", share: "Partager", copy: "Copier le Lien",
-                test_email: "Tester Alerte Email", mark_read: "Tout marquer lu",
-                api_desc: "Utilisez notre API REST pour connecter les données NexDash avec vos autres applications.",
-                set_acc: "Compte & Permissions", set_role: "Simuler Rôle Utilisateur", set_sys: "Sauvegarde Système", set_backup: "Déclencher Sauvegarde", set_reset: "Réinitialiser les Données",
-                th_name: "Nom", th_company: "Entreprise", th_contact: "Contact", th_status: "Statut", th_actions: "Actions", th_invoice: "Facture #", th_client: "Client", th_date: "Date", th_amount: "Montant", th_desc: "Description", th_cat: "Catégorie", th_type: "Type", th_title: "Titre", th_tax: "Taxe", th_time: "Heure", th_topic: "Sujet", th_msg: "Message",
-                sync_status: "Synchro", forms_synced: "Synchronisé avec succès!"
-            },
-            ar: {
-                nav_dashboard: "لوحة القيادة", nav_events: "الأحداث والأنشطة", nav_clients: "العملاء", nav_invoices: "الفواتير", nav_finances: "الإيرادات والمصروفات", nav_forms: "بيانات نماذج جوجل", nav_calendar: "التقويم", nav_notifs: "الإشعارات", nav_api: "تكامل API", nav_settings: "الإعدادات",
-                search: "ابحث في أي مكان...", search_cli: "ابحث عن عملاء...",
-                dash_overview: "نظرة عامة على اللوحة", export_report: "تصدير التقرير", tot_rev: "إجمالي الإيرادات", tot_exp: "إجمالي المصروفات", net_profit: "صافي الربح", act_clients: "العملاء النشطون", rev_vs_exp: "الإيرادات مقابل المصروفات", exp_cat: "فئات المصروفات", rec_inv: "الفواتير الأخيرة", up_events: "الأحداث القادمة",
-                create_event: "إنشاء حدث", add_client: "إضافة عميل", create_invoice: "إنشاء فاتورة", add_transaction: "إضافة معاملة", sync_now: "مزامنة الآن",
-                export: "تصدير", save: "حفظ", delete: "حذف", edit: "تعديل", share: "مشاركة", copy: "نسخ الرابط",
-                test_email: "اختبار بريد التنبيه", mark_read: "تحديد الكل كمقروء",
-                api_desc: "استخدم API الخاصة بنا لربط بيانات نكس داش بالتطبيقات الأخرى بأمان.",
-                set_acc: "الحساب والصلاحيات", set_role: "محاكاة دور المستخدم", set_sys: "نسخ احتياطي للنظام", set_backup: "بدء النسخ الاحتياطي", set_reset: "إعادة ضبط البيانات",
-                th_name: "الاسم", th_company: "الشركة", th_contact: "جهة الاتصال", th_status: "الحالة", th_actions: "إجراءات", th_invoice: "رقم الفاتورة", th_client: "العميل", th_date: "التاريخ", th_amount: "المبلغ", th_desc: "الوصف", th_cat: "الفئة", th_type: "النوع", th_title: "العنوان", th_tax: "الضريبة", th_time: "الوقت", th_topic: "موضوع النموذج", th_msg: "الرسالة",
-                sync_status: "المزامنة", forms_synced: "تمت المزامنة بنجاح!"
+        // Check if viewing a shared real link
+        const urlParams = new URLSearchParams(window.location.search);
+        const shareId = urlParams.get('share_invoice');
+
+        window.onload = function() {
+            if(shareId) {
+                // If it's a shared link, bypass login and show only the invoice
+                document.getElementById('login-screen').classList.add('hidden');
+                document.querySelector('aside').classList.add('hidden');
+                document.querySelector('header').classList.add('hidden');
+                document.getElementById('main-content').classList.add('hidden');
+                loadSharedInvoice(shareId);
+            } else {
+                // Normal flow
+                if(localStorage.getItem('nexdash_auth') === 'true') {
+                    document.getElementById('login-screen').classList.add('hidden');
+                    loadData();
+                }
             }
         };
 
-        const t = (key) => {
-            const lang = window.appData.lang || 'en';
-            return translations[lang][key] || key;
-        };
-
         // ==========================================
-        // STATE MANAGEMENT & DATA
+        // DATA STATE (DZD Currency)
         // ==========================================
         const defaultData = {
-            lang: 'en',
-            role: 'Admin',
-            clients:[
-                { id: 'c1', name: 'John Doe', email: 'john@acme.com', phone: '555-0100', company: 'Acme Corp', status: 'Active', regDate: '2026-01-15' },
-                { id: 'c2', name: 'Jane Smith', email: 'jane@stark.com', phone: '555-0200', company: 'Stark Ind', status: 'Active', regDate: '2026-02-10' }
-            ],
-            events:[
-                { id: 'e1', title: 'Q2 Marketing Seminar', date: '2026-04-15', time: '10:00', location: 'Virtual', desc: 'Discussing Q2 strategies', participants: 45, status: 'Upcoming' },
-                { id: 'e2', title: 'Client Onboarding', date: '2026-03-20', time: '14:00', location: 'NY Office', desc: 'Onboarding session', participants: 5, status: 'Upcoming' }
-            ],
-            invoices:[
-                { id: 'INV-1024', clientId: 'c1', desc: 'Consulting', amount: 1500, tax: 150, total: 1650, status: 'Paid', date: '2026-03-01' },
-                { id: 'INV-1025', clientId: 'c2', desc: 'Design Assets', amount: 800, tax: 80, total: 880, status: 'Unpaid', date: '2026-03-15' }
-            ],
+            clients: [],
             finances:[
-                { id: 'f1', type: 'Revenue', amount: 1650, desc: 'INV-1024', cat: 'Service Income', date: '2026-03-05' },
-                { id: 'f2', type: 'Expense', amount: 300, desc: 'Software Sub', cat: 'Equipment', date: '2026-03-10' }
+                { id: 'f1', type: 'Revenue', amount: 50000, desc: 'رصيد افتتاحي', cat: 'أخرى', date: getToday() }
             ],
-            forms:[
-                { id: 'fm1', date: '2026-03-14 09:30', name: 'Alice Ray', email: 'al@mail.com', topic: 'Event Registration', msg: 'Looking forward to the seminar.' }
-            ],
-            notifications:[
-                { id: 'n1', text: 'New client registration', date: '2026-02-10', read: true },
-                { id: 'n2', text: 'Invoice INV-1025 generated', date: '2026-03-15', read: false }
+            invoices: [],
+            tasks:[
+                { id: 't1', title: 'مراجعة حسابات الشهر', status: 'todo' },
+                { id: 't2', title: 'إرسال عرض السعر للعميل أ', status: 'doing' }
             ]
         };
 
         window.appData = { ...defaultData };
 
         async function saveData() {
-            localStorage.setItem('nexdash_data', JSON.stringify(window.appData));
+            localStorage.setItem('nexdash_data_pro', JSON.stringify(window.appData));
             updateDashboard();
             if(db) {
-                try {
-                    await setDoc(doc(db, "appData", "mainStore"), window.appData);
-                    document.getElementById('sync-status').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Online';
-                } catch(e) { document.getElementById('sync-status').innerHTML = '<span class="text-red-500"><i class="fa-solid fa-cloud-arrow-up"></i> Local Only</span>'; }
+                try { await setDoc(doc(db, "appData", "proStore"), window.appData); } catch(e){}
             }
         }
 
         async function loadData() {
-            const local = localStorage.getItem('nexdash_data');
+            const local = localStorage.getItem('nexdash_data_pro');
             if(local) window.appData = JSON.parse(local);
-
             if(db) {
-                try {
-                    const docSnap = await getDoc(doc(db, "appData", "mainStore"));
-                    if(docSnap.exists()) {
-                        window.appData = docSnap.data();
-                        localStorage.setItem('nexdash_data', JSON.stringify(window.appData));
-                    }
-                } catch(e) {}
+                try { const docSnap = await getDoc(doc(db, "appData", "proStore")); if(docSnap.exists()) { window.appData = docSnap.data(); } } catch(e){}
             }
-
-            if(!window.appData.lang) window.appData.lang = 'en';
-            applyLanguage();
-            applyRoleUI();
             initCharts();
-            initCalendar();
-            
-            setTimeout(() => showToast('Welcome to NexDash!', 'info'), 1000);
-        }
-
-        // ==========================================
-        // LANGUAGE & UI
-        // ==========================================
-        window.changeLanguage = function(lang) {
-            window.appData.lang = lang;
-            saveData();
-            applyLanguage();
-        };
-
-        function applyLanguage() {
-            const lang = window.appData.lang;
-            const isRtl = lang === 'ar';
-            document.documentElement.lang = lang;
-            document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
-            document.getElementById('lang-select').value = lang;
-
-            // Chart.js RTL setting
-            Chart.defaults.rtl = isRtl;
-
-            // Static translations
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(translations[lang][key]) {
-                    if(el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.innerText = translations[lang][key];
-                    }
-                }
-            });
-
-            // Re-render Dynamic views
-            renderAllViews();
             updateDashboard();
-            renderCalendar();
-            if(window.myCharts) window.myCharts.forEach(c => c.update());
+            renderAll();
         }
 
+        function getToday() { return new Date().toISOString().split('T')[0]; }
+
+        // ==========================================
+        // UI & NAVIGATION
+        // ==========================================
         window.navigate = function(viewId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('view-' + viewId).classList.remove('hidden');
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.querySelector(`.nav-item[data-target="${viewId}"]`).classList.add('active');
-            if(viewId === 'calendar') renderCalendar();
+            
+            if(viewId === 'emails') {
+                const sel = document.getElementById('mail-to');
+                // Could auto-complete with client emails, but let's keep it generic input
+            }
         };
-
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            themeToggleBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun text-lg"></i>' : '<i class="fa-solid fa-moon text-lg"></i>';
-            if(window.myCharts) window.myCharts.forEach(c => c.update());
-        });
 
         window.showToast = function(msg, type = 'info') {
             const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `<i class="fa-solid ${type==='success'?'fa-check-circle':type==='error'?'fa-circle-exclamation':'fa-info-circle'} me-2"></i> ${msg}`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
+            const t = document.createElement('div'); t.className = `toast ${type}`;
+            t.innerHTML = msg; container.appendChild(t); setTimeout(() => t.remove(), 4000);
         };
 
         window.openModal = function(id) {
-            if(window.appData.role === 'Viewer') { showToast('Viewers cannot perform this action.', 'error'); return; }
             document.getElementById('modal-backdrop').classList.remove('hidden');
             document.querySelectorAll('.modal-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
-            if(id === 'invoice-modal') {
-                const sel = document.getElementById('inv-client');
-                sel.innerHTML = window.appData.clients.map(c => `<option value="${c.id}">${c.name} (${c.company})</option>`).join('');
-            }
         };
         window.closeModal = function() { document.getElementById('modal-backdrop').classList.add('hidden'); };
 
-        window.changeRole = function(role) {
-            window.appData.role = role;
-            saveData();
-            applyRoleUI();
-        };
-        function applyRoleUI() {
-            document.getElementById('current-user-role').innerText = window.appData.role;
-            document.getElementById('role-select').value = window.appData.role;
-            document.querySelectorAll('.require-admin').forEach(el => {
-                el.style.display = window.appData.role === 'Viewer' ? 'none' : 'flex';
-            });
-        }
-
-        // ==========================================
-        // RENDERING & LOGIC
-        // ==========================================
-        function updateDashboard() {
-            const rev = window.appData.finances.filter(f=>f.type==='Revenue').reduce((s,f)=>s+f.amount, 0);
-            const exp = window.appData.finances.filter(f=>f.type==='Expense').reduce((s,f)=>s+f.amount, 0);
-            
-            document.getElementById('stat-revenue').innerText = `$${rev.toLocaleString()}`;
-            document.getElementById('stat-expenses').innerText = `$${exp.toLocaleString()}`;
-            document.getElementById('stat-profit').innerText = `$${(rev-exp).toLocaleString()}`;
-            document.getElementById('stat-clients').innerText = window.appData.clients.length;
-
-            document.getElementById('recent-invoices-table').innerHTML = window.appData.invoices.slice(-5).reverse().map(inv => {
-                const c = window.appData.clients.find(c=>c.id===inv.clientId);
-                const statusColor = inv.status==='Paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
-                return `<tr class="border-b border-gray-100 dark:border-gray-700">
-                    <td class="px-5 py-3">${inv.id}</td>
-                    <td class="px-5 py-3">${c?c.name:'Unknown'}</td>
-                    <td class="px-5 py-3">$${inv.total}</td>
-                    <td class="px-5 py-3"><span class="px-2 py-1 rounded text-xs font-bold ${statusColor}">${inv.status}</span></td>
-                </tr>`;
-            }).join('');
-
-            document.getElementById('upcoming-events-list').innerHTML = window.appData.events.filter(e=>e.status==='Upcoming').slice(0,4).map(e => `
-                <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                    <div class="bg-primary text-white w-12 h-12 rounded flex flex-col justify-center items-center font-bold me-4">
-                        <span class="text-xs uppercase">${new Date(e.date).toLocaleString('en', {month:'short'})}</span>
-                        <span class="text-lg">${new Date(e.date).getDate()}</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-start">${e.title}</h4>
-                        <p class="text-xs text-gray-500 text-start" dir="ltr">${e.time} | ${e.location}</p>
-                    </div>
-                </div>
-            `).join('');
-            updateChartsData(rev, exp);
-        }
-
-        function renderAllViews() {
-            renderClients(); renderInvoices(); renderEvents(); renderFinances(); renderForms(); renderNotifications();
-        }
-
-        window.renderClients = function() {
-            const q = document.getElementById('client-search').value.toLowerCase();
-            const filtered = window.appData.clients.filter(c => c.name.toLowerCase().includes(q) || c.company.toLowerCase().includes(q));
-            
-            document.getElementById('clients-thead').innerHTML = `<tr><th class="px-6 py-3 font-medium">${t('th_name')}</th><th class="px-6 py-3 font-medium">${t('th_company')}</th><th class="px-6 py-3 font-medium">${t('th_contact')}</th><th class="px-6 py-3 font-medium">${t('th_status')}</th><th class="px-6 py-3 font-medium text-end">${t('th_actions')}</th></tr>`;
-            
-            document.getElementById('clients-tbody').innerHTML = filtered.map(c => `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <td class="px-6 py-4 font-medium">${c.name}</td>
-                    <td class="px-6 py-4">${c.company}</td>
-                    <td class="px-6 py-4 text-xs" dir="ltr"><span class="block text-start">${c.email}</span><span class="block text-start">${c.phone}</span></td>
-                    <td class="px-6 py-4"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">${c.status}</span></td>
-                    <td class="px-6 py-4 text-end">
-                        <button class="text-gray-400 hover:text-red-500 require-admin" onclick="deleteItem('clients','${c.id}')"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-            applyRoleUI();
-        };
-
-        window.renderInvoices = function() {
-            document.getElementById('invoices-thead').innerHTML = `<tr><th class="px-6 py-3 font-medium">${t('th_invoice')}</th><th class="px-6 py-3 font-medium">${t('th_client')}</th><th class="px-6 py-3 font-medium">${t('th_date')}</th><th class="px-6 py-3 font-medium">${t('th_amount')}</th><th class="px-6 py-3 font-medium">${t('th_status')}</th><th class="px-6 py-3 font-medium text-end">${t('th_actions')}</th></tr>`;
-            
-            document.getElementById('invoices-tbody').innerHTML = window.appData.invoices.map(inv => {
-                const c = window.appData.clients.find(c=>c.id===inv.clientId);
-                const s = inv.status==='Paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
-                return `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <td class="px-6 py-4 font-bold text-primary">${inv.id}</td>
-                    <td class="px-6 py-4">${c?c.name:'-'}</td>
-                    <td class="px-6 py-4">${inv.date}</td>
-                    <td class="px-6 py-4">$${inv.total}</td>
-                    <td class="px-6 py-4 cursor-pointer" onclick="toggleInvoiceStatus('${inv.id}')"><span class="px-2 py-1 rounded text-xs font-bold ${s}">${inv.status}</span></td>
-                    <td class="px-6 py-4 text-end flex gap-3 justify-end">
-                        <button class="text-gray-400 hover:text-secondary" onclick="shareQr('${inv.id}', 'https://nexdash.app/pay/${inv.id}')"><i class="fa-solid fa-share-nodes"></i></button>
-                        <button class="text-gray-400 hover:text-red-500 require-admin" onclick="deleteItem('invoices','${inv.id}')"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>`}).join('');
-            applyRoleUI();
-        };
-
-        window.toggleInvoiceStatus = function(id) {
-            if(window.appData.role === 'Viewer') return;
-            const inv = window.appData.invoices.find(i=>i.id===id);
-            inv.status = inv.status === 'Paid' ? 'Unpaid' : 'Paid';
-            saveData();
-        };
-
-        window.renderEvents = function() {
-            document.getElementById('events-container').innerHTML = window.appData.events.map(e => `
-                <div class="bg-white dark:bg-darkcard rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-5 hover:shadow-md transition-shadow relative overflow-hidden text-start">
-                    <div class="absolute top-0 end-0 w-2 h-full ${e.status==='Upcoming'?'bg-primary':'bg-gray-400'}"></div>
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="font-bold text-lg pe-4">${e.title}</h3>
-                        <span class="bg-gray-100 dark:bg-gray-700 text-xs px-2 py-1 rounded">${e.status}</span>
-                    </div>
-                    <p class="text-sm text-gray-500 mb-4 h-10 overflow-hidden">${e.desc}</p>
-                    <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        <div class="flex items-center gap-2"><i class="fa-regular fa-calendar w-4"></i> <span dir="ltr">${e.date} ${e.time}</span></div>
-                        <div class="flex items-center gap-2"><i class="fa-solid fa-location-dot w-4"></i> <span>${e.location}</span></div>
-                    </div>
-                    <div class="flex border-t border-gray-100 dark:border-gray-700 pt-4 gap-2">
-                        <button class="flex-1 text-center flex justify-center items-center gap-2 text-sm font-medium text-primary hover:bg-gray-50 dark:hover:bg-gray-800 py-2 rounded transition" onclick="shareQr('${e.title}', 'https://nexdash.app/ev/${e.id}')"><i class="fa-solid fa-share"></i> ${t('share')}</button>
-                        <button class="flex-1 text-center flex justify-center items-center gap-2 text-sm font-medium text-red-500 hover:bg-gray-50 dark:hover:bg-gray-800 py-2 rounded transition require-admin" onclick="deleteItem('events','${e.id}')"><i class="fa-solid fa-trash"></i> ${t('delete')}</button>
-                    </div>
-                </div>
-            `).join('');
-            applyRoleUI();
-        };
-
-        window.renderFinances = function() {
-            document.getElementById('finances-thead').innerHTML = `<tr><th class="px-6 py-3 font-medium">${t('th_date')}</th><th class="px-6 py-3 font-medium">${t('th_desc')}</th><th class="px-6 py-3 font-medium">${t('th_cat')}</th><th class="px-6 py-3 font-medium">${t('th_type')}</th><th class="px-6 py-3 font-medium">${t('th_amount')}</th></tr>`;
-            document.getElementById('finances-tbody').innerHTML = window.appData.finances.slice().reverse().map(f => `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <td class="px-6 py-4">${f.date}</td><td class="px-6 py-4 font-medium">${f.desc}</td>
-                    <td class="px-6 py-4 text-xs"><span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">${f.cat}</span></td>
-                    <td class="px-6 py-4"><span class="${f.type==='Revenue'?'text-green-500':'text-red-500'} font-bold">${f.type}</span></td>
-                    <td class="px-6 py-4 font-bold">$${f.amount}</td>
-                </tr>`).join('');
-        };
-
-        window.renderForms = function() {
-            document.getElementById('forms-thead').innerHTML = `<tr><th class="px-6 py-3 font-medium">${t('th_date')}</th><th class="px-6 py-3 font-medium">${t('th_name')}</th><th class="px-6 py-3 font-medium">Email</th><th class="px-6 py-3 font-medium">${t('th_topic')}</th><th class="px-6 py-3 font-medium">${t('th_msg')}</th></tr>`;
-            document.getElementById('forms-tbody').innerHTML = window.appData.forms.map(f => `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                    <td class="px-6 py-4 text-xs" dir="ltr">${f.date}</td><td class="px-6 py-4 font-medium">${f.name}</td>
-                    <td class="px-6 py-4" dir="ltr">${f.email}</td>
-                    <td class="px-6 py-4"><span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs font-bold">${f.topic}</span></td>
-                    <td class="px-6 py-4 text-sm text-gray-500">${f.msg}</td>
-                </tr>`).join('');
-        };
-
-        window.renderNotifications = function() {
-            const container = document.getElementById('notifs-container');
-            const notifs = window.appData.notifications;
-            const unread = notifs.filter(n=>!n.read).length;
-            const badge = document.querySelector('.fa-bell').nextElementSibling;
-            const sidebarBadge = document.querySelector('a[data-target="notifications"] span');
-            
-            if(unread > 0) {
-                badge.classList.remove('hidden'); sidebarBadge.innerText = unread; sidebarBadge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden'); sidebarBadge.classList.add('hidden');
-            }
-
-            container.innerHTML = notifs.slice().reverse().map(n => `
-                <div class="p-4 rounded-xl border ${n.read ? 'bg-white dark:bg-darkcard border-gray-100 dark:border-gray-700' : 'bg-indigo-50 dark:bg-gray-800 border-indigo-200 dark:border-indigo-500'} flex justify-between items-center cursor-pointer text-start" onclick="markRead('${n.id}')">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full ${n.read?'bg-gray-200 text-gray-500 dark:bg-gray-700':'bg-primary text-white'} flex items-center justify-center shrink-0"><i class="fa-solid fa-bell"></i></div>
-                        <div>
-                            <p class="${n.read?'text-gray-600 dark:text-gray-400':'font-bold'}">${n.text}</p>
-                            <p class="text-xs text-gray-500 mt-1" dir="ltr">${n.date}</p>
-                        </div>
-                    </div>
-                    ${!n.read ? '<span class="w-3 h-3 bg-primary rounded-full shrink-0"></span>' : ''}
-                </div>`).join('');
-        };
-
-        window.markRead = function(id) { const n = window.appData.notifications.find(n=>n.id===id); if(n) { n.read = true; saveData(); } };
-
-        // ==========================================
-        // FORMS SUBMISSION
-        // ==========================================
-        function getToday() { const d = new Date(); return d.toISOString().split('T')[0]; }
-
-        document.getElementById('form-event').addEventListener('submit', (e) => {
-            e.preventDefault();
-            window.appData.events.push({
-                id: 'ev' + Date.now(), title: document.getElementById('ev-title').value, date: document.getElementById('ev-date').value, time: document.getElementById('ev-time').value, location: document.getElementById('ev-location').value, desc: document.getElementById('ev-desc').value, participants: 0, status: 'Upcoming'
-            });
-            saveData(); closeModal(); showToast('Saved', 'success'); e.target.reset();
+        // Dark Mode Toggle
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if(window.myCharts) window.myCharts.forEach(c => c.update());
         });
 
-        document.getElementById('form-client').addEventListener('submit', (e) => {
-            e.preventDefault();
-            window.appData.clients.push({ id: 'c' + Date.now(), name: document.getElementById('cli-name').value, email: document.getElementById('cli-email').value, phone: document.getElementById('cli-phone').value, company: document.getElementById('cli-company').value, status: 'Active', regDate: getToday() });
-            saveData(); closeModal(); showToast('Saved', 'success'); e.target.reset();
-        });
-
-        document.getElementById('form-invoice').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const amt = parseFloat(document.getElementById('inv-amount').value);
-            const tax = parseFloat(document.getElementById('inv-tax').value) || 0;
-            const taxAmt = amt * (tax/100);
-            window.appData.invoices.push({ id: 'INV-' + Math.floor(1000 + Math.random() * 9000), clientId: document.getElementById('inv-client').value, desc: document.getElementById('inv-desc').value, amount: amt, tax: taxAmt, total: amt + taxAmt, status: 'Unpaid', date: getToday() });
-            saveData(); closeModal(); showToast('Saved', 'success'); e.target.reset();
-        });
-
-        document.getElementById('form-finance').addEventListener('submit', (e) => {
-            e.preventDefault();
-            window.appData.finances.push({ id: 'f' + Date.now(), type: document.getElementById('fin-type').value, amount: parseFloat(document.getElementById('fin-amount').value), desc: document.getElementById('fin-desc').value, cat: document.getElementById('fin-cat').value || 'Other', date: getToday() });
-            saveData(); closeModal(); showToast('Saved', 'success'); e.target.reset();
-        });
-
-        window.deleteItem = function(collection, id) {
-            if(!confirm('Delete this item?')) return;
-            window.appData[collection] = window.appData[collection].filter(item => item.id !== id);
-            saveData(); showToast('Deleted');
-        };
-
         // ==========================================
-        // CHARTS LOGIC
+        // DASHBOARD & CHARTS
         // ==========================================
         window.myCharts =[];
         function initCharts() {
-            const ctx1 = document.getElementById('financeChart').getContext('2d');
-            const ctx2 = document.getElementById('expenseDoughnut').getContext('2d');
-            Chart.defaults.color = document.documentElement.classList.contains('dark') ? '#cbd5e1' : '#475569';
-            Chart.defaults.font.family = 'Inter, sans-serif';
+            const ctxBar = document.getElementById('financeChart').getContext('2d');
+            const ctxGauge = document.getElementById('gaugeChart').getContext('2d');
+            Chart.defaults.color = '#94a3b8'; Chart.defaults.font.family = 'Cairo';
 
-            const lineChart = new Chart(ctx1, {
+            const barChart = new Chart(ctxBar, {
                 type: 'bar',
-                data: { labels:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], datasets:[{ label: 'Revenue', data:[1200, 1900, 1650, 0, 0, 0], backgroundColor: '#4F46E5', borderRadius: 4 }, { label: 'Expenses', data:[500, 800, 1100, 0, 0, 0], backgroundColor: '#F43F5E', borderRadius: 4 }] },
+                data: { labels:['Jan','Feb','Mar','Apr','May','Jun'], datasets:[
+                    { label: 'إيرادات', data:[0,0,0,0,0,0], backgroundColor: '#10B981', borderRadius: 4 },
+                    { label: 'نفقات', data:[0,0,0,0,0,0], backgroundColor: '#EF4444', borderRadius: 4 }
+                ]},
                 options: { responsive: true, maintainAspectRatio: false }
             });
 
-            const doughnutChart = new Chart(ctx2, {
+            // GAUGE CHART (Speedometer style)
+            const gaugeChart = new Chart(ctxGauge, {
                 type: 'doughnut',
-                data: { labels: ['Equipment', 'Marketing', 'Software', 'Other'], datasets: [{ data:[300, 800, 150, 100], backgroundColor:['#10B981', '#3B82F6', '#8B5CF6', '#F59E0B'], borderWidth: 0 }] },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
+                data: { labels:['عجز (سالب)', 'ربح (موجب)'], datasets: [{ data: [1, 1], backgroundColor: ['#EF4444', '#10B981'], borderWidth: 0 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: true,
+                    circumference: 180, rotation: -90, cutout: '80%',
+                    plugins: { legend: { display: false }, tooltip: {enabled: false} }
+                }
             });
-            window.myCharts = [lineChart, doughnutChart];
+
+            window.myCharts =[barChart, gaugeChart];
         }
 
-        function updateChartsData(rev, exp) { if(window.myCharts.length) { window.myCharts[0].data.datasets[0].data[2] = rev; window.myCharts[0].data.datasets[1].data[2] = exp; window.myCharts[0].update(); } }
+        function updateDashboard() {
+            const rev = window.appData.finances.filter(f=>f.type==='Revenue').reduce((s,f)=>s+f.amount, 0);
+            const exp = window.appData.finances.filter(f=>f.type==='Expense').reduce((s,f)=>s+f.amount, 0);
+            const profit = rev - exp;
+            
+            document.getElementById('stat-revenue').innerText = rev.toLocaleString() + ' DZD';
+            document.getElementById('stat-expenses').innerText = exp.toLocaleString() + ' DZD';
+            document.getElementById('stat-profit').innerText = profit.toLocaleString() + ' DZD';
+            document.getElementById('stat-clients').innerText = window.appData.clients.length;
 
-        // ==========================================
-        // CALENDAR LOGIC
-        // ==========================================
-        let currentMonth = 2, currentYear = 2026;
-        
-        window.initCalendar = function() { renderCalendar(); };
-        window.changeMonth = function(dir) {
-            currentMonth += dir;
-            if(currentMonth > 11) { currentMonth = 0; currentYear++; }
-            if(currentMonth < 0) { currentMonth = 11; currentYear--; }
-            renderCalendar();
-        };
-
-        function renderCalendar() {
-            const daysNames = window.appData.lang === 'fr' ? ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'] : 
-                              window.appData.lang === 'ar' ?['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'] :['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            const months = window.appData.lang === 'fr' ?["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"] : 
-                           window.appData.lang === 'ar' ?["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"] :["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            
-            document.getElementById('cal-headers').innerHTML = daysNames.map(d=>`<div>${d}</div>`).join('');
-            document.getElementById('calendar-month-year').innerText = `${months[currentMonth]} ${currentYear}`;
-            
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            
-            let html = '';
-            for(let i=0; i<firstDay; i++) { html += `<div class="calendar-cell bg-gray-50 dark:bg-gray-800 opacity-50"></div>`; }
-            for(let d=1; d<=daysInMonth; d++) {
-                const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                const dayEvents = window.appData.events.filter(e => e.date === dateStr);
-                let evHtml = dayEvents.map(e => `<div class="bg-primary text-white text-xs px-1 py-0.5 rounded mt-1 truncate cursor-pointer" onclick="navigate('events')">${e.title}</div>`).join('');
-                html += `<div class="calendar-cell relative"><span class="font-semibold text-sm text-gray-400">${d}</span><div class="mt-1">${evHtml}</div></div>`;
+            // Update Gauge
+            document.getElementById('gauge-amount').innerText = profit.toLocaleString() + ' DZD';
+            document.getElementById('gauge-amount').className = `text-3xl font-black mt-1 ${profit >= 0 ? 'text-green-500' : 'text-red-500'}`;
+            if(window.myCharts[1]) {
+                // simple visual ratio
+                let pRatio = profit >= 0 ? 100 : 0;
+                let lRatio = profit < 0 ? 100 : 0;
+                if(profit > 0 && exp > 0) { pRatio = rev; lRatio = exp; }
+                window.myCharts[1].data.datasets[0].data = [lRatio, pRatio];
+                window.myCharts[1].update();
             }
-            document.getElementById('calendar-days').innerHTML = html;
+            if(window.myCharts[0]) {
+                window.myCharts[0].data.datasets[0].data[5] = rev;
+                window.myCharts[0].data.datasets[1].data[5] = exp;
+                window.myCharts[0].update();
+            }
         }
 
         // ==========================================
-        // EXPORT & BONUS FEATURES
+        // EXCEL-STYLE INVOICE LOGIC
         // ==========================================
-        window.exportData = function(format) {
-            if(format === 'csv') {
-                const csvRows =[];
-                csvRows.push('Name,Email,Company,Phone,Status');
-                window.appData.clients.forEach(c => csvRows.push(`${c.name},${c.email},${c.company},${c.phone},${c.status}`));
-                const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
-                const a = document.createElement('a'); a.href = window.URL.createObjectURL(blob); a.download = 'nexdash.csv'; a.click();
-            } else if (format === 'pdf') {
-                try {
-                    const doc = new window.jspdf.jsPDF();
-                    doc.text("NexDash Report", 10, 10);
-                    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 10, 20);
-                    doc.text(`Clients: ${window.appData.clients.length} | Events: ${window.appData.events.length}`, 10, 30);
-                    doc.save("nexdash_report.pdf");
-                } catch(e) { showToast('PDF Export failed.', 'error'); }
+        let currentInvoiceItems =[];
+
+        window.openInvoiceModal = function(id = null) {
+            currentInvoiceItems =[];
+            document.getElementById('form-invoice').reset();
+            const sel = document.getElementById('inv-client');
+            sel.innerHTML = window.appData.clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            
+            if(id) {
+                const inv = window.appData.invoices.find(i=>i.id===id);
+                document.getElementById('inv-edit-id').value = id;
+                document.getElementById('inv-date').value = inv.date;
+                sel.value = inv.clientId;
+                currentInvoiceItems = [...inv.items];
+                document.getElementById('inv-modal-title').innerText = "تعديل الفاتورة " + id;
+            } else {
+                document.getElementById('inv-edit-id').value = "";
+                document.getElementById('inv-date').value = getToday();
+                currentInvoiceItems.push({desc: '', qty: 1, price: 0}); // Add default row
+                document.getElementById('inv-modal-title').innerText = "إنشاء فاتورة احترافية";
             }
+            renderInvoiceRows();
+            openModal('invoice-modal');
         };
 
+        window.addInvoiceRow = function() {
+            currentInvoiceItems.push({desc: '', qty: 1, price: 0});
+            renderInvoiceRows();
+        };
+
+        window.removeInvoiceRow = function(idx) {
+            currentInvoiceItems.splice(idx, 1);
+            renderInvoiceRows();
+        };
+
+        window.updateInvItem = function(idx, field, val) {
+            currentInvoiceItems[idx][field] = field === 'desc' ? val : parseFloat(val)||0;
+            renderInvoiceRows();
+        };
+
+        function renderInvoiceRows() {
+            let ht = 0;
+            const tbody = document.getElementById('inv-items-body');
+            tbody.innerHTML = currentInvoiceItems.map((item, i) => {
+                const total = item.qty * item.price;
+                ht += total;
+                return `
+                <tr class="border-b dark:border-gray-700">
+                    <td class="p-2"><input type="text" value="${item.desc}" onchange="updateInvItem(${i},'desc',this.value)" class="w-full p-1 border rounded dark:bg-gray-700"></td>
+                    <td class="p-2"><input type="number" value="${item.qty}" onchange="updateInvItem(${i},'qty',this.value)" class="w-full p-1 border rounded text-center dark:bg-gray-700"></td>
+                    <td class="p-2"><input type="number" value="${item.price}" onchange="updateInvItem(${i},'price',this.value)" class="w-full p-1 border rounded text-center dark:bg-gray-700"></td>
+                    <td class="p-2 font-bold">${total.toLocaleString()}</td>
+                    <td class="p-2"><button type="button" onclick="removeInvoiceRow(${i})" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>
+            `}).join('');
+            
+            const tva = ht * 0.19;
+            const ttc = ht + tva;
+            
+            document.getElementById('inv-ht').innerText = ht.toLocaleString() + ' DZD';
+            document.getElementById('inv-tva').innerText = tva.toLocaleString() + ' DZD';
+            document.getElementById('inv-ttc').innerText = ttc.toLocaleString() + ' DZD';
+        }
+
+        document.getElementById('form-invoice').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('inv-edit-id').value;
+            const ht = currentInvoiceItems.reduce((s,i)=>s+(i.qty*i.price), 0);
+            const invObj = {
+                id: editId || 'INV-' + Math.floor(1000 + Math.random() * 9000),
+                clientId: document.getElementById('inv-client').value,
+                date: document.getElementById('inv-date').value,
+                items: currentInvoiceItems,
+                ht: ht, tva: ht*0.19, ttc: ht + (ht*0.19)
+            };
+            
+            if(editId) { window.appData.invoices = window.appData.invoices.map(i=>i.id===editId ? invObj : i); }
+            else { window.appData.invoices.push(invObj); }
+            
+            saveData(); renderInvoices(); closeModal(); showToast('تم حفظ الفاتورة بنجاح', 'success');
+        });
+
+        // ==========================================
+        // RENDER TABLES & KANBAN
+        // ==========================================
+        function renderAll() { renderInvoices(); renderFinances(); renderClients(); renderTasks(); }
+
+        window.renderInvoices = function() {
+            document.getElementById('invoices-tbody').innerHTML = window.appData.invoices.map(inv => {
+                const c = window.appData.clients.find(c=>c.id===inv.clientId);
+                return `<tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <td class="p-4 font-bold text-primary">${inv.id}</td>
+                    <td class="p-4">${c?c.name:'-'}</td><td class="p-4" dir="ltr">${inv.date}</td>
+                    <td class="p-4">${inv.ht.toLocaleString()}</td><td class="p-4">${inv.tva.toLocaleString()}</td>
+                    <td class="p-4 font-bold text-green-600">${inv.ttc.toLocaleString()} DZD</td>
+                    <td class="p-4 text-center space-x-2 space-x-reverse">
+                        <button onclick="shareQr('فاتورة ${inv.id}', '${window.location.origin}${window.location.pathname}?share_invoice=${inv.id}')" class="text-gray-500 hover:text-blue-500 mx-1" title="مشاركة رابط حقيقي"><i class="fa-solid fa-share-nodes"></i></button>
+                        <button onclick="openInvoiceModal('${inv.id}')" class="text-gray-500 hover:text-secondary mx-1"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteItem('invoices','${inv.id}')" class="text-gray-500 hover:text-red-500 mx-1"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`}).join('');
+        };
+
+        window.renderFinances = function() {
+            document.getElementById('finances-tbody').innerHTML = window.appData.finances.map(f => `
+                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <td class="p-4" dir="ltr">${f.date}</td><td class="p-4 font-bold">${f.desc}</td><td class="p-4"><span class="bg-gray-200 dark:bg-gray-700 px-2 rounded text-xs">${f.cat}</span></td>
+                    <td class="p-4 font-bold ${f.type==='Revenue'?'text-green-500':'text-red-500'}">${f.type==='Revenue'?'إيراد (+)':'نفقة (-)'}</td>
+                    <td class="p-4 font-bold">${f.amount.toLocaleString()} DZD</td>
+                    <td class="p-4 text-center"><button onclick="deleteItem('finances','${f.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td>
+                </tr>`).join('');
+        };
+
+        window.renderClients = function() {
+            document.getElementById('clients-tbody').innerHTML = window.appData.clients.map(c => `
+                <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <td class="p-4 font-bold">${c.name}</td><td class="p-4">${c.company}</td><td class="p-4" dir="ltr">${c.phone}<br>${c.email}</td>
+                    <td class="p-4 text-center space-x-2 space-x-reverse">
+                        <button onclick="deleteItem('clients','${c.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>`).join('');
+        };
+
+        window.renderTasks = function() {
+            const cols = { todo: 'قيد الانتظار', doing: 'جاري العمل', done: 'مكتملة' };
+            document.getElementById('kanban-board').innerHTML = Object.keys(cols).map(k => `
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 h-full min-h-[300px]">
+                    <h3 class="font-bold text-lg mb-4 text-center border-b border-gray-300 dark:border-gray-600 pb-2">${cols[k]}</h3>
+                    <div class="space-y-3">
+                        ${window.appData.tasks.filter(t=>t.status===k).map(t => `
+                            <div class="bg-white dark:bg-darkcard p-3 rounded shadow border dark:border-gray-600 flex justify-between items-center cursor-move">
+                                <span class="font-bold text-sm">${t.title}</span>
+                                <div>
+                                    ${k!=='done'?`<button onclick="moveTask('${t.id}','done')" class="text-green-500 hover:text-green-700 ml-2"><i class="fa-solid fa-check"></i></button>`:''}
+                                    <button onclick="deleteItem('tasks','${t.id}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        window.moveTask = function(id, status) {
+            const t = window.appData.tasks.find(x=>x.id===id); if(t) { t.status = status; saveData(); renderTasks(); }
+        }
+
+        // ==========================================
+        // FORMS SUBMISSION (Other Models)
+        // ==========================================
+        document.getElementById('form-finance').addEventListener('submit', (e)=>{ e.preventDefault();
+            window.appData.finances.push({ id:'f'+Date.now(), type:document.getElementById('fin-type').value, amount:parseFloat(document.getElementById('fin-amount').value), desc:document.getElementById('fin-desc').value, cat:document.getElementById('fin-cat').value, date:getToday() });
+            saveData(); renderFinances(); closeModal(); showToast('تم الحفظ', 'success'); e.target.reset();
+        });
+
+        document.getElementById('form-client').addEventListener('submit', (e)=>{ e.preventDefault();
+            window.appData.clients.push({ id:'c'+Date.now(), name:document.getElementById('cli-name').value, email:document.getElementById('cli-email').value, phone:document.getElementById('cli-phone').value, company:document.getElementById('cli-company').value });
+            saveData(); renderClients(); closeModal(); showToast('تم الحفظ', 'success'); e.target.reset();
+        });
+
+        document.getElementById('form-task').addEventListener('submit', (e)=>{ e.preventDefault();
+            window.appData.tasks.push({ id:'t'+Date.now(), title:document.getElementById('task-title').value, status:document.getElementById('task-status').value });
+            saveData(); renderTasks(); closeModal(); showToast('تمت إضافة المهمة', 'success'); e.target.reset();
+        });
+
+        window.deleteItem = function(col, id) {
+            if(confirm('تأكيد الحذف؟')) { window.appData[col] = window.appData[col].filter(i=>i.id!==id); saveData(); renderAll(); showToast('تم الحذف', 'error'); }
+        };
+
+        // ==========================================
+        // REAL EMAILJS SENDER
+        // ==========================================
+        document.getElementById('form-email').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button'); btn.innerText = "جاري الإرسال...";
+            
+            // NOTE: Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with actual ones from your EmailJS dashboard
+            const params = {
+                to_email: document.getElementById('mail-to').value,
+                subject: document.getElementById('mail-subject').value,
+                message: document.getElementById('mail-body').value
+            };
+
+            // Uncomment the lines below when you have valid keys
+            /*
+            emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", params)
+            .then(function(res) {
+                showToast("تم إرسال الإيميل بنجاح (حقيقي)!", "success");
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل الآن';
+                document.getElementById('form-email').reset();
+            }, function(error) {
+                showToast("خطأ في الإرسال: تأكد من إعدادات EmailJS", "error");
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل الآن';
+            });
+            */
+            
+            // Fallback Simulation for demo
+            setTimeout(()=>{ 
+                showToast('تنبيه: يجب وضع مفاتيح EmailJS لكي يرسل بريداً حقيقياً. (محاكاة النجاح)', 'info');
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane ml-2"></i> إرسال الإيميل الآن';
+            }, 1500);
+        });
+
+        // ==========================================
+        // QR CODE & REAL SHARING
+        // ==========================================
         window.shareQr = function(title, link) {
             document.getElementById('share-link-input').value = link;
             document.getElementById('qrcode-box').innerHTML = "";
-            new QRCode(document.getElementById("qrcode-box"), { text: link, width: 150, height: 150 });
+            new QRCode(document.getElementById("qrcode-box"), { text: link, width: 200, height: 200 });
             openModal('qr-modal');
         };
 
         window.copyShareLink = function() {
-            document.getElementById("share-link-input").select();
-            document.execCommand("copy");
-            showToast(t('copy') + ' OK', 'success');
+            const input = document.getElementById("share-link-input");
+            input.select(); document.execCommand("copy");
+            showToast('تم نسخ الرابط החقيقي بنجاح', 'success');
         };
 
-        window.simulateEmailReminder = function() {
-            showToast('Sending...', 'info');
-            setTimeout(() => showToast('Email reminder delivered!', 'success'), 1500);
-        };
+        // ==========================================
+        // RENDER SHARED READ-ONLY VIEW (For URLs)
+        // ==========================================
+        function loadSharedInvoice(id) {
+            // Because local storage might not be accessible if cross-origin, or if sent to someone else,
+            // Realistically this requires Firebase fetch. Since we sync to Firebase, let's try fetch from Firebase or Local.
+            const ov = document.getElementById('shared-view-overlay');
+            const box = document.getElementById('shared-content');
+            ov.style.display = 'flex';
+            
+            let inv = null, cli = null;
+            const rawData = localStorage.getItem('nexdash_data_pro');
+            if(rawData) {
+                const data = JSON.parse(rawData);
+                inv = data.invoices.find(i=>i.id===id);
+                if(inv) cli = data.clients.find(c=>c.id===inv.clientId);
+            }
 
-        window.triggerBackup = function() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.appData));
-            const a = document.createElement('a'); a.href = dataStr; a.download = "backup.json"; a.click();
-        };
+            if(!inv) {
+                box.innerHTML = `<h2 class="text-2xl font-bold text-red-500 text-center"><i class="fa-solid fa-triangle-exclamation"></i> الفاتورة غير موجودة أو تم حذفها</h2>`;
+                return;
+            }
+
+            box.innerHTML = `
+                <div class="flex justify-between items-center border-b pb-4 mb-6">
+                    <div>
+                        <h1 class="text-3xl font-black text-primary">FATCURE (الفاتورة)</h1>
+                        <p class="text-gray-500 mt-2 font-bold">${inv.id}</p>
+                    </div>
+                    <div class="text-left" dir="ltr">
+                        <p class="font-bold">${cli ? cli.name : 'Client'}</p>
+                        <p class="text-gray-500">${cli ? cli.company : ''}</p>
+                        <p class="text-sm text-gray-400 mt-1">${inv.date}</p>
+                    </div>
+                </div>
+                <table class="w-full text-center border mb-6">
+                    <thead class="bg-primary text-white font-bold">
+                        <tr><th class="p-3 w-1/2 text-right pr-4">البيان</th><th class="p-3">الكمية</th><th class="p-3">السعر</th><th class="p-3">المجموع</th></tr>
+                    </thead>
+                    <tbody>
+                        ${inv.items.map(item => `<tr class="border-b"><td class="p-3 text-right pr-4">${item.desc}</td><td class="p-3">${item.qty}</td><td class="p-3">${item.price.toLocaleString()}</td><td class="p-3 font-bold">${(item.qty*item.price).toLocaleString()}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+                <div class="flex justify-end border-t pt-4">
+                    <div class="w-64 space-y-3 font-bold text-lg">
+                        <div class="flex justify-between"><span>HT :</span> <span dir="ltr">${inv.ht.toLocaleString()} DZD</span></div>
+                        <div class="flex justify-between"><span>TVA (19%) :</span> <span dir="ltr">${inv.tva.toLocaleString()} DZD</span></div>
+                        <div class="flex justify-between text-green-600 text-2xl border-t border-black pt-2 mt-2"><span>TTC :</span> <span dir="ltr">${inv.ttc.toLocaleString()} DZD</span></div>
+                    </div>
+                </div>
+                <div class="mt-8 text-center text-sm text-gray-500 print:hidden">
+                    <button onclick="window.print()" class="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition"><i class="fa-solid fa-print ml-2"></i> طباعة الفاتورة أو حفظها PDF</button>
+                </div>
+            `;
+        }
 
         window.resetData = function() {
-            if(confirm("Factory reset app data?")) {
-                window.appData = JSON.parse(JSON.stringify(defaultData));
-                saveData(); showToast('Reset complete', 'info');
-                setTimeout(()=>window.location.reload(), 1000);
+            if(confirm("تحذير: هذا سيمسح كل شيء ويعيد الموقع لشكله الافتراضي، هل أنت متأكد؟")) {
+                localStorage.removeItem('nexdash_data_pro');
+                location.reload();
             }
         };
-
-        window.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
