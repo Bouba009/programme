@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>aitchikh consulting | Pro Dashboard</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config={darkMode:'class',theme:{extend:{colors:{primary:'#2563EB',brand:'#1E3A8A'}}}}</script>
+    
+    <!-- Icons & Charts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- EmailJS (حسب طلبك) -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         body { font-family: 'Cairo', sans-serif; }
-        ::-webkit-scrollbar { width: 5px; height: 5px; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; } 
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .active-nav { background: rgba(37,99,235,0.1); color: #2563EB; border-inline-start: 4px solid #2563EB; font-weight: bold; }
         .toast { position:fixed; bottom:20px; right:20px; padding:15px; border-radius:8px; color:#fff; font-weight:bold; z-index:9999; animation: fade 0.3s; }
         @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -53,7 +61,7 @@
             <a href="#" onclick="go('ev')" class="block p-4 hover:bg-gray-50 dark:hover:bg-slate-700" data-view="ev"><i class="fa-solid fa-calendar w-6 text-yellow-500"></i> المواعيد والأحداث</a>
             <a href="#" onclick="go('mail')" class="block p-4 hover:bg-gray-50 dark:hover:bg-slate-700" data-view="mail"><i class="fa-solid fa-envelope w-6 text-primary"></i> المراسلات والشركات</a>
             <a href="#" onclick="go('forms')" class="block p-4 hover:bg-gray-50 dark:hover:bg-slate-700" data-view="forms"><i class="fa-brands fa-google w-6 text-red-500"></i> Google Forms</a>
-            <a href="#" onclick="go('set')" class="block p-4 hover:bg-gray-50 dark:hover:bg-slate-700" data-view="set"><i class="fa-solid fa-gear w-6"></i> إعدادات الـ API</a>
+            <a href="#" onclick="go('set')" class="block p-4 hover:bg-gray-50 dark:hover:bg-slate-700" data-view="set"><i class="fa-solid fa-gear w-6"></i> الإعدادات</a>
         </nav>
     </aside>
 
@@ -96,7 +104,7 @@
             <!-- EVENTS -->
             <div id="v-ev" class="view hidden">
                 <div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-black text-brand dark:text-white">الأحداث والمواعيد</h2><button onclick="openM('m-ev')" class="bg-primary text-white px-4 py-2 rounded font-bold">حدث جديد</button></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="tb-ev"></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="tb-ev"></div>
             </div>
 
             <!-- FINANCES -->
@@ -113,17 +121,17 @@
 
             <!-- EMAILS & MESSAGES -->
             <div id="v-mail" class="view hidden">
-                <h2 class="text-2xl font-black text-brand dark:text-white mb-6">المراسلات والأرشيف</h2>
+                <h2 class="text-2xl font-black text-brand dark:text-white mb-6">المراسلات والأرشيف (EmailJS)</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border dark:border-slate-700">
-                        <h3 class="font-bold mb-4 text-primary">إرسال بريد حقيقي (EmailJS)</h3>
+                        <h3 class="font-bold mb-4 text-primary">إرسال بريد حقيقي</h3>
                         <form id="f-mail" class="space-y-4">
                             <select id="em-tpl" onchange="setTpl()" class="w-full p-2 border rounded dark:bg-slate-700"><option value="c">رسالة حرة</option><option value="p">عرض خدمات (Proposal)</option><option value="i">دعوة لحدث</option></select>
                             <input type="email" id="em-to" list="dl-cli" required placeholder="الإيميل المرسل إليه" class="w-full p-2 border rounded dark:bg-slate-700" dir="ltr">
                             <datalist id="dl-cli"></datalist>
                             <input type="text" id="em-sub" required placeholder="الموضوع" class="w-full p-2 border rounded dark:bg-slate-700">
                             <textarea id="em-msg" rows="5" required placeholder="نص الرسالة..." class="w-full p-2 border rounded dark:bg-slate-700"></textarea>
-                            <button type="submit" class="w-full bg-primary text-white p-3 rounded font-bold">إرسال البريد</button>
+                            <button type="submit" class="w-full bg-primary text-white p-3 rounded font-bold">إرسال البريد <i class="fa-solid fa-paper-plane mr-2"></i></button>
                         </form>
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border dark:border-slate-700 h-[500px] flex flex-col">
@@ -143,15 +151,10 @@
             <div id="v-set" class="view hidden">
                 <h2 class="text-2xl font-black text-brand dark:text-white mb-6">الإعدادات</h2>
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border dark:border-slate-700 max-w-lg mb-6">
-                    <h3 class="font-bold mb-4">مفاتيح EmailJS</h3>
-                    <form id="f-set" class="space-y-3">
-                        <input type="text" id="api-pub" placeholder="Public Key" class="w-full p-2 border rounded dark:bg-slate-700" dir="ltr">
-                        <input type="text" id="api-srv" placeholder="Service ID" class="w-full p-2 border rounded dark:bg-slate-700" dir="ltr">
-                        <input type="text" id="api-tpl" placeholder="Template ID" class="w-full p-2 border rounded dark:bg-slate-700" dir="ltr">
-                        <button type="submit" class="bg-primary text-white px-4 py-2 rounded font-bold">حفظ</button>
-                    </form>
+                    <h3 class="font-bold mb-4 text-green-500"><i class="fa-solid fa-check-circle"></i> تم ربط EmailJS بنجاح</h3>
+                    <p class="text-sm text-gray-500 mb-4">تم تضمين مفاتيحك (y9qpL0BwEGCoU87fX و service_tl81dab) داخل النظام تلقائياً، والآن يمكنك إرسال الفواتير والمواعيد بضغطة زر.</p>
                 </div>
-                <button onclick="if(confirm('مسح الكل؟')){localStorage.clear();location.reload();}" class="bg-red-500 text-white px-4 py-2 rounded font-bold">إعادة ضبط المصنع</button>
+                <button onclick="if(confirm('هل أنت متأكد من مسح جميع البيانات؟')){localStorage.clear();location.reload();}" class="bg-red-500 text-white px-4 py-2 rounded font-bold"><i class="fa-solid fa-trash"></i> إعادة ضبط المصنع</button>
             </div>
         </main>
     </div>
@@ -162,7 +165,7 @@
         <form id="f-inv" class="space-y-4">
             <div class="grid grid-cols-2 gap-4"><select id="i-cli" required class="p-2 border rounded dark:bg-slate-700"></select><input type="date" id="i-dat" required class="p-2 border rounded dark:bg-slate-700"></div>
             <table class="w-full text-center border"><thead class="bg-primary text-white"><tr><th>البيان</th><th>الكمية</th><th>السعر</th><th>مجموع</th><th></th></tr></thead><tbody id="i-items"></tbody></table>
-            <button type="button" onclick="addRow()" class="w-full bg-gray-100 dark:bg-slate-700 p-2 font-bold">+ سطر</button>
+            <button type="button" onclick="addRow()" class="w-full bg-gray-100 dark:bg-slate-700 p-2 font-bold">+ إضافة سطر</button>
             <div class="text-left font-bold text-lg space-y-1" dir="ltr"><div>HT: <span id="i-ht">0</span></div><div class="text-red-500">TVA: <span id="i-tva">0</span></div><div class="text-green-500">TTC: <span id="i-ttc">0</span></div></div>
             <button type="submit" class="w-full bg-primary text-white p-3 rounded font-bold">حفظ الفاتورة</button>
         </form>
@@ -175,7 +178,7 @@
             <div class="grid grid-cols-2 gap-2"><input type="date" id="e-dat" required class="p-2 border rounded dark:bg-slate-700"><input type="time" id="e-tim" required class="p-2 border rounded dark:bg-slate-700"></div>
             <input type="text" id="e-loc" required placeholder="المكان" class="w-full p-2 border rounded dark:bg-slate-700">
             <input type="url" id="e-map" placeholder="رابط Google Maps" class="w-full p-2 border rounded dark:bg-slate-700" dir="ltr">
-            <div class="border-t pt-2"><label class="font-bold mb-1 block">المدعوين (العملاء)</label><div id="e-invlist" class="grid grid-cols-2 gap-2 max-h-32 overflow-auto border p-2"></div><label class="mt-2 flex items-center"><input type="checkbox" id="e-send" class="mr-2 ml-2">إرسال دعوة بالإيميل فوراً</label></div>
+            <div class="border-t pt-2"><label class="font-bold mb-1 block">المدعوين (العملاء)</label><div id="e-invlist" class="grid grid-cols-2 gap-2 max-h-32 overflow-auto border p-2"></div><label class="mt-2 flex items-center"><input type="checkbox" id="e-send" class="mr-2 ml-2">إرسال دعوة بالإيميل فوراً <i class="fa-solid fa-envelope text-primary mr-1"></i></label></div>
             <button type="submit" class="w-full bg-primary text-white p-3 rounded font-bold">حفظ الحدث</button>
         </form>
     </div></div>
@@ -192,20 +195,32 @@
 
     <!-- QR Modal -->
     <div id="m-qr" class="modal"><div class="bg-white dark:bg-slate-800 p-6 rounded-xl w-full max-w-xs text-center"><div class="flex justify-between mb-4"><h3 class="font-bold text-xl">مشاركة</h3><button onclick="closeM()"><i class="fa-solid fa-xmark"></i></button></div>
-        <div id="qr-box" class="bg-white p-4 inline-block rounded mb-4"></div><input type="text" id="qr-url" readonly class="w-full p-2 border rounded text-xs mb-4" dir="ltr"><button onclick="document.getElementById('qr-url').select();document.execCommand('copy');toast('تم النسخ')" class="w-full bg-green-500 text-white p-2 rounded font-bold">نسخ الرابط</button>
+        <div id="qr-box" class="bg-white p-4 inline-block rounded mb-4"></div><input type="text" id="qr-url" readonly class="w-full p-2 border rounded text-xs mb-4" dir="ltr"><button onclick="document.getElementById('qr-url').select();document.execCommand('copy');toast('تم النسخ ✅')" class="w-full bg-green-500 text-white p-2 rounded font-bold">نسخ الرابط</button>
     </div></div>
 
     <!-- JAVASCRIPT -->
     <script>
-        // Data State
-        let d = JSON.parse(localStorage.getItem('ac_data')) || { c:[], f:[], i:[], e:[], m:[], s:{p:'',v:'',t:''} };
-        const save = () => { localStorage.setItem('ac_data', JSON.stringify(d)); render(); };
-        const today = () => new Date().toISOString().split('T')[0];
-        const toast = msg => { const d = document.createElement('div'); d.className='toast bg-green-500'; d.innerText=msg; document.body.appendChild(d); setTimeout(()=>d.remove(),3000); };
+        // --- 🔑 إعدادات EmailJS الحقيقية الخاصة بك ---
+        const EMAIL_PUB_KEY = "y9qpL0BwEGCoU87fX";
+        const EMAIL_SERVICE = "service_tl81dab";
+        const EMAIL_TEMPLATE = "template_c0iobrh";
         
+        // Data State
+        let d = JSON.parse(localStorage.getItem('ac_data_pro')) || { c:[], f:[], i:[], e:[], m:[] };
+        const save = () => { localStorage.setItem('ac_data_pro', JSON.stringify(d)); render(); };
+        const today = () => new Date().toISOString().split('T')[0];
+        const toast = (msg, type='success') => { const el = document.createElement('div'); el.className=`toast ${type==='error'?'bg-red-500':'bg-green-500'}`; el.innerText=msg; document.body.appendChild(el); setTimeout(()=>el.remove(),3500); };
+        
+        // EmailJS Helper
+        const sendEmail = (email, name, message, successMsg) => {
+            emailjs.send(EMAIL_SERVICE, EMAIL_TEMPLATE, { name: name || 'عميلنا العزيز', email: email, message: message })
+            .then(() => toast(successMsg || 'تم الإرسال بنجاح ✅'))
+            .catch(err => { console.error(err); toast('فشل الإرسال ❌', 'error'); });
+        };
+
         // Navigation & Modals
         const go = v => { document.querySelectorAll('.view').forEach(e=>e.classList.add('hidden')); document.getElementById('v-'+v).classList.remove('hidden'); document.querySelectorAll('#nav-links a').forEach(a=>a.classList.remove('active-nav')); document.querySelector(`[data-view="${v}"]`).classList.add('active-nav'); };
-        const openM = id => { document.querySelectorAll('.modal').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='m-inv') resetInv(); if(id==='m-ev') document.getElementById('e-invlist').innerHTML=d.c.map(x=>`<label class="block"><input type="checkbox" value="${x.e}" class="ev-chk ml-1"> ${x.n}</label>`).join(''); };
+        const openM = id => { document.querySelectorAll('.modal').forEach(e=>e.classList.remove('active')); document.getElementById(id).classList.add('active'); if(id==='m-inv') resetInv(); if(id==='m-ev') document.getElementById('e-invlist').innerHTML=d.c.map(x=>`<label class="block cursor-pointer"><input type="checkbox" value="${x.e}" class="ev-chk ml-1"> ${x.n}</label>`).join(''); };
         const closeM = () => document.querySelectorAll('.modal').forEach(e=>e.classList.remove('active'));
 
         // Init
@@ -214,21 +229,18 @@
             Chart.defaults.font.family = 'Cairo';
             chartBar = new Chart(document.getElementById('bars'), {type:'bar', data:{labels:[],datasets:[{label:'إيرادات',data:[],backgroundColor:'#10B981'},{label:'نفقات',data:[],backgroundColor:'#EF4444'}]}});
             chartGau = new Chart(document.getElementById('gauge'), {type:'doughnut', data:{datasets:[{data:[1,1],backgroundColor:['#EF4444','#10B981'],borderWidth:0}]}, options:{circumference:180,rotation:-90,cutout:'80%'}});
-            document.getElementById('api-pub').value=d.s.p; document.getElementById('api-srv').value=d.s.v; document.getElementById('api-tpl').value=d.s.t;
-            if(d.s.p) emailjs.init(d.s.p);
+            emailjs.init(EMAIL_PUB_KEY); // تهيئة EmailJS تلقائياً
             render();
         };
 
         // Render
         const render = () => {
-            // Dash
             let rev=0, exp=0; d.f.forEach(x=>{ if(x.t==='r') rev+=x.a; else exp+=x.a; }); let net = rev-exp;
             document.getElementById('s-rev').innerText = rev.toLocaleString()+' DZD'; document.getElementById('s-exp').innerText = exp.toLocaleString()+' DZD'; document.getElementById('s-net').innerText = net.toLocaleString()+' DZD'; document.getElementById('s-cli').innerText = d.c.length;
             document.getElementById('s-gauge').innerText = net.toLocaleString()+' DZD'; document.getElementById('s-gauge').className = `text-xl font-black mt-1 ${net>=0?'text-green-500':'text-red-500'}`;
             chartGau.data.datasets[0].data =[net<0?1:(exp>0?exp:0), net>=0?1:(rev>0?rev:0)]; chartGau.update();
             chartBar.data.labels=['الإجمالي']; chartBar.data.datasets[0].data=[rev]; chartBar.data.datasets[1].data=[exp]; chartBar.update();
             
-            // Lists
             document.getElementById('dl-cli').innerHTML = d.c.map(x=>`<option value="${x.e}">${x.n}</option>`).join('');
             document.getElementById('i-cli').innerHTML = d.c.map(x=>`<option value="${x.id}">${x.n}</option>`).join('');
             document.getElementById('tb-cli').innerHTML = d.c.map(x=>`<tr class="border-b dark:border-slate-700"><td>${x.n}</td><td>${x.c}</td><td dir="ltr">${x.e}<br>${x.p}</td><td><button onclick="del('c','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
@@ -237,13 +249,24 @@
             
             document.getElementById('tb-inv').innerHTML = d.i.map(x=>{
                 let c = d.c.find(y=>y.id===x.c)||{}; 
-                return `<tr class="border-b dark:border-slate-700"><td class="font-bold">${x.id}</td><td>${c.n||''}</td><td>${x.d}</td><td>${x.h}</td><td>${x.v}</td><td class="font-bold text-green-500">${x.t}</td><td><button onclick="share('inv','${x.id}')" class="text-blue-500 ml-2"><i class="fa-solid fa-share-nodes"></i></button><button onclick="del('i','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                return `<tr class="border-b dark:border-slate-700"><td class="font-bold">${x.id}</td><td>${c.n||''}</td><td>${x.d}</td><td>${x.h}</td><td>${x.v}</td><td class="font-bold text-green-500">${x.t}</td>
+                <td>
+                    <button onclick="emailInvoice('${x.id}')" class="text-emerald-500 ml-2" title="إرسال بالإيميل"><i class="fa-solid fa-envelope"></i></button>
+                    <button onclick="share('inv','${x.id}')" class="text-blue-500 ml-2" title="مشاركة رابط"><i class="fa-solid fa-share-nodes"></i></button>
+                    <button onclick="del('i','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
+                </td></tr>`;
             }).join('');
 
-            document.getElementById('tb-ev').innerHTML = d.e.map(x=>`<div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg border dark:border-slate-600"><h3 class="font-bold text-primary text-lg">${x.t}</h3><p class="text-sm my-1"><i class="fa-regular fa-clock"></i> ${x.d} ${x.m}</p><p class="text-sm"><i class="fa-solid fa-location-dot"></i> ${x.l} ${x.u?`<a href="${x.u}" target="_blank" class="text-blue-500 inline-block mr-2">خريطة</a>`:''}</p><div class="mt-3 flex gap-2"><button onclick="share('ev','${x.id}')" class="bg-white text-gray-800 px-3 py-1 rounded text-sm font-bold flex-1">مشاركة</button><button onclick="del('e','${x.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm font-bold flex-1">حذف</button></div></div>`).join('');
+            document.getElementById('tb-ev').innerHTML = d.e.map(x=>`
+            <div class="bg-gray-50 dark:bg-slate-700 p-4 rounded-lg border dark:border-slate-600">
+                <h3 class="font-bold text-primary text-lg">${x.t}</h3>
+                <p class="text-sm my-1"><i class="fa-regular fa-clock"></i> ${x.d} ${x.m}</p>
+                <p class="text-sm"><i class="fa-solid fa-location-dot"></i> ${x.l} ${x.u?`<a href="${x.u}" target="_blank" class="text-blue-500 inline-block mr-2">خريطة</a>`:''}</p>
+                <div class="mt-3 flex gap-2"><button onclick="share('ev','${x.id}')" class="bg-white text-gray-800 px-3 py-1 rounded text-sm font-bold flex-1">مشاركة الرابط</button><button onclick="del('e','${x.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm font-bold flex-1">حذف</button></div>
+            </div>`).join('');
         };
 
-        const del = (col,id) => { if(confirm('حذف؟')){ d[col]=d[col].filter(x=>x.id!==id); save(); } };
+        const del = (col,id) => { if(confirm('تأكيد الحذف؟')){ d[col]=d[col].filter(x=>x.id!==id); save(); toast('تم الحذف', 'error'); } };
 
         // Invoice Builder
         let inv=[]; 
@@ -251,44 +274,79 @@
         const addRow = () => { inv.push({s:'',q:1,p:0}); drawInv(); };
         const updRow = (i,f,v) => { inv[i][f] = f==='s'?v:Number(v)||0; drawInv(); };
         const drawInv = () => {
-            let ht=0; document.getElementById('i-items').innerHTML = inv.map((x,i)=>{ let t=x.q*x.p; ht+=t; return `<tr><td><input onchange="updRow(${i},'s',this.value)" value="${x.s}" class="w-full border p-1 text-black"></td><td><input type="number" onchange="updRow(${i},'q',this.value)" value="${x.q}" class="w-full border p-1 text-center text-black"></td><td><input type="number" onchange="updRow(${i},'p',this.value)" value="${x.p}" class="w-full border p-1 text-center text-black"></td><td>${t}</td><td><button type="button" onclick="inv.splice(${i},1);drawInv()" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;}).join('');
+            let ht=0; document.getElementById('i-items').innerHTML = inv.map((x,i)=>{ let t=x.q*x.p; ht+=t; return `<tr><td><input onchange="updRow(${i},'s',this.value)" value="${x.s}" class="w-full border p-1 text-black"></td><td><input type="number" onchange="updRow(${i},'q',this.value)" value="${x.q}" class="w-full border p-1 text-center text-black"></td><td><input type="number" onchange="updRow(${i},'p',this.value)" value="${x.p}" class="w-full border p-1 text-center text-black"></td><td class="font-bold">${t}</td><td><button type="button" onclick="inv.splice(${i},1);drawInv()" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;}).join('');
             document.getElementById('i-ht').innerText=ht; document.getElementById('i-tva').innerText=ht*0.19; document.getElementById('i-ttc').innerText=ht*1.19;
         };
 
-        // Forms Submissions
-        document.getElementById('f-cli').onsubmit = e => { e.preventDefault(); d.c.push({id:'c'+Date.now(), n:document.getElementById('c-nam').value, e:document.getElementById('c-ema').value, p:document.getElementById('c-pho').value, c:document.getElementById('c-com').value}); save(); closeM(); toast('تم!'); };
-        document.getElementById('f-fin').onsubmit = e => { e.preventDefault(); d.f.push({id:'f'+Date.now(), t:document.getElementById('f-typ').value, a:Number(document.getElementById('f-amt').value), s:document.getElementById('f-des').value, d:today()}); save(); closeM(); toast('تم!'); };
-        document.getElementById('f-inv').onsubmit = e => { e.preventDefault(); let ht=inv.reduce((s,x)=>s+(x.q*x.p),0); d.i.push({id:'INV-'+Date.now().toString().slice(-4), c:document.getElementById('i-cli').value, d:document.getElementById('i-dat').value, r:inv, h:ht, v:ht*0.19, t:ht*1.19}); save(); closeM(); toast('تم!'); };
-        document.getElementById('f-ev').onsubmit = e => { e.preventDefault(); let ti=document.getElementById('e-tit').value, ems=Array.from(document.querySelectorAll('.ev-chk:checked')).map(x=>x.value); d.e.push({id:'e'+Date.now(), t:ti, d:document.getElementById('e-dat').value, m:document.getElementById('e-tim').value, l:document.getElementById('e-loc').value, u:document.getElementById('e-map').value}); if(document.getElementById('e-send').checked) ems.forEach(x=>d.m.push({to:x,s:'دعوة: '+ti,d:today()})); save(); closeM(); toast('تم!'); };
-        document.getElementById('f-set').onsubmit = e => { e.preventDefault(); d.s.p=document.getElementById('api-pub').value; d.s.v=document.getElementById('api-srv').value; d.s.t=document.getElementById('api-tpl').value; save(); if(d.s.p)emailjs.init(d.s.p); toast('حفظ'); };
+        // Form Submits
+        document.getElementById('f-cli').onsubmit = e => { e.preventDefault(); d.c.push({id:'c'+Date.now(), n:document.getElementById('c-nam').value, e:document.getElementById('c-ema').value, p:document.getElementById('c-pho').value, c:document.getElementById('c-com').value}); save(); closeM(); toast('تم حفظ العميل ✅'); };
+        document.getElementById('f-fin').onsubmit = e => { e.preventDefault(); d.f.push({id:'f'+Date.now(), t:document.getElementById('f-typ').value, a:Number(document.getElementById('f-amt').value), s:document.getElementById('f-des').value, d:today()}); save(); closeM(); toast('تم حفظ العملية ✅'); };
+        document.getElementById('f-inv').onsubmit = e => { e.preventDefault(); let ht=inv.reduce((s,x)=>s+(x.q*x.p),0); d.i.push({id:'INV-'+Date.now().toString().slice(-4), c:document.getElementById('i-cli').value, d:document.getElementById('i-dat').value, r:inv, h:ht, v:ht*0.19, t:ht*1.19}); save(); closeM(); toast('تم إصدار الفاتورة ✅'); };
         
-        // Email
-        const setTpl = () => { let t=document.getElementById('em-tpl').value, s=document.getElementById('em-sub'), m=document.getElementById('em-msg'); if(t==='p'){s.value="عرض خدمات"; m.value="نتشرف...";} else if(t==='i'){s.value="دعوة"; m.value="نرجو الحضور...";} else{s.value="";m.value="";} };
-        document.getElementById('f-mail').onsubmit = e => { e.preventDefault(); let to=document.getElementById('em-to').value, sub=document.getElementById('em-sub').value, msg=document.getElementById('em-msg').value, btn=e.target.querySelector('button'); btn.innerText="جاري الإرسال...";
-            const done = () => { d.m.push({to:to,s:sub,d:today()}); save(); toast('تم الإرسال'); btn.innerText="إرسال"; e.target.reset(); };
-            if(d.s.v && d.s.t) emailjs.send(d.s.v, d.s.t, {to_email:to, subject:sub, message:msg}).then(done, ()=>done()); else setTimeout(done, 1000);
+        // --- Event Submit & Auto Email ---
+        document.getElementById('f-ev').onsubmit = e => { 
+            e.preventDefault(); 
+            let evId = 'e'+Date.now(), ti = document.getElementById('e-tit').value, date = document.getElementById('e-dat').value, loc = document.getElementById('e-loc').value;
+            let ems = Array.from(document.querySelectorAll('.ev-chk:checked')).map(x=>x.value); 
+            d.e.push({id: evId, t:ti, d:date, m:document.getElementById('e-tim').value, l:loc, u:document.getElementById('e-map').value}); 
+            
+            if(document.getElementById('e-send').checked) {
+                ems.forEach(email => {
+                    let client = d.c.find(c => c.e === email); let name = client ? client.n : "";
+                    let link = `${location.origin}${location.pathname}?s=ev&id=${evId}`;
+                    let msg = `مرحباً ${name}،\nندعوك لحضور حدث: ${ti}\nبتاريخ: ${date}\nالمكان: ${loc}\nرابط التفاصيل: ${link}`;
+                    sendEmail(email, name, msg, `تم إرسال الدعوة لـ ${name}`);
+                    d.m.push({to:email,s:'دعوة: '+ti,d:today()});
+                });
+            }
+            save(); closeM(); toast('تم حفظ الحدث ✅'); 
+        };
+        
+        // --- Email Invoice ---
+        window.emailInvoice = (id) => {
+             let i = d.i.find(x=>x.id===id), c = d.c.find(x=>x.id===(i?i.c:null));
+             if(!c || !c.e) return toast('العميل غير موجود أو ليس لديه إيميل مسجل', 'error');
+             let link = `${location.origin}${location.pathname}?s=inv&id=${id}`;
+             let msg = `مرحباً ${c.n}،\nمرفق لكم رابط الفاتورة رقم ${i.id} بمبلغ ${i.t} DZD.\nالرابط: ${link}`;
+             sendEmail(c.e, c.n, msg, 'تم إرسال الفاتورة بالإيميل للعميل ✅');
+             d.m.push({to:c.e,s:'إرسال فاتورة: '+i.id,d:today()}); save();
         };
 
-        // Share & URL Check
-        const share = (typ, id) => { let u=`${location.origin}${location.pathname}?s=${typ}&id=${id}`; document.getElementById('qr-url').value=u; document.getElementById('qr-box').innerHTML=''; new QRCode(document.getElementById('qr-box'), {text:u,width:150,height:150}); openM('m-qr'); };
+        // --- Custom Email Form ---
+        const setTpl = () => { let t=document.getElementById('em-tpl').value, s=document.getElementById('em-sub'), m=document.getElementById('em-msg'); if(t==='p'){s.value="عرض خدمات"; m.value="نتشرف بتقديم عرض خدمات aitchikh consulting...";} else if(t==='i'){s.value="دعوة"; m.value="نرجو الحضور...";} else{s.value="";m.value="";} };
+        document.getElementById('f-mail').onsubmit = e => { 
+            e.preventDefault(); 
+            let to = document.getElementById('em-to').value, sub = document.getElementById('em-sub').value, msg = document.getElementById('em-msg').value; 
+            let btn = e.target.querySelector('button'); btn.innerText = "جاري الإرسال...";
+            
+            let client = d.c.find(c => c.e === to); let name = client ? client.n : "";
+            
+            emailjs.send(EMAIL_SERVICE, EMAIL_TEMPLATE, { name: name, email: to, message: `الموضوع: ${sub}\n\n${msg}` })
+            .then(() => { d.m.push({to:to,s:sub,d:today()}); save(); toast('تم الإرسال بنجاح ✅'); btn.innerHTML="إرسال البريد <i class='fa-solid fa-paper-plane mr-2'></i>"; e.target.reset(); })
+            .catch(err => { console.error(err); toast('فشل الإرسال ❌', 'error'); btn.innerHTML="إرسال البريد <i class='fa-solid fa-paper-plane mr-2'></i>"; });
+        };
 
-        const login = () => { if(document.getElementById('pwd').value==='1077'){ localStorage.setItem('ac_auth','1'); document.getElementById('login').style.display='none'; init(); }else toast('خطأ'); };
-        const logout = () => { localStorage.removeItem('ac_auth'); location.reload(); };
+        // Share Link
+        const share = (typ, id) => { let u=`${location.origin}${location.pathname}?s=${typ}&id=${id}`; document.getElementById('qr-url').value=u; document.getElementById('qr-box').innerHTML=''; new QRCode(document.getElementById('qr-box'), {text:u,width:180,height:180}); openM('m-qr'); };
 
-        // On Load Logic
+        // Auth
+        const login = () => { if(document.getElementById('pwd').value==='1077'){ localStorage.setItem('ac_auth_p','1'); document.getElementById('login').style.display='none'; init(); }else toast('خطأ في كلمة السر', 'error'); };
+        const logout = () => { localStorage.removeItem('ac_auth_p'); location.reload(); };
+
+        // Window Load (Check Links / Login)
         window.onload = () => {
             const p = new URLSearchParams(location.search);
             const st = p.get('s'), sid = p.get('id');
             if(st && sid) {
-                document.getElementById('login').style.display='none'; document.getElementById('shared').classList.remove('hidden'); let b = document.getElementById('shared-box');
+                document.getElementById('login').style.display='none'; document.getElementById('shared').style.display='flex'; let b = document.getElementById('shared-box');
                 if(st==='inv') {
                     let i = d.i.find(x=>x.id===sid), c = d.c.find(x=>x.id===(i?i.c:null));
-                    if(i) b.innerHTML=`<div class="flex justify-between border-b pb-4 mb-4"><h1 class="text-3xl font-black text-brand">aitchikh consulting</h1><div dir="ltr"><b>${c?c.n:''}</b><br>${i.d}</div></div><table class="w-full text-center border"><thead><tr class="bg-brand text-white"><th>البيان</th><th>الكمية</th><th>السعر</th><th>المجموع</th></tr></thead><tbody>${i.r.map(x=>`<tr><td>${x.s}</td><td>${x.q}</td><td>${x.p}</td><td class="font-bold">${x.q*x.p}</td></tr>`).join('')}</tbody></table><div class="mt-4 text-left font-bold text-lg" dir="ltr">HT: ${i.h} DZD<br>TVA: ${i.v} DZD<br><span class="text-green-600 text-2xl">TTC: ${i.t} DZD</span></div><button onclick="window.print()" class="mt-8 bg-primary text-white px-6 py-2 rounded">طباعة</button>`; else b.innerHTML="غير موجود";
+                    if(i) b.innerHTML=`<div class="flex justify-between border-b pb-4 mb-4"><h1 class="text-3xl font-black text-brand">aitchikh consulting</h1><div dir="ltr"><b>${c?c.n:''}</b><br>${i.d}</div></div><table class="w-full text-center border"><thead><tr class="bg-brand text-white"><th>البيان</th><th>الكمية</th><th>السعر</th><th>المجموع</th></tr></thead><tbody>${i.r.map(x=>`<tr class="border-b"><td class="p-2">${x.s}</td><td>${x.q}</td><td>${x.p}</td><td class="font-bold">${x.q*x.p}</td></tr>`).join('')}</tbody></table><div class="mt-4 text-left font-bold text-lg" dir="ltr">HT: ${i.h} DZD<br>TVA: ${i.v} DZD<br><span class="text-green-600 text-2xl">TTC: ${i.t} DZD</span></div><button onclick="window.print()" class="mt-8 bg-primary text-white px-6 py-2 rounded">طباعة / PDF</button>`; else b.innerHTML="الرابط غير صالح";
                 } else if (st==='ev') {
                     let e = d.e.find(x=>x.id===sid);
-                    if(e) b.innerHTML=`<h1 class="text-3xl font-black text-brand mb-4">aitchikh consulting</h1><h2 class="text-2xl font-bold mb-2">${e.t}</h2><p><b>التاريخ:</b> ${e.d} | ${e.m}</p><p><b>المكان:</b> ${e.l}</p>${e.u?`<a href="${e.u}" target="_blank" class="text-blue-500 mt-2 block">رابط الخريطة</a>`:''}`; else b.innerHTML="غير موجود";
+                    if(e) b.innerHTML=`<h1 class="text-3xl font-black text-brand mb-4 border-b pb-4">aitchikh consulting</h1><h2 class="text-2xl font-bold mb-4 text-primary">${e.t}</h2><p class="mb-2"><b>التاريخ:</b> ${e.d} | ${e.m}</p><p class="mb-4"><b>المكان:</b> ${e.l}</p>${e.u?`<a href="${e.u}" target="_blank" class="bg-green-500 text-white px-4 py-2 rounded font-bold inline-block"><i class="fa-solid fa-map"></i> فتح الخريطة</a>`:''}`; else b.innerHTML="الرابط غير صالح";
                 }
-            } else if (localStorage.getItem('ac_auth')==='1') { document.getElementById('login').style.display='none'; init(); }
+            } else if (localStorage.getItem('ac_auth_p')==='1') { document.getElementById('login').style.display='none'; init(); }
         };
     </script>
 </body>
