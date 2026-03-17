@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>aitchikh consulting | Pro Dashboard</title>
+    <title>aitchikh consulting | ERP Pro</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config={theme:{extend:{colors:{primary:'#2563EB',brand:'#1E3A8A'}}}}</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -19,397 +18,428 @@
         body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
         ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .active-nav { background: rgba(37,99,235,0.1); color: #2563EB; border-right: 4px solid #2563EB; font-weight: bold; }
-        html[dir="ltr"] .active-nav { border-right: none; border-left: 4px solid #2563EB; }
         .toast { position: fixed; bottom: 20px; right: 20px; padding: 15px 25px; border-radius: 8px; color: white; font-weight: bold; z-index: 99999; animation: slideIn 0.3s forwards; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @media print { body * { visibility: hidden; } #shared-overlay, #shared-overlay * { visibility: visible; } #shared-overlay { position: absolute; left:0; top:0; width: 100%; height: 100%; background: white; padding:0; } #shared-box { box-shadow: none; border: none; width: 100%; max-width: 100%; padding:0; } .no-print { display: none !important; } }
-        .chart-container { position: relative; height: 250px; width: 100%; }
+        
+        /* للطباعة */
+        @media print { 
+            body * { visibility: hidden; } 
+            #print-zone, #print-zone * { visibility: visible; } 
+            #print-zone { position: absolute; left: 0; top: 0; width: 100%; padding: 0; background: white; }
+            .no-print { display: none !important; }
+            .print-break { page-break-inside: avoid; }
+        }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden text-gray-800">
 
-    <!-- LOGIN -->
+    <!-- شاشة الدخول -->
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-[200] flex items-center justify-center">
         <div class="bg-white p-10 rounded-2xl shadow-2xl w-96 text-center">
             <h1 class="text-3xl font-black text-brand mb-2">aitchikh consulting</h1>
-            <p class="text-sm font-bold text-gray-500 mb-8" data-i18n="login_desc">بوابة الفريق (كلمة السر: 1077)</p>
+            <p class="text-sm font-bold text-gray-500 mb-8">بوابة الإدارة (المرور: 1077)</p>
             <input type="password" id="login-pwd" placeholder="****" class="w-full text-center text-xl tracking-widest p-4 border rounded-xl mb-4" onkeypress="if(event.key==='Enter') window.login()">
-            <button onclick="window.login()" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl" data-i18n="login_btn">دخول</button>
+            <button onclick="window.login()" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl">تسجيل الدخول</button>
         </div>
     </div>
 
-    <!-- SHARED OVERLAY -->
-    <div id="shared-overlay" class="fixed inset-0 bg-gray-100 z-[150] hidden overflow-y-auto flex justify-center items-start py-10 px-4">
-        <div id="shared-box" class="bg-white p-0 rounded-2xl shadow-2xl w-full max-w-4xl border border-gray-200 overflow-hidden"></div>
+    <!-- شاشة العرض للمشاركة (بدون باسورد) -->
+    <div id="shared-overlay" class="fixed inset-0 bg-gray-100 z-[150] hidden overflow-y-auto justify-center items-start py-10 px-4">
+        <div id="print-zone" class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl border border-gray-200 overflow-hidden"></div>
     </div>
 
-    <!-- SIDEBAR -->
+    <!-- القائمة الجانبية -->
     <aside class="w-64 bg-white border-l border-gray-200 flex-col hidden md:flex h-full shadow-sm z-10" id="sidebar">
-        <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+        <div class="p-6 border-b border-gray-100 bg-gray-50">
             <h1 class="text-2xl font-black text-brand leading-tight">aitchikh<br><span class="text-sm font-bold text-gray-500">consulting</span></h1>
-            <button onclick="window.toggleLang()" class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded font-bold" id="lang-btn">FR</button>
         </div>
         <nav class="flex-1 overflow-y-auto py-4 text-sm font-semibold" id="nav-links">
-            <a href="#" onclick="window.go('dash')" data-view="dash" class="block p-4 active-nav"><i class="fa-solid fa-chart-pie w-6"></i> <span data-i18n="nav_dash">لوحة القيادة</span></a>
-            <a href="#" onclick="window.go('inv')" data-view="inv" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-file-invoice-dollar w-6"></i> <span data-i18n="nav_inv">الفواتير</span></a>
-            <a href="#" onclick="window.go('ev')" data-view="ev" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-calendar-star w-6 text-yellow-500"></i> <span data-i18n="nav_ev">الأحداث</span></a>
-            <a href="#" onclick="window.go('fin')" data-view="fin" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-vault w-6"></i> <span data-i18n="nav_fin">المالية</span></a>
-            <a href="#" onclick="window.go('cli')" data-view="cli" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-users w-6"></i> <span data-i18n="nav_cli">العملاء</span></a>
+            <a href="#" onclick="window.go('dash')" data-view="dash" class="block p-4 active-nav"><i class="fa-solid fa-chart-pie w-6"></i> لوحة القيادة</a>
+            <a href="#" onclick="window.go('inv')" data-view="inv" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-file-invoice-dollar w-6"></i> الفواتير (Factures)</a>
+            <a href="#" onclick="window.go('fin')" data-view="fin" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-vault w-6"></i> التقرير المالي</a>
+            <a href="#" onclick="window.go('ev')" data-view="ev" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-calendar-star w-6 text-yellow-500"></i> الأحداث والدعوات</a>
+            <a href="#" onclick="window.go('sch')" data-view="sch" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-clock w-6 text-red-500"></i> برنامج العمل (مواعيد)</a>
+            <a href="#" onclick="window.go('frm')" data-view="fm" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-list-check w-6 text-green-600"></i> إنشاء استمارات (Forms)</a>
+            <a href="#" onclick="window.go('cli')" data-view="cli" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-users w-6"></i> العملاء</a>
+            <a href="#" onclick="window.go('mail')" data-view="mail" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-envelope w-6 text-primary"></i> المراسلات والإعدادات</a>
         </nav>
-        <div class="p-4 border-t text-center text-xs font-bold text-gray-500" id="sync-status">جارٍ الاتصال بقاعدة البيانات...</div>
+        <div class="p-3 text-center text-xs font-bold text-gray-400 border-t" id="sync-status">Firebase Syncing...</div>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- المحتوى الرئيسي -->
     <div class="flex-1 flex flex-col h-full w-full bg-gray-50">
         <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shadow-sm">
-            <h2 class="font-bold text-lg text-gray-700" data-i18n="header_title">مساحة الإدارة الاحترافية</h2>
-            <button onclick="window.logout()" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-red-100"><i class="fa-solid fa-power-off ml-1"></i> <span data-i18n="logout">خروج</span></button>
+            <h2 class="font-bold text-lg text-gray-700">مساحة عمل الإدارة</h2>
+            <button onclick="window.logout()" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-red-100"><i class="fa-solid fa-power-off ml-1"></i> خروج</button>
         </header>
 
         <main class="flex-1 overflow-auto p-8" id="views">
             
-            <!-- DASHBOARD -->
+            <!-- 1. DASHBOARD -->
             <div id="v-dash" class="view block">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border"><p class="text-gray-500 font-bold" data-i18n="stat_rev">الإيرادات</p><h3 class="text-3xl font-black text-green-500 mt-2" id="s-rev" dir="ltr">0 DZD</h3></div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border"><p class="text-gray-500 font-bold" data-i18n="stat_exp">النفقات</p><h3 class="text-3xl font-black text-red-500 mt-2" id="s-exp" dir="ltr">0 DZD</h3></div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border"><p class="text-gray-500 font-bold" data-i18n="stat_net">الصافي</p><h3 class="text-3xl font-black text-primary mt-2" id="s-net" dir="ltr">0 DZD</h3></div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border"><p class="text-gray-500 font-bold" data-i18n="stat_cli">العملاء</p><h3 class="text-3xl font-black mt-2" id="s-cli">0</h3></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><p class="text-gray-500 font-bold text-sm">الإيرادات</p><h3 class="text-3xl font-black text-green-500 mt-2" id="s-rev" dir="ltr">0</h3></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><p class="text-gray-500 font-bold text-sm">النفقات</p><h3 class="text-3xl font-black text-red-500 mt-2" id="s-exp" dir="ltr">0</h3></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><p class="text-gray-500 font-bold text-sm">الرصيد الصافي</p><h3 class="text-3xl font-black text-primary mt-2" id="s-net" dir="ltr">0</h3></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><p class="text-gray-500 font-bold text-sm">إجمالي العملاء</p><h3 class="text-3xl font-black mt-2" id="s-cli">0</h3></div>
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border col-span-2">
-                        <h3 class="font-bold mb-4" data-i18n="chart_flow">التدفق المالي شهرياً</h3>
-                        <div class="chart-container"><canvas id="barChart"></canvas></div>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border col-span-1">
-                        <h3 class="font-bold mb-4" data-i18n="chart_exp">توزع النفقات</h3>
-                        <div class="chart-container"><canvas id="pieChart"></canvas></div>
-                    </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border"><h3 class="font-bold mb-4">التدفق المالي شهرياً</h3><div class="relative h-64"><canvas id="barChart"></canvas></div></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border"><h3 class="font-bold mb-4">توزع النفقات</h3><div class="relative h-64"><canvas id="pieChart"></canvas></div></div>
                 </div>
             </div>
 
-            <!-- INVOICES -->
+            <!-- 2. INVOICES -->
             <div id="v-inv" class="view hidden">
-                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-brand" data-i18n="nav_inv">الفواتير</h2><button onclick="window.openModal('m-inv')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold"><i class="fa-solid fa-plus ml-2"></i> <span data-i18n="new_inv">فاتورة جديدة</span></button></div>
-                <div class="bg-white rounded-2xl shadow-sm border overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100"><tr><th class="p-4" data-i18n="th_ref">رقم</th><th class="p-4" data-i18n="th_cli">العميل</th><th class="p-4" data-i18n="th_date">التاريخ</th><th class="p-4">TTC</th><th class="p-4" data-i18n="th_act">إجراءات</th></tr></thead><tbody id="tb-inv" class="divide-y divide-gray-100"></tbody></table></div>
+                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-brand">إدارة الفواتير (Excel Tools)</h2><button onclick="window.openModal('m-inv')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold shadow-lg"><i class="fa-solid fa-plus ml-2"></i> فاتورة جديدة</button></div>
+                <div class="bg-white rounded-2xl shadow-sm border overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100"><tr><th class="p-4">رقم</th><th class="p-4">العميل</th><th class="p-4">التاريخ</th><th class="p-4">TTC (DZD)</th><th class="p-4">إجراءات الفاتورة</th></tr></thead><tbody id="tb-inv" class="divide-y divide-gray-100"></tbody></table></div>
             </div>
 
-            <!-- EVENTS -->
+            <!-- 3. FINANCES (REPORT) -->
+            <div id="v-fin" class="view hidden">
+                <div class="flex justify-between mb-6"><h2 class="text-3xl font-black text-brand">المالية والتقارير</h2>
+                    <div class="flex gap-2">
+                        <button onclick="window.printReport()" class="bg-gray-800 text-white px-6 py-3 rounded-xl font-bold shadow-lg"><i class="fa-solid fa-print ml-2"></i> طباعة التقرير</button>
+                        <button onclick="window.openModal('m-fin')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold shadow-lg"><i class="fa-solid fa-plus ml-2"></i> عملية جديدة</button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border overflow-hidden" id="finance-print-area">
+                    <div class="p-6 border-b text-center hidden" id="report-header"><h2 class="text-3xl font-black text-brand mb-2">aitchikh consulting</h2><h3 class="text-xl font-bold mb-4">التقرير المالي الشامل</h3><div class="flex justify-around font-bold text-lg border p-4 rounded-xl bg-gray-50"><span class="text-green-600">إجمالي الإيرادات: <span id="r-rev" dir="ltr">0</span></span><span class="text-red-600">إجمالي النفقات: <span id="r-exp" dir="ltr">0</span></span><span class="text-brand">الصافي: <span id="r-net" dir="ltr">0</span></span></div></div>
+                    <table class="w-full text-center"><thead class="bg-gray-100"><tr><th class="p-4">التاريخ</th><th class="p-4">البيان</th><th class="p-4">النوع</th><th class="p-4">المبلغ (DZD)</th><th class="p-4 no-print">حذف</th></tr></thead><tbody id="tb-fin" class="divide-y"></tbody></table>
+                </div>
+            </div>
+
+            <!-- 4. EVENTS -->
             <div id="v-ev" class="view hidden">
-                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-brand" data-i18n="nav_ev">الأحداث</h2><button onclick="window.openModal('m-ev')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold"><i class="fa-solid fa-plus ml-2"></i> <span data-i18n="new_ev">حدث جديد</span></button></div>
+                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-brand">الأحداث والدعوات المرفقة</h2><button onclick="window.openModal('m-ev')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold"><i class="fa-solid fa-plus ml-2"></i> حدث جديد</button></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tb-ev"></div>
             </div>
 
-            <!-- FINANCES -->
-            <div id="v-fin" class="view hidden">
-                <div class="flex justify-between mb-6"><h2 class="text-3xl font-black text-brand" data-i18n="nav_fin">المالية</h2><button onclick="window.openModal('m-fin')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold"><i class="fa-solid fa-plus ml-2"></i> <span data-i18n="new_fin">عملية جديدة</span></button></div>
-                <div class="bg-white rounded-2xl border overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100"><tr><th class="p-4" data-i18n="th_date">تاريخ</th><th class="p-4" data-i18n="th_desc">بيان</th><th class="p-4" data-i18n="th_pay">الدفع</th><th class="p-4" data-i18n="th_amt">مبلغ</th><th class="p-4" data-i18n="th_act">إجراءات</th></tr></thead><tbody id="tb-fin" class="divide-y"></tbody></table></div>
+            <!-- 5. WORK SCHEDULE & REMINDERS -->
+            <div id="v-sch" class="view hidden">
+                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-brand">برنامج العمل والمواعيد</h2><button onclick="window.openModal('m-sch')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold"><i class="fa-solid fa-plus ml-2"></i> موعد جديد</button></div>
+                <p class="text-sm font-bold text-gray-500 mb-4"><i class="fa-solid fa-bell text-red-500"></i> المواعيد القريبة (أقل من يومين) ستظهر باللون الأحمر، وسيتم إرسال تذكير تلقائي بالإيميل.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="tb-sch"></div>
             </div>
 
-            <!-- CLIENTS -->
+            <!-- 6. CUSTOM FORMS BUILDER -->
+            <div id="v-frm" class="view hidden">
+                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-brand">إنشاء الاستمارات (Forms)</h2><button onclick="window.openModal('m-frm')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold"><i class="fa-solid fa-plus ml-2"></i> استمارة جديدة</button></div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div><h3 class="font-bold mb-4 text-xl">الاستمارات النشطة</h3><div class="space-y-4" id="tb-forms"></div></div>
+                    <div class="bg-white p-6 rounded-2xl border shadow-sm">
+                        <h3 class="font-bold mb-4 text-xl text-green-600">الردود والإحصائيات</h3>
+                        <select id="form-select-view" onchange="window.renderFormResponses()" class="w-full p-3 border rounded-xl mb-4"><option value="">اختر الاستمارة لعرض الردود...</option></select>
+                        <div id="form-responses-area" class="overflow-x-auto"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. CLIENTS -->
             <div id="v-cli" class="view hidden">
-                <div class="flex justify-between mb-6"><h2 class="text-3xl font-black text-brand" data-i18n="nav_cli">العملاء</h2><button onclick="window.openModal('m-cli')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold"><i class="fa-solid fa-plus ml-2"></i> <span data-i18n="new_cli">عميل جديد</span></button></div>
-                <div class="bg-white rounded-2xl border overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100"><tr><th class="p-4" data-i18n="th_name">الاسم</th><th class="p-4" data-i18n="th_com">الشركة</th><th class="p-4" data-i18n="th_con">اتصال</th><th class="p-4" data-i18n="th_act">إجراءات</th></tr></thead><tbody id="tb-cli" class="divide-y"></tbody></table></div>
+                <div class="flex justify-between mb-6"><h2 class="text-3xl font-black text-brand">العملاء</h2><button onclick="window.openModal('m-cli')" class="bg-primary text-white px-6 py-3 rounded-xl font-bold">إضافة عميل</button></div>
+                <div class="bg-white rounded-2xl border overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100"><tr><th class="p-4">الاسم</th><th class="p-4">الشركة</th><th class="p-4">اتصال</th><th class="p-4">حذف</th></tr></thead><tbody id="tb-cli" class="divide-y"></tbody></table></div>
+            </div>
+
+            <!-- 8. EMAIL & SETTINGS -->
+            <div id="v-mail" class="view hidden">
+                <h2 class="text-3xl font-black text-brand mb-6">المراسلات وإعدادات التذكير</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <form id="f-mail" class="bg-white p-8 rounded-2xl border shadow-sm space-y-4">
+                        <h3 class="font-bold text-primary mb-2">إرسال بريد سريع للعملاء</h3>
+                        <input type="email" id="em-to" list="dl-cli" required placeholder="إلى (بريد العميل)" class="w-full p-4 border rounded-xl" dir="ltr"><datalist id="dl-cli"></datalist>
+                        <input type="text" id="em-sub" required placeholder="عنوان الرسالة" class="w-full p-4 border rounded-xl">
+                        <textarea id="em-msg" required placeholder="محتوى الرسالة..." rows="4" class="w-full p-4 border rounded-xl"></textarea>
+                        <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl">إرسال البريد <i class="fa-solid fa-paper-plane mr-2"></i></button>
+                    </form>
+                    <div class="bg-white p-8 rounded-2xl border shadow-sm">
+                        <h3 class="font-bold text-red-500 mb-4">إعدادات بريد الإدارة (لتلقي التذكيرات)</h3>
+                        <p class="text-sm font-bold text-gray-500 mb-4">أدخل إيميلك الشخصي لكي يقوم النظام بإرسال تذكيرات المواعيد وبرنامج العمل إليه تلقائياً.</p>
+                        <input type="email" id="admin-email-set" placeholder="admin@aitchikh.com" class="w-full p-4 border rounded-xl mb-4" dir="ltr">
+                        <button onclick="window.saveAdminEmail()" class="w-full bg-gray-800 text-white font-bold py-4 rounded-xl">حفظ الإيميل</button>
+                        
+                        <div class="mt-8 pt-8 border-t"><button onclick="if(confirm('سيتم حذف كل البيانات نهائياً! هل أنت متأكد؟')){localStorage.clear();location.reload();}" class="w-full bg-red-50 text-red-600 font-bold py-4 rounded-xl hover:bg-red-100">إعادة ضبط المصنع ومسح الكل</button></div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- MODALS -->
+    <!-- ===== نوافذ الإدخال (MODALS) ===== -->
     
-    <!-- 1. Invoice Modal (Excel Style) -->
+    <!-- فاتورة احترافية -->
     <div id="m-inv" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto">
-            <div class="p-6 border-b flex justify-between items-center bg-gray-50"><h3 class="font-black text-2xl text-primary" data-i18n="new_inv">إنشاء فاتورة</h3><button onclick="window.closeModal()" class="text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="p-6 border-b flex justify-between bg-gray-50"><h3 class="font-black text-2xl text-primary">فاتورة احترافية (Facture)</h3><button onclick="window.closeModal()" class="text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button></div>
             <div class="p-6">
                 <form id="f-inv" class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div><label class="font-bold mb-2 block" data-i18n="th_cli">العميل</label><select id="i-cli" required class="w-full p-3 border rounded-xl"></select></div>
-                        <div><label class="font-bold mb-2 block" data-i18n="th_date">التاريخ</label><input type="date" id="i-dat" required class="w-full p-3 border rounded-xl"></div>
-                        <div class="flex items-end pb-2">
-                            <label class="flex items-center cursor-pointer bg-blue-50 p-3 rounded-xl border border-blue-100 w-full"><input type="checkbox" id="i-tva-check" checked onchange="window.drawInv()" class="w-5 h-5"><span class="font-bold ml-2 text-blue-800">TVA 19%</span></label>
-                        </div>
+                        <div><label class="font-bold mb-2 block">العميل</label><select id="i-cli" required class="w-full p-3 border rounded-xl"></select></div>
+                        <div><label class="font-bold mb-2 block">التاريخ</label><input type="date" id="i-dat" required class="w-full p-3 border rounded-xl"></div>
+                        <div class="flex items-end pb-2"><label class="flex items-center bg-blue-50 p-3 rounded-xl border border-blue-100 w-full cursor-pointer"><input type="checkbox" id="i-tva-check" checked onchange="window.drawInv()" class="w-5 h-5"><span class="font-bold ml-2 text-blue-800">تطبيق TVA 19%</span></label></div>
                     </div>
-                    <!-- Excel Table -->
-                    <div class="border rounded-xl overflow-hidden overflow-x-auto">
-                        <table class="w-full text-center min-w-[700px]"><thead class="bg-primary text-white"><tr><th class="p-3">Désignation</th><th class="p-3 w-20">Qté</th><th class="p-3 w-32">Prix U.</th><th class="p-3 w-24">Remise %</th><th class="p-3 w-32">Total</th><th class="p-3 w-10"></th></tr></thead><tbody id="i-items"></tbody></table>
-                        <button type="button" onclick="window.addRow()" class="w-full bg-gray-50 p-3 font-bold text-primary hover:bg-gray-100">+ Ligne (سطر جديد)</button>
-                    </div>
+                    <div class="border rounded-xl overflow-x-auto"><table class="w-full text-center min-w-[700px]"><thead class="bg-brand text-white"><tr><th class="p-3">Désignation</th><th class="p-3 w-20">Qté</th><th class="p-3 w-32">Prix U.</th><th class="p-3 w-24">Remise %</th><th class="p-3 w-32">Total</th><th class="p-3 w-10"></th></tr></thead><tbody id="i-items"></tbody></table><button type="button" onclick="window.addRow()" class="w-full bg-gray-50 hover:bg-gray-100 p-4 font-bold text-primary transition">+ Ligne (سطر جديد)</button></div>
                     <div class="flex justify-between items-end mt-4">
                         <div class="w-1/3"><label class="font-bold block mb-1">Global Remise (%)</label><input type="number" id="i-g-remise" value="0" onchange="window.drawInv()" class="w-full p-3 border rounded-xl" max="100"></div>
-                        <div class="w-72 bg-gray-50 p-4 rounded-xl border font-bold" dir="ltr"><div class="flex justify-between"><span>HT:</span> <span id="i-ht">0</span></div><div class="flex justify-between text-red-500"><span>TVA:</span> <span id="i-tva">0</span></div><div class="flex justify-between text-green-600 text-xl border-t pt-2 mt-2"><span>TTC:</span> <span id="i-ttc">0</span></div></div>
+                        <div class="w-72 bg-gray-50 p-6 rounded-xl border font-bold text-lg" dir="ltr"><div class="flex justify-between"><span>HT:</span> <span id="i-ht">0</span></div><div class="flex justify-between text-red-500"><span>TVA:</span> <span id="i-tva">0</span></div><div class="flex justify-between text-green-600 text-2xl border-t border-gray-300 pt-4 mt-2"><span>TTC:</span> <span id="i-ttc">0</span></div></div>
                     </div>
-                    <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-xl shadow-lg mt-6" data-i18n="save">حفظ</button>
+                    <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl text-xl shadow-lg mt-6">حفظ الفاتورة</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- 2. Event Modal -->
+    <!-- حدث مع صورة -->
     <div id="m-ev" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div class="p-6 border-b flex justify-between"><h3 class="font-black text-2xl text-primary" data-i18n="new_ev">حدث جديد</h3><button onclick="window.closeModal()" class="text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="p-6 border-b flex justify-between bg-gray-50"><h3 class="font-black text-2xl text-primary">حدث جديد</h3><button onclick="window.closeModal()" class="text-red-500 text-xl"><i class="fa-solid fa-xmark"></i></button></div>
             <div class="p-6">
                 <form id="f-ev" class="space-y-4">
-                    <input type="text" id="e-tit" required placeholder="عنوان الحدث" class="w-full p-3 border rounded-xl">
-                    <div class="grid grid-cols-2 gap-4"><input type="date" id="e-dat" required class="w-full p-3 border rounded-xl"><input type="time" id="e-tim" required class="w-full p-3 border rounded-xl"></div>
-                    <input type="text" id="e-loc" required placeholder="المكان" class="w-full p-3 border rounded-xl">
-                    <input type="url" id="e-map" placeholder="رابط Google Maps (اختياري)" class="w-full p-3 border rounded-xl" dir="ltr">
-                    <div class="bg-gray-50 p-4 rounded-xl border"><label class="font-bold block mb-2">صورة الغلاف (Background)</label><input type="file" id="e-img" accept="image/*" class="w-full"></div>
-                    <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl" data-i18n="save">حفظ</button>
+                    <input type="text" id="e-tit" required placeholder="عنوان الحدث" class="w-full p-4 border rounded-xl">
+                    <div class="grid grid-cols-2 gap-4"><input type="date" id="e-dat" required class="w-full p-4 border rounded-xl"><input type="time" id="e-tim" required class="w-full p-4 border rounded-xl"></div>
+                    <input type="text" id="e-loc" required placeholder="اسم المكان" class="w-full p-4 border rounded-xl">
+                    <input type="url" id="e-map" placeholder="رابط خرائط جوجل (Google Maps URL)" class="w-full p-4 border rounded-xl" dir="ltr">
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100"><label class="font-bold block mb-2 text-brand">صورة الغلاف (تظهر كخلفية داكنة للدعوة)</label><input type="file" id="e-img" accept="image/*" class="w-full"></div>
+                    <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg mt-4">حفظ الحدث</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- 3. Finance Modal (Detailed) -->
-    <div id="m-fin" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
-        <div class="bg-white p-6 rounded-2xl w-full max-w-md"><h3 class="font-bold text-xl mb-4" data-i18n="new_fin">عملية مالية</h3>
-        <form id="f-fin" class="space-y-3">
-            <select id="f-typ" class="w-full p-3 border rounded-xl"><option value="r">إيراد (+)</option><option value="e">نفقة (-)</option></select>
-            <input type="number" id="f-amt" required placeholder="المبلغ DZD" class="w-full p-3 border rounded-xl">
-            <input type="text" id="f-des" required placeholder="البيان / الوصف" class="w-full p-3 border rounded-xl">
-            <select id="f-pay" class="w-full p-3 border rounded-xl"><option value="Espèce">Espèce (نقداً)</option><option value="Virement">Virement (تحويل)</option><option value="Chèque">Chèque (شيك)</option></select>
-            <input type="text" id="f-ref" placeholder="رقم المرجع / الفاتورة" class="w-full p-3 border rounded-xl">
-            <button type="submit" class="w-full bg-primary text-white p-3 rounded-xl font-bold" data-i18n="save">حفظ</button>
-        </form></div>
+    <!-- المواعيد (برنامج العمل) -->
+    <div id="m-sch" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-md p-6">
+            <h3 class="font-black text-2xl mb-4 text-primary">إضافة موعد لبرنامج العمل</h3>
+            <form id="f-sch" class="space-y-4">
+                <input type="text" id="s-tit" required placeholder="عنوان الموعد (مثال: اجتماع مع الموردين)" class="w-full p-4 border rounded-xl">
+                <input type="date" id="s-dat" required class="w-full p-4 border rounded-xl">
+                <input type="time" id="s-tim" required class="w-full p-4 border rounded-xl">
+                <textarea id="s-not" placeholder="ملاحظات..." rows="3" class="w-full p-4 border rounded-xl"></textarea>
+                <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg">حفظ الموعد</button>
+            </form>
+        </div>
     </div>
 
-    <!-- 4. Client Modal -->
-    <div id="m-cli" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
-        <div class="bg-white p-6 rounded-2xl w-full max-w-md"><h3 class="font-bold text-xl mb-4" data-i18n="new_cli">عميل جديد</h3>
-        <form id="f-cli" class="space-y-3"><input type="text" id="c-nam" required placeholder="الاسم" class="w-full p-3 border rounded-xl"><input type="email" id="c-ema" required placeholder="الإيميل" class="w-full p-3 border rounded-xl" dir="ltr"><input type="text" id="c-com" placeholder="الشركة" class="w-full p-3 border rounded-xl"><button type="submit" class="w-full bg-primary text-white p-3 rounded-xl font-bold" data-i18n="save">حفظ</button></form></div>
+    <!-- بناء استمارة (Form Builder) -->
+    <div id="m-frm" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+            <div class="flex justify-between mb-4"><h3 class="font-black text-2xl text-primary">بناء استمارة جديدة</h3><button onclick="window.closeModal()" class="text-red-500"><i class="fa-solid fa-xmark"></i></button></div>
+            <form id="f-frm" class="space-y-4">
+                <input type="text" id="fm-tit" required placeholder="عنوان الاستمارة (مثال: طلب خدمة)" class="w-full p-4 border rounded-xl text-xl font-bold">
+                <p class="font-bold text-gray-500 mt-4 border-b pb-2">الحقول المطلوبة من العميل:</p>
+                <div id="fm-fields" class="space-y-2"></div>
+                <div class="flex gap-2 mt-2">
+                    <input type="text" id="fm-f-lbl" placeholder="اسم الحقل (مثال: رقم الهاتف)" class="flex-1 p-3 border rounded-xl">
+                    <select id="fm-f-typ" class="p-3 border rounded-xl"><option value="text">نص</option><option value="number">رقم</option><option value="email">إيميل</option></select>
+                    <button type="button" onclick="window.addFormField()" class="bg-green-500 text-white px-4 rounded-xl font-bold">+</button>
+                </div>
+                <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg mt-6">حفظ وإنشاء رابط للاستمارة</button>
+            </form>
+        </div>
     </div>
 
-    <!-- Firebase Script via Module -->
+    <!-- نوافذ بسيطة (عملية، عميل، مشاركة) -->
+    <div id="m-fin" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4"><div class="bg-white p-6 rounded-2xl w-full max-w-md"><h3 class="font-bold text-xl mb-4">عملية مالية</h3><form id="f-fin" class="space-y-3"><select id="f-typ" class="w-full p-3 border rounded-xl"><option value="r">إيراد (+)</option><option value="e">نفقة (-)</option></select><input type="number" id="f-amt" required placeholder="المبلغ DZD" class="w-full p-3 border rounded-xl"><input type="text" id="f-des" required placeholder="البيان" class="w-full p-3 border rounded-xl"><button type="submit" class="w-full bg-primary text-white p-3 rounded-xl font-bold">حفظ</button></form></div></div>
+    <div id="m-cli" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4"><div class="bg-white p-6 rounded-2xl w-full max-w-md"><h3 class="font-bold text-xl mb-4">عميل جديد</h3><form id="f-cli" class="space-y-3"><input type="text" id="c-nam" required placeholder="الاسم" class="w-full p-3 border rounded-xl"><input type="email" id="c-ema" required placeholder="الإيميل" class="w-full p-3 border rounded-xl" dir="ltr"><input type="text" id="c-com" placeholder="الشركة" class="w-full p-3 border rounded-xl"><button type="submit" class="w-full bg-primary text-white p-3 rounded-xl font-bold">حفظ</button></form></div></div>
+    <div id="m-qr" class="hidden fixed inset-0 bg-black/60 z-[300] flex items-center justify-center p-4"><div class="bg-white p-8 rounded-2xl w-full max-w-sm text-center"><h3 class="font-bold text-xl mb-4">مشاركة الرابط</h3><div id="qr-box" class="bg-white p-4 inline-block border rounded-xl mb-4"></div><input type="text" id="qr-url" readonly class="w-full p-3 border rounded-xl text-sm mb-4" dir="ltr"><button onclick="document.getElementById('qr-url').select();document.execCommand('copy');window.toast('تم النسخ ✅')" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold mb-2">نسخ الرابط</button><button onclick="window.closeModal()" class="w-full bg-gray-200 py-3 rounded-xl font-bold">إغلاق</button></div></div>
+
+    <!-- JAVASCRIPT SYSTEM -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyCePMwR1Ov1Xknj-1m0FJG-IE3pmSItzzU",
-            authDomain: "thwas-b496b.firebaseapp.com",
-            projectId: "thwas-b496b",
-            storageBucket: "thwas-b496b.firebasestorage.app",
-            messagingSenderId: "435409022648",
-            appId: "1:435409022648:web:85ad4d14546f5d2ccb0e4d"
-        };
-        
-        let db = null;
-        try { const app = initializeApp(firebaseConfig); db = getFirestore(app); } catch(e) { console.error("Firebase Error", e); }
-
-        // EmailJS Keys (Hardcoded as requested)
+        // 1. Config Firebase & EmailJS
+        const app = initializeApp({ apiKey: "AIzaSyCePMwR1Ov1Xknj-1m0FJG-IE3pmSItzzU", authDomain: "thwas-b496b.firebaseapp.com", projectId: "thwas-b496b", storageBucket: "thwas-b496b.firebasestorage.app", messagingSenderId: "435409022648", appId: "1:435409022648:web:85ad4d14546f5d2ccb0e4d" });
+        const db = getFirestore(app);
         const EM_PUB = "y9qpL0BwEGCoU87fX", EM_SRV = "service_tl81dab", EM_TPL = "template_c0iobrh";
         try { emailjs.init(EM_PUB); } catch(e){}
 
-        // I18n Dictionary
-        const i18n = {
-            ar: { login_desc:"بوابة الفريق (كلمة السر: 1077)", login_btn:"دخول", nav_dash:"لوحة القيادة", nav_inv:"الفواتير", nav_ev:"الأحداث", nav_fin:"المالية", nav_cli:"العملاء", header_title:"مساحة الإدارة", logout:"خروج", stat_rev:"الإيرادات", stat_exp:"النفقات", stat_net:"الصافي", stat_cli:"العملاء", chart_flow:"التدفق المالي شهرياً", chart_exp:"توزع النفقات", new_inv:"فاتورة جديدة", new_ev:"حدث جديد", new_fin:"عملية مالية", new_cli:"عميل جديد", th_ref:"رقم", th_cli:"العميل", th_date:"التاريخ", th_act:"إجراءات", th_desc:"البيان", th_pay:"الدفع", th_amt:"مبلغ", th_name:"الاسم", th_com:"الشركة", th_con:"اتصال", save:"حفظ", print:"طباعة / PDF", exp_csv:"تصدير CSV", online:"متصل سحابياً", offline:"محلي فقط" },
-            fr: { login_desc:"Portail d'équipe (Mot de passe: 1077)", login_btn:"Connexion", nav_dash:"Tableau de bord", nav_inv:"Factures", nav_ev:"Événements", nav_fin:"Finances", nav_cli:"Clients", header_title:"Espace de Gestion", logout:"Déconnexion", stat_rev:"Revenus", stat_exp:"Dépenses", stat_net:"Bénéfice net", stat_cli:"Clients", chart_flow:"Flux financier mensuel", chart_exp:"Répartition des dépenses", new_inv:"Nouvelle Facture", new_ev:"Nouvel Événement", new_fin:"Nouvelle Opération", new_cli:"Nouveau Client", th_ref:"N°", th_cli:"Client", th_date:"Date", th_act:"Actions", th_desc:"Désignation", th_pay:"Paiement", th_amt:"Montant", th_name:"Nom", th_com:"Entreprise", th_con:"Contact", save:"Enregistrer", print:"Imprimer / PDF", exp_csv:"Exporter CSV", online:"Connecté au Cloud", offline:"Local uniquement" }
-        };
-
-        // State
-        window.dbState = { lang: 'ar', c:[], f:[], i:[], e:[] };
+        // 2. Global State
+        const LOCAL_KEY = 'aitchikh_erp_v1';
+        window.d = JSON.parse(localStorage.getItem(LOCAL_KEY)) || { c:[], f:[], i:[], e:[], w:[], frm:[], res:[], s:{ adminEm: '' } };
         
-        // Save & Sync Logic
-        const syncData = async () => {
-            localStorage.setItem('aitchikh_db_v6', JSON.stringify(window.dbState));
-            render();
-            if(db) {
-                try { 
-                    await setDoc(doc(db, "appData", "main"), window.dbState); 
-                    document.getElementById('sync-status').innerHTML = `<span class="text-green-500"><i class="fa-solid fa-cloud"></i> ${i18n[window.dbState.lang].online}</span>`;
-                } catch(e) { document.getElementById('sync-status').innerHTML = `<span class="text-gray-500"><i class="fa-solid fa-hard-drive"></i> ${i18n[window.dbState.lang].offline}</span>`; }
-            }
+        window.save = async () => { 
+            localStorage.setItem(LOCAL_KEY, JSON.stringify(window.d)); window.render(); 
+            try { await setDoc(doc(db, "data", "erp"), window.d); document.getElementById('sync-status').innerText="Synced ✅"; } catch(e){ document.getElementById('sync-status').innerText="Local Only"; }
         };
 
         const loadData = async () => {
-            const local = localStorage.getItem('aitchikh_db_v6');
-            if(local) window.dbState = JSON.parse(local);
-            if(db) {
-                try {
-                    onSnapshot(doc(db, "appData", "main"), (docSnap) => {
-                        if (docSnap.exists()) { window.dbState = docSnap.data(); render(); }
-                    });
-                } catch(e){}
-            }
-            initCharts(); window.applyLang(); render();
+            const loc = localStorage.getItem(LOCAL_KEY); if(loc) window.d = JSON.parse(loc);
+            try { onSnapshot(doc(db, "data", "erp"), (s) => { if(s.exists()){ window.d=s.data(); window.render(); } }); } catch(e){}
+            window.initCharts(); window.render(); document.getElementById('admin-email-set').value = window.d.s.adminEm || '';
+            window.checkReminders();
         };
 
-        // Language Toggle
-        window.toggleLang = () => { window.dbState.lang = window.dbState.lang === 'ar' ? 'fr' : 'ar'; syncData(); window.applyLang(); };
-        window.applyLang = () => {
-            const l = window.dbState.lang;
-            document.documentElement.lang = l; document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('lang-btn').innerText = l === 'ar' ? 'FR' : 'AR';
-            document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if(i18n[l][k]) el.innerText = i18n[l][k]; });
-            if(chartBar) { chartBar.data.datasets[0].label = l==='ar'?'إيرادات':'Revenus'; chartBar.data.datasets[1].label = l==='ar'?'نفقات':'Dépenses'; chartBar.update(); }
-        };
-
-        // Helpers
-        const toast = (msg, typ='success') => { const t=document.createElement('div'); t.className=`toast ${typ==='error'?'bg-red-500':'bg-green-500'}`; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),3000); };
+        // 3. UI Helpers
+        window.toast = (m, t='success') => { const el=document.createElement('div'); el.className=`toast ${t==='error'?'bg-red-500':'bg-green-500'}`; el.innerText=m; document.body.appendChild(el); setTimeout(()=>el.remove(),3000); };
         window.go = v => { document.querySelectorAll('.view').forEach(e=>e.classList.add('hidden')); document.getElementById('v-'+v).classList.remove('hidden'); document.querySelectorAll('#nav-links a').forEach(a=>a.classList.remove('active-nav')); document.querySelector(`[data-view="${v}"]`).classList.add('active-nav'); };
-        window.openModal = id => { document.getElementById(id).classList.remove('hidden'); if(id==='m-inv') window.resetInv(); };
+        window.openModal = id => { document.getElementById(id).classList.remove('hidden'); if(id==='m-inv') window.resetInv(); if(id==='m-frm') window.frmFields=[]; };
         window.closeModal = () => document.querySelectorAll('[id^="m-"]').forEach(e=>e.classList.add('hidden'));
+        window.del = (col,id) => { if(confirm('تأكيد الحذف؟')){ window.d[col]=window.d[col].filter(x=>x.id!==id); window.save(); window.toast('تم الحذف','error'); } };
 
-        // Charts
-        let chartBar, chartPie;
-        const initCharts = () => {
-            Chart.defaults.font.family = 'Cairo';
-            chartBar = new Chart(document.getElementById('barChart').getContext('2d'), {type:'bar', data:{labels:['1','2','3','4','5','6','7','8','9','10','11','12'],datasets:[{label:'إيرادات',data:Array(12).fill(0),backgroundColor:'#10B981'},{label:'نفقات',data:Array(12).fill(0),backgroundColor:'#EF4444'}]}, options:{responsive:true, maintainAspectRatio:false}});
-            chartPie = new Chart(document.getElementById('pieChart').getContext('2d'), {type:'doughnut', data:{labels:[],datasets:[{data:[],backgroundColor:['#3B82F6','#EF4444','#10B981','#F59E0B','#8B5CF6']}]}, options:{responsive:true, maintainAspectRatio:false}});
+        // 4. Charts
+        let bChart, pChart;
+        window.initCharts = () => {
+            Chart.defaults.font.family='Cairo';
+            bChart = new Chart(document.getElementById('barChart').getContext('2d'),{type:'bar',data:{labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],datasets:[{label:'إيرادات',data:Array(12).fill(0),backgroundColor:'#10B981'},{label:'نفقات',data:Array(12).fill(0),backgroundColor:'#EF4444'}]},options:{responsive:true,maintainAspectRatio:false}});
+            pChart = new Chart(document.getElementById('pieChart').getContext('2d'),{type:'doughnut',data:{labels:['نفقات'],datasets:[{data:[1],backgroundColor:['#EF4444']}]},options:{responsive:true,maintainAspectRatio:false}});
         };
 
-        // Render Data
-        const render = () => {
-            const d = window.dbState;
-            let rev=0, exp=0, expCats={};
-            let barRev = Array(12).fill(0), barExp = Array(12).fill(0);
+        // 5. Render Core
+        window.render = () => {
+            let rev=0, exp=0, bRev=Array(12).fill(0), bExp=Array(12).fill(0);
+            window.d.f.forEach(x=>{ let m=parseInt(x.d.split('-')[1])-1; if(x.t==='r'){rev+=x.a;bRev[m]+=x.a;}else{exp+=x.a;bExp[m]+=x.a;} });
+            document.getElementById('s-rev').innerText=rev.toLocaleString(); document.getElementById('s-exp').innerText=exp.toLocaleString(); document.getElementById('s-net').innerText=(rev-exp).toLocaleString(); document.getElementById('s-cli').innerText=window.d.c.length;
+            document.getElementById('r-rev').innerText=rev.toLocaleString(); document.getElementById('r-exp').innerText=exp.toLocaleString(); document.getElementById('r-net').innerText=(rev-exp).toLocaleString();
+            if(bChart){ bChart.data.datasets[0].data=bRev; bChart.data.datasets[1].data=bExp; bChart.update(); }
+
+            document.getElementById('i-cli').innerHTML = window.d.c.map(x=>`<option value="${x.id}">${x.n}</option>`).join('');
+            document.getElementById('dl-cli').innerHTML = window.d.c.map(x=>`<option value="${x.e}">${x.n}</option>`).join('');
             
-            d.f.forEach(x => { 
-                const m = parseInt(x.d.split('-')[1]) - 1;
-                if(x.t==='r') { rev+=x.a; if(!isNaN(m)) barRev[m]+=x.a; } 
-                else { exp+=x.a; if(!isNaN(m)) barExp[m]+=x.a; expCats[x.p] = (expCats[x.p]||0) + x.a; } 
+            document.getElementById('tb-cli').innerHTML = window.d.c.map(x=>`<tr class="border-b"><td class="p-4 font-bold">${x.n}</td><td class="p-4">${x.c}</td><td class="p-4" dir="ltr">${x.e}</td><td class="p-4"><button onclick="window.del('c','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+            document.getElementById('tb-fin').innerHTML = window.d.f.map(x=>`<tr class="border-b print-break"><td class="p-4">${x.d}</td><td class="p-4 font-bold">${x.s}</td><td class="p-4 font-bold ${x.t==='r'?'text-green-500':'text-red-500'}">${x.t==='r'?'إيراد':'نفقة'}</td><td class="p-4 font-black">${x.a.toLocaleString()}</td><td class="p-4 no-print"><button onclick="window.del('f','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+            
+            document.getElementById('tb-inv').innerHTML = window.d.i.map(x=>{ let c=window.d.c.find(y=>y.id===x.c)||{}; return `<tr class="border-b"><td class="p-4 font-bold text-brand">${x.id}</td><td class="p-4 font-bold">${c.n||''}</td><td class="p-4">${x.d}</td><td class="p-4 font-black text-green-600">${x.t.toLocaleString()}</td><td class="p-4"><button onclick="window.emailInv('${x.id}')" class="bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold mx-1" title="إرسال إيميل"><i class="fa-solid fa-envelope"></i></button><button onclick="window.share('inv','${x.id}')" class="bg-gray-200 text-gray-800 px-3 py-1 rounded font-bold mx-1" title="رابط الفاتورة كملف"><i class="fa-solid fa-link"></i></button><button onclick="window.del('i','${x.id}')" class="text-red-500 mx-1"><i class="fa-solid fa-trash"></i></button></td></tr>`;}).join('');
+
+            document.getElementById('tb-ev').innerHTML = window.d.e.map(x=>`<div class="bg-white rounded-2xl border overflow-hidden shadow-sm flex flex-col"><div class="p-6 text-white relative bg-cover bg-center h-32 flex items-center justify-center text-center" style="background-image: linear-gradient(rgba(30,58,138,0.8), rgba(0,0,0,0.8)), url('${x.bg||''}');"><h3 class="font-black text-xl relative z-10">${x.t}</h3></div><div class="p-6 bg-white flex-1"><p class="text-sm font-bold text-gray-500 mb-2"><i class="fa-regular fa-clock text-primary"></i> ${x.d} | ${x.m}</p><p class="text-sm font-bold text-gray-500"><i class="fa-solid fa-location-dot text-red-500"></i> ${x.l}</p></div><div class="p-4 bg-gray-50 border-t flex gap-2"><button onclick="window.share('ev','${x.id}')" class="bg-primary text-white flex-1 py-2 rounded-xl font-bold">دعوة</button><button onclick="window.del('e','${x.id}')" class="bg-red-100 text-red-600 px-4 py-2 rounded-xl font-bold"><i class="fa-solid fa-trash"></i></button></div></div>`).join('');
+            
+            // Work Schedule
+            document.getElementById('tb-sch').innerHTML = window.d.w.map(x=>{
+                let diff = (new Date(x.d) - new Date())/(1000*3600*24); let isNear = diff>=0 && diff<=2;
+                return `<div class="rounded-xl border p-5 shadow-sm ${isNear?'bg-red-50 border-red-500':'bg-white'}"><div class="flex justify-between items-start mb-2"><h3 class="font-bold text-xl ${isNear?'text-red-600':'text-brand'}">${x.t}</h3><button onclick="window.del('w','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></div><p class="font-bold text-gray-600"><i class="fa-regular fa-calendar text-primary"></i> ${x.d} | ${x.m}</p><p class="text-sm text-gray-500 mt-2">${x.n}</p></div>`;
+            }).join('');
+
+            // Forms
+            document.getElementById('tb-forms').innerHTML = window.d.frm.map(x=>`<div class="bg-gray-50 p-4 rounded-xl border flex justify-between items-center"><h4 class="font-bold text-brand">${x.t}</h4><div class="flex gap-2"><button onclick="window.share('frm','${x.id}')" class="bg-primary text-white px-3 py-1 rounded-lg font-bold">رابط الاستمارة</button><button onclick="window.del('frm','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></div></div>`).join('');
+            let sel = document.getElementById('form-select-view'); let prevSel = sel.value;
+            sel.innerHTML = `<option value="">اختر الاستمارة...</option>` + window.d.frm.map(x=>`<option value="${x.id}">${x.t}</option>`).join('');
+            sel.value = prevSel; window.renderFormResponses();
+        };
+
+        // 6. Print Report
+        window.printReport = () => { document.getElementById('report-header').classList.remove('hidden'); window.print(); setTimeout(()=>document.getElementById('report-header').classList.add('hidden'), 1000); };
+
+        // 7. Auto Reminders
+        window.checkReminders = () => {
+            if(!window.d.s.adminEm) return;
+            let chg = false;
+            window.d.w.forEach(x=>{
+                let diff = (new Date(x.d) - new Date())/(1000*3600*24);
+                if(diff<=2 && diff>=0 && !x.r) {
+                    emailjs.send(EM_SRV, EM_TPL, {name:'الإدارة', email:window.d.s.adminEm, message:`تذكير بموعد قريب!\nالعنوان: ${x.t}\nالتاريخ: ${x.d} الساعة ${x.m}\nالملاحظات: ${x.n}`});
+                    x.r = true; chg = true;
+                }
             });
-            let net=rev-exp;
-
-            document.getElementById('s-rev').innerText=rev.toLocaleString()+' DZD'; document.getElementById('s-exp').innerText=exp.toLocaleString()+' DZD'; document.getElementById('s-net').innerText=net.toLocaleString()+' DZD'; document.getElementById('s-cli').innerText=d.c.length;
-            
-            if(chartBar) { chartBar.data.datasets[0].data=barRev; chartBar.data.datasets[1].data=barExp; chartBar.update(); }
-            if(chartPie) { chartPie.data.labels=Object.keys(expCats).length?Object.keys(expCats):['Aucun']; chartPie.data.datasets[0].data=Object.keys(expCats).length?Object.values(expCats):[1]; chartPie.update(); }
-
-            document.getElementById('i-cli').innerHTML = d.c.map(x=>`<option value="${x.id}">${x.n} - ${x.c}</option>`).join('');
-            
-            document.getElementById('tb-cli').innerHTML = d.c.map(x=>`<tr class="border-b"><td class="p-4 font-bold">${x.n}</td><td class="p-4">${x.c}</td><td class="p-4" dir="ltr">${x.e}</td><td class="p-4"><button onclick="window.del('c','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
-            document.getElementById('tb-fin').innerHTML = d.f.map(x=>`<tr class="border-b"><td class="p-4">${x.d}</td><td class="p-4 font-bold">${x.s}<br><span class="text-xs text-gray-500">Ref: ${x.r||'-'}</span></td><td class="p-4">${x.p}</td><td class="p-4 font-bold ${x.t==='r'?'text-green-500':'text-red-500'}">${x.a.toLocaleString()}</td><td class="p-4"><button onclick="window.del('f','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
-            
-            document.getElementById('tb-inv').innerHTML = d.i.map(x=>{
-                let c = d.c.find(y=>y.id===x.c)||{}; 
-                return `<tr class="border-b"><td class="p-4 font-bold text-brand">${x.id}</td><td class="p-4 font-bold">${c.n||''}</td><td class="p-4">${x.d}</td><td class="p-4">${x.h.toLocaleString()}</td><td class="p-4 font-black text-green-600">${x.t.toLocaleString()}</td>
-                <td class="p-4 text-center">
-                    <button onclick="window.emailInv('${x.id}')" class="bg-blue-100 text-blue-600 px-3 py-1 rounded font-bold hover:bg-blue-200 transition" title="Envoyer par Email"><i class="fa-solid fa-envelope"></i></button>
-                    <button onclick="window.share('inv','${x.id}')" class="bg-gray-100 text-gray-800 px-3 py-1 rounded font-bold hover:bg-gray-200 mx-1" title="Lien Facture"><i class="fa-solid fa-link"></i></button>
-                    <button onclick="window.del('i','${x.id}')" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
-                </td></tr>`;
-            }).join('');
-
-            document.getElementById('tb-ev').innerHTML = d.e.map(x=>`
-            <div class="bg-white rounded-2xl border overflow-hidden shadow-sm flex flex-col">
-                <div class="p-6 text-white relative bg-cover bg-center h-32 flex items-center justify-center text-center" style="background-image: linear-gradient(rgba(30,58,138,0.8), rgba(0,0,0,0.8)), url('${x.bg||''}');">
-                    <h3 class="font-black text-xl relative z-10">${x.t}</h3>
-                </div>
-                <div class="p-6 bg-white flex-1"><p class="text-sm font-bold text-gray-500 mb-2"><i class="fa-regular fa-clock text-primary"></i> ${x.d} | ${x.m}</p><p class="text-sm font-bold text-gray-500"><i class="fa-solid fa-location-dot text-red-500"></i> ${x.l}</p></div>
-                <div class="p-4 bg-gray-50 border-t flex gap-2">
-                    <button onclick="window.emailEv('${x.id}')" class="bg-primary text-white flex-1 py-2 rounded-xl font-bold" title="Invitation Email"><i class="fa-solid fa-envelope"></i></button>
-                    <button onclick="window.share('ev','${x.id}')" class="bg-gray-200 text-gray-800 flex-1 py-2 rounded-xl font-bold">رابط</button>
-                    <button onclick="window.del('e','${x.id}')" class="text-red-500 bg-red-50 px-4 py-2 rounded-xl font-bold"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            </div>`).join('');
+            if(chg) window.save();
         };
 
-        window.del = (col,id) => { if(confirm('Are you sure? / هل أنت متأكد؟')){ window.dbState[col]=window.dbState[col].filter(x=>x.id!==id); syncData(); toast('Deleted'); } };
-
-        // Excel Invoice Builder
-        let invArr=[]; 
-        window.resetInv = () => { invArr=[{s:'',q:1,p:0,r:0}]; document.getElementById('f-inv').reset(); document.getElementById('i-dat').value=new Date().toISOString().split('T')[0]; window.drawInv(); };
-        window.addRow = () => { invArr.push({s:'',q:1,p:0,r:0}); window.drawInv(); };
-        window.updRow = (i,f,v) => { invArr[i][f] = f==='s'?v:Number(v)||0; window.drawInv(); };
-        window.drawInv = () => {
-            let ht=0, hasTva=document.getElementById('i-tva-check').checked, globalRemise=Number(document.getElementById('i-g-remise').value)||0;
-            document.getElementById('i-items').innerHTML = invArr.map((x,i)=>{ 
-                let base = x.q*x.p; let rem = base * (x.r/100); let t = base - rem; ht+=t; 
-                return `<tr><td class="p-2"><input type="text" onchange="window.updRow(${i},'s',this.value)" value="${x.s}" class="w-full border p-2 rounded-lg" placeholder="Désignation"></td><td class="p-2"><input type="number" onchange="window.updRow(${i},'q',this.value)" value="${x.q}" class="w-full border p-2 rounded-lg text-center"></td><td class="p-2"><input type="number" onchange="window.updRow(${i},'p',this.value)" value="${x.p}" class="w-full border p-2 rounded-lg text-center"></td><td class="p-2"><input type="number" onchange="window.updRow(${i},'r',this.value)" value="${x.r}" class="w-full border p-2 rounded-lg text-center" placeholder="%"></td><td class="p-2 font-bold">${t.toLocaleString()}</td><td class="p-2"><button type="button" onclick="invArr.splice(${i},1);window.drawInv()" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-            }).join('');
-            let finalHt = ht - (ht * (globalRemise/100)); let tva = hasTva ? finalHt*0.19 : 0; let ttc = finalHt+tva;
-            document.getElementById('i-ht').innerText=finalHt.toLocaleString(); document.getElementById('i-tva').innerText=tva.toLocaleString(); document.getElementById('i-ttc').innerText=ttc.toLocaleString();
+        // 8. Excel Invoice Logic
+        window.invArr=[]; 
+        window.resetInv=()=>{window.invArr=[{s:'',q:1,p:0,r:0}];document.getElementById('f-inv').reset();document.getElementById('i-dat').value=new Date().toISOString().split('T')[0];window.drawInv();};
+        window.addRow=()=>{window.invArr.push({s:'',q:1,p:0,r:0});window.drawInv();};
+        window.updRow=(i,f,v)=>{window.invArr[i][f]=f==='s'?v:Number(v)||0;window.drawInv();};
+        window.drawInv=()=>{
+            let ht=0, htva=document.getElementById('i-tva-check').checked, grem=Number(document.getElementById('i-g-remise').value)||0;
+            document.getElementById('i-items').innerHTML = window.invArr.map((x,i)=>{let b=x.q*x.p;let t=b-(b*(x.r/100));ht+=t;return `<tr><td class="p-2"><input type="text" onchange="window.updRow(${i},'s',this.value)" value="${x.s}" class="w-full border p-2 rounded-lg text-black"></td><td class="p-2"><input type="number" onchange="window.updRow(${i},'q',this.value)" value="${x.q}" class="w-full border p-2 rounded-lg text-center text-black"></td><td class="p-2"><input type="number" onchange="window.updRow(${i},'p',this.value)" value="${x.p}" class="w-full border p-2 rounded-lg text-center text-black"></td><td class="p-2"><input type="number" onchange="window.updRow(${i},'r',this.value)" value="${x.r}" class="w-full border p-2 rounded-lg text-center text-black"></td><td class="p-2 font-bold">${t.toLocaleString()}</td><td class="p-2"><button type="button" onclick="window.invArr.splice(${i},1);window.drawInv()" class="text-red-500"><i class="fa-solid fa-trash"></i></button></td></tr>`;}).join('');
+            let fht=ht*(1-(grem/100)); let tva=htva?fht*0.19:0; let ttc=fht+tva;
+            document.getElementById('i-ht').innerText=fht.toLocaleString(); document.getElementById('i-tva').innerText=tva.toLocaleString(); document.getElementById('i-ttc').innerText=ttc.toLocaleString();
         };
 
-        // Form Submits
-        document.getElementById('f-cli').onsubmit=e=>{e.preventDefault(); window.dbState.c.push({id:'c'+Date.now(), n:document.getElementById('c-nam').value, e:document.getElementById('c-ema').value, c:document.getElementById('c-com').value}); syncData(); window.closeModal(); toast('Client saved');};
-        document.getElementById('f-fin').onsubmit=e=>{e.preventDefault(); window.dbState.f.push({id:'f'+Date.now(), t:document.getElementById('f-typ').value, a:Number(document.getElementById('f-amt').value), s:document.getElementById('f-des').value, p:document.getElementById('f-pay').value, r:document.getElementById('f-ref').value, d:new Date().toISOString().split('T')[0]}); syncData(); window.closeModal(); toast('Finance saved');};
+        // 9. Forms Builder Logic
+        window.frmFields=[];
+        window.addFormField = () => { let lbl=document.getElementById('fm-f-lbl').value, typ=document.getElementById('fm-f-typ').value; if(!lbl)return; window.frmFields.push({l:lbl, t:typ}); document.getElementById('fm-f-lbl').value=''; window.drawFrmFields(); };
+        window.drawFrmFields = () => { document.getElementById('fm-fields').innerHTML = window.frmFields.map((x,i)=>`<div class="bg-gray-100 p-2 rounded flex justify-between"><span>${x.l} (${x.t})</span><button type="button" onclick="window.frmFields.splice(${i},1);window.drawFrmFields()" class="text-red-500">x</button></div>`).join(''); };
+        window.renderFormResponses = () => {
+            let id = document.getElementById('form-select-view').value; let a = document.getElementById('form-responses-area');
+            if(!id){ a.innerHTML=''; return; }
+            let f = window.d.frm.find(x=>x.id===id); let rs = window.d.res.filter(x=>x.fId===id);
+            if(!f || rs.length===0){ a.innerHTML='<p class="text-gray-500 text-center font-bold">لا توجد ردود بعد.</p>'; return; }
+            let cols = f.f.map(x=>x.l);
+            a.innerHTML = `<table class="w-full text-center border text-sm"><thead class="bg-gray-100 border-b"><tr><th class="p-2">التاريخ</th>${cols.map(c=>`<th class="p-2">${c}</th>`).join('')}</tr></thead><tbody>${rs.map(r=>`<tr class="border-b"><td class="p-2 text-gray-500" dir="ltr">${r.date}</td>${cols.map(c=>`<td class="p-2 font-bold">${r.ans[c]||'-'}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+        };
+
+        // 10. Submits
+        document.getElementById('f-cli').onsubmit=e=>{e.preventDefault(); window.d.c.push({id:'c'+Date.now(), n:document.getElementById('c-nam').value, e:document.getElementById('c-ema').value, c:document.getElementById('c-com').value}); window.save(); window.closeModal(); window.toast('تم حفظ العميل');};
+        document.getElementById('f-fin').onsubmit=e=>{e.preventDefault(); window.d.f.push({id:'f'+Date.now(), t:document.getElementById('f-typ').value, a:Number(document.getElementById('f-amt').value), s:document.getElementById('f-des').value, d:new Date().toISOString().split('T')[0]}); window.save(); window.closeModal(); window.toast('تم الحفظ');};
+        document.getElementById('f-sch').onsubmit=e=>{e.preventDefault(); window.d.w.push({id:'w'+Date.now(), t:document.getElementById('s-tit').value, d:document.getElementById('s-dat').value, m:document.getElementById('s-tim').value, n:document.getElementById('s-not').value, r:false}); window.save(); window.closeModal(); window.toast('تم حفظ الموعد'); window.checkReminders(); };
+        document.getElementById('f-frm').onsubmit=e=>{e.preventDefault(); window.d.frm.push({id:'fm'+Date.now(), t:document.getElementById('fm-tit').value, f:window.frmFields}); window.save(); window.closeModal(); window.toast('تم إنشاء الاستمارة'); };
+        
         document.getElementById('f-inv').onsubmit=e=>{
-            e.preventDefault(); 
-            let ht=invArr.reduce((s,x)=>s+(x.q*x.p*(1-(x.r/100))),0); let grem=Number(document.getElementById('i-g-remise').value)||0; let fht=ht*(1-(grem/100)); let hasTva=document.getElementById('i-tva-check').checked; let tva=hasTva?fht*0.19:0; 
-            window.dbState.i.push({id:'F-'+Date.now().toString().slice(-4), c:document.getElementById('i-cli').value, d:document.getElementById('i-dat').value, r:invArr, grem:grem, h:fht, v:tva, t:fht+tva, hasTva:hasTva}); 
-            syncData(); window.closeModal(); toast('Facture créée');
+            e.preventDefault(); let ht=window.invArr.reduce((s,x)=>s+(x.q*x.p*(1-(x.r/100))),0); let grem=Number(document.getElementById('i-g-remise').value)||0; let fht=ht*(1-(grem/100)); let htva=document.getElementById('i-tva-check').checked; let tva=htva?fht*0.19:0; 
+            window.d.i.push({id:'F-'+Date.now().toString().slice(-4), c:document.getElementById('i-cli').value, d:document.getElementById('i-dat').value, r:window.invArr, grem:grem, h:fht, v:tva, t:fht+tva, hasTva:htva}); 
+            window.save(); window.closeModal(); window.toast('فاتورة جاهزة');
         };
         
         document.getElementById('f-ev').onsubmit=e=>{
-            e.preventDefault(); let file=document.getElementById('e-img').files[0];
-            if(file){ let r=new FileReader(); r.onload=(e2)=>saveEv(e2.target.result); r.readAsDataURL(file); } else saveEv('');
-        };
-        const saveEv = (bgStr) => {
-            window.dbState.e.push({id:'ev'+Date.now(), t:document.getElementById('e-tit').value, d:document.getElementById('e-dat').value, m:document.getElementById('e-tim').value, l:document.getElementById('e-loc').value, u:document.getElementById('e-map').value, bg:bgStr});
-            syncData(); window.closeModal(); toast('Événement sauvegardé');
+            e.preventDefault(); let f=document.getElementById('e-img').files[0];
+            if(f){ let r=new FileReader(); r.onload=(e2)=>{ window.d.e.push({id:'ev'+Date.now(), t:document.getElementById('e-tit').value, d:document.getElementById('e-dat').value, m:document.getElementById('e-tim').value, l:document.getElementById('e-loc').value, u:document.getElementById('e-map').value, bg:e2.target.result}); window.save(); window.closeModal(); window.toast('تم الحفظ'); }; r.readAsDataURL(f); } 
+            else { window.d.e.push({id:'ev'+Date.now(), t:document.getElementById('e-tit').value, d:document.getElementById('e-dat').value, m:document.getElementById('e-tim').value, l:document.getElementById('e-loc').value, u:document.getElementById('e-map').value, bg:''}); window.save(); window.closeModal(); window.toast('تم الحفظ'); }
         };
 
-        // Emails (Direct Buttons)
+        // Emails Send
         window.emailInv = (id) => {
-            let i = window.dbState.i.find(x=>x.id===id), c = window.dbState.c.find(x=>x.id===(i?i.c:null));
-            if(!c || !c.e) return toast("L'email du client n'est pas renseigné", "error");
+            let i=window.d.i.find(x=>x.id===id), c=window.d.c.find(x=>x.id===i.c); if(!c||!c.e) return window.toast("لا يوجد إيميل للعميل", "error");
             let link = `${location.origin}${location.pathname}?s=inv&id=${id}`;
-            emailjs.send(EM_SRV, EM_TPL, {name: c.n, email: c.e, message: `Bonjour,\nVeuillez trouver ci-joint le lien vers votre facture N° ${i.id} d'un montant de ${i.t.toLocaleString()} DZD.\n\nLien: ${link}`})
-            .then(()=>toast('Facture envoyée par email ✅')).catch(()=>toast('Erreur d\'envoi ❌','error'));
+            let ht = `<h2>Facture ${i.id}</h2><p>Veuillez télécharger votre facture au format PDF directement via ce lien:</p><br><a href="${link}&dl=1" style="background:#2563EB; color:#fff; padding:10px 20px; text-decoration:none; border-radius:5px;">Télécharger la Facture PDF</a>`;
+            emailjs.send(EM_SRV, EM_TPL, {name: c.n, email: c.e, message: "Facture aitchikh consulting. Cliquez sur le lien envoyé pour visualiser et télécharger votre facture sous forme de fichier PDF." + "\nLien: " + link})
+            .then(()=>window.toast('تم إرسال الفاتورة ✅')).catch(()=>window.toast('خطأ الإرسال ❌','error'));
         };
 
-        window.emailEv = (id) => {
-            let ev = window.dbState.e.find(x=>x.id===id); let link = `${location.origin}${location.pathname}?s=ev&id=${id}`;
-            let emails = window.dbState.c.map(c=>c.e).join(','); // sends to all clients for demo (can be optimized)
-            if(!emails) return toast('Aucun client enregistré', 'error');
-            emailjs.send(EM_SRV, EM_TPL, {name: "Cher Client", email: emails, message: `Invitation à l'événement: ${ev.t}\nDate: ${ev.d} à ${ev.m}\nLieu: ${ev.l}\n\nDétails et carte ici: ${link}`})
-            .then(()=>toast('Invitations envoyées ✅')).catch(()=>toast('Erreur d\'envoi ❌','error'));
+        document.getElementById('f-mail').onsubmit=e=>{ e.preventDefault(); emailjs.send(EM_SRV, EM_TPL, {name: 'العميل', email:document.getElementById('em-to').value, message:document.getElementById('em-msg').value}).then(()=>{window.toast('تم الإرسال ✅'); e.target.reset();}); };
+        window.saveAdminEmail = () => { window.d.s.adminEm = document.getElementById('admin-email-set').value; window.save(); window.toast('تم الحفظ. سيصلك تذكير المواعيد.'); };
+
+        // CSV Export Facture
+        window.expCsv = (id) => {
+            let i=window.d.i.find(x=>x.id===id); if(!i)return; let c="Désignation,Qté,Prix U,Remise(%),Total\n";
+            i.r.forEach(x=> c+=`"${x.s}",${x.q},${x.p},${x.r},${x.q*x.p*(1-x.r/100)}\n`);
+            c+=`\nSous-total (HT),,,,${i.h}\nTVA (19%),,,,${i.v}\nTotal (TTC),,,,${i.t}\n`;
+            let a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(["\uFEFF"+c],{type:'text/csv;charset=utf-8;'})); a.download=`Facture_${i.id}.csv`; a.click();
         };
 
-        // Export CSV
-        window.exportCSV = (id) => {
-            let i = window.dbState.i.find(x=>x.id===id); if(!i) return;
-            let csv = "Désignation,Qté,Prix Unitaire,Remise(%),Total\n";
-            i.r.forEach(x=> csv+=`"${x.s}",${x.q},${x.p},${x.r},${(x.q*x.p*(1-(x.r/100)))}\n`);
-            csv += `\nSous-total (HT),,,,${i.h}\n`; if(i.hasTva) csv += `TVA (19%),,,,${i.v}\n`; csv += `Total (TTC),,,,${i.t}\n`;
-            let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(["\uFEFF"+csv], {type:'text/csv;charset=utf-8;'})); a.download=`Facture_${i.id}.csv`; a.click();
-        };
+        window.share = (typ, id) => { let u=`${location.origin}${location.pathname}?s=${typ}&id=${id}`; document.getElementById('qr-url').value=u; document.getElementById('qr-box').innerHTML=''; new QRCode(document.getElementById('qr-box'), {text:u,width:160,height:160}); window.openModal('m-qr'); };
 
-        // Shared Links
-        window.share = (typ, id) => { let u=`${location.origin}${location.pathname}?s=${typ}&id=${id}`; navigator.clipboard.writeText(u); toast('Lien copié / تم نسخ الرابط'); };
+        window.login = () => { if(document.getElementById('login-pwd').value==='1077'){ localStorage.setItem('ac_erp_a','1'); document.getElementById('login-screen').remove(); loadData(); }else window.toast('خطأ','error'); };
+        window.logout = () => { localStorage.removeItem('ac_erp_a'); location.reload(); };
 
-        // Auth
-        window.login = () => { if(document.getElementById('login-pwd').value==='1077'){ localStorage.setItem('ac_v6_auth','1'); document.getElementById('login-screen').remove(); loadData(); }else toast('Error','error'); };
-        window.logout = () => { localStorage.removeItem('ac_v6_auth'); location.reload(); };
-
-        window.onload = () => {
-            const p = new URLSearchParams(location.search); const st = p.get('s'), sid = p.get('id');
+        // SHARED LINKS LOADER (No Password needed for clients)
+        window.onload = async () => {
+            const p = new URLSearchParams(location.search); const st = p.get('s'), sid = p.get('id'), dl = p.get('dl');
             if(st && sid) {
-                // Client View
                 document.getElementById('login-screen').remove(); document.getElementById('sidebar').remove(); document.querySelector('header').remove(); document.getElementById('views').remove();
-                const ov = document.getElementById('shared-overlay'); const box = document.getElementById('shared-box'); ov.classList.remove('hidden');
+                document.getElementById('shared-overlay').classList.remove('hidden'); document.getElementById('shared-overlay').classList.add('flex');
+                const box = document.getElementById('print-zone');
                 
-                const d = JSON.parse(localStorage.getItem('aitchikh_db_v6')) || {i:[], c:[], e:[]};
-                
+                // Fetch Data from Local or Firebase for shared link
+                let dt = JSON.parse(localStorage.getItem(LOCAL_KEY));
+                if(!dt && db) { const snap = await getDoc(doc(db, "data", "erp")); if(snap.exists()) dt = snap.data(); }
+                if(!dt) dt = {i:[], e:[], c:[], frm:[]};
+
                 if(st==='inv') {
-                    let i = d.i.find(x=>x.id===sid), c = d.c.find(x=>x.id===(i?i.c:null));
+                    let i = dt.i.find(x=>x.id===sid), c = dt.c.find(x=>x.id===(i?i.c:null));
                     if(i) {
-                        box.innerHTML=`
-                        <div class="bg-white p-2" dir="ltr">
-                            <div class="flex justify-between items-start border-b-2 border-brand pb-6 mb-8">
-                                <div><h1 class="text-4xl font-black text-brand uppercase tracking-widest">aitchikh</h1><h2 class="text-xl font-bold text-gray-500 uppercase tracking-[0.3em]">consulting</h2><p class="text-gray-500 mt-2 font-semibold">Alger, Rouiba</p></div>
-                                <div class="text-right"><h2 class="text-4xl font-black text-gray-800 uppercase mb-2">Facture</h2><p class="font-bold text-gray-600 text-lg">N° : <span class="text-brand">${i.id}</span></p><p class="text-gray-500 font-bold">Date : ${i.d}</p></div>
-                            </div>
-                            <div class="mb-10 bg-gray-50 p-6 rounded-xl border border-gray-100"><p class="text-gray-500 font-bold mb-1">À :</p><h3 class="text-2xl font-black text-brand">${c?c.n:''}</h3><p class="text-gray-600 font-bold text-lg">${c?c.c:''}</p></div>
-                            <table class="w-full text-center mb-8 border-collapse"><thead class="bg-brand text-white"><tr><th class="p-4 text-left rounded-tl-xl">Désignation</th><th class="p-4">Qté</th><th class="p-4">Prix U.</th><th class="p-4">Remise</th><th class="p-4 text-right rounded-tr-xl">Total</th></tr></thead><tbody>
-                                ${i.r.map(x=>`<tr class="border-b border-gray-200"><td class="p-4 text-left font-bold text-gray-800">${x.s}</td><td class="p-4">${x.q}</td><td class="p-4">${x.p.toLocaleString()}</td><td class="p-4 text-red-500">${x.r}%</td><td class="p-4 text-right font-black text-gray-800">${(x.q*x.p*(1-x.r/100)).toLocaleString()}</td></tr>`).join('')}
-                            </tbody></table>
-                            <div class="flex justify-end"><div class="w-96 space-y-3 text-lg"><div class="flex justify-between font-bold text-gray-600"><span>Sous-total (HT) :</span><span>${i.h.toLocaleString()} DZD</span></div>${i.hasTva?`<div class="flex justify-between font-bold text-red-500"><span>TVA (19%) :</span><span>${i.v.toLocaleString()} DZD</span></div>`:''}<div class="flex justify-between font-black text-2xl border-t-2 border-brand pt-3 mt-3 text-green-600"><span>Total (TTC) :</span><span>${i.t.toLocaleString()} DZD</span></div></div></div>
-                            <div class="mt-12 pt-6 flex justify-center gap-4 no-print"><button onclick="window.print()" class="bg-brand text-white px-8 py-4 rounded-xl font-black text-lg shadow-xl"><i class="fa-solid fa-print mr-2"></i> Imprimer / PDF</button><button onclick="window.exportCSV('${i.id}')" class="bg-green-600 text-white px-8 py-4 rounded-xl font-black text-lg shadow-xl"><i class="fa-solid fa-file-excel mr-2"></i> Exporter CSV</button></div>
-                        </div>`;
-                    } else box.innerHTML="<h2 class='text-center text-red-500 font-bold text-2xl'>Facture Introuvable</h2>";
-                } else if (st==='ev') {
-                    let e = d.e.find(x=>x.id===sid);
+                        box.innerHTML=`<div class="p-10" dir="ltr"><div class="flex justify-between border-b-2 border-brand pb-6 mb-8"><div><h1 class="text-4xl font-black text-brand tracking-widest uppercase">aitchikh</h1><h2 class="text-xl font-bold text-gray-500 uppercase tracking-[0.3em]">consulting</h2><p class="font-bold text-gray-500">Alger, Rouiba</p></div><div class="text-right"><h2 class="text-4xl font-black uppercase mb-2">Facture</h2><p class="font-bold text-gray-600 text-lg">N° : <span class="text-brand">${i.id}</span></p><p class="font-bold text-gray-500">Date : ${i.d}</p></div></div><div class="bg-gray-50 p-6 rounded-xl border mb-8"><p class="text-gray-500 font-bold">À :</p><h3 class="text-2xl font-black text-brand">${c?c.n:''}</h3><p class="text-lg font-bold">${c?c.c:''}</p></div><table class="w-full text-center border-collapse mb-8"><thead class="bg-brand text-white"><tr><th class="p-4 text-left">Désignation</th><th>Qté</th><th>Prix U.</th><th>Remise</th><th class="text-right p-4">Total</th></tr></thead><tbody>${i.r.map(x=>`<tr class="border-b"><td class="p-4 text-left font-bold">${x.s}</td><td>${x.q}</td><td>${x.p.toLocaleString()}</td><td class="text-red-500">${x.r}%</td><td class="text-right p-4 font-black">${(x.q*x.p*(1-x.r/100)).toLocaleString()}</td></tr>`).join('')}</tbody></table><div class="flex justify-end"><div class="w-96 text-lg"><div class="flex justify-between font-bold text-gray-600"><span>Sous-total (HT):</span><span>${i.h.toLocaleString()} DZD</span></div>${i.hasTva?`<div class="flex justify-between font-bold text-red-500 my-2"><span>TVA (19%):</span><span>${i.v.toLocaleString()} DZD</span></div>`:''}<div class="flex justify-between font-black text-2xl border-t-2 border-brand pt-3 mt-3 text-green-700"><span>Total (TTC):</span><span>${i.t.toLocaleString()} DZD</span></div></div></div><div class="mt-12 pt-6 flex justify-center gap-4 no-print"><button onclick="window.print()" class="bg-brand text-white px-8 py-4 rounded-xl font-black shadow-xl"><i class="fa-solid fa-print"></i> Télécharger en PDF / Imprimer</button><button onclick="window.expCsv('${i.id}')" class="bg-green-600 text-white px-8 py-4 rounded-xl font-black shadow-xl"><i class="fa-solid fa-file-excel"></i> Fichier Excel (CSV)</button></div></div>`;
+                        if(dl==='1') setTimeout(()=>window.print(), 1000);
+                    } else box.innerHTML="<h2 class='text-center text-red-500 p-10 font-bold text-2xl'>Facture Introuvable</h2>";
+                } else if(st==='ev') {
+                    let e = dt.e.find(x=>x.id===sid);
                     if(e) {
-                        box.className = "bg-white p-0 rounded-2xl shadow-2xl w-full max-w-2xl border border-gray-200 overflow-hidden";
-                        box.innerHTML=`<div class="relative w-full h-80 flex flex-col justify-center items-center text-center p-8" style="background: linear-gradient(rgba(15,23,42,0.8), rgba(15,23,42,0.9)), url('${e.bg||''}'); background-size: cover; background-position: center;"><h1 class="text-5xl font-black text-white mb-6 drop-shadow-lg leading-tight">${e.t}</h1><p class="text-2xl font-bold text-blue-200 mb-2"><i class="fa-regular fa-calendar-check ml-2"></i> ${e.d} | ${e.m}</p><p class="text-xl font-bold text-gray-300"><i class="fa-solid fa-location-dot text-red-400 ml-2"></i> ${e.l}</p></div><div class="p-8 bg-white"><h3 class="font-black text-xl text-brand mb-4 flex items-center justify-center"><i class="fa-solid fa-map-location-dot ml-2 text-primary"></i> خريطة الموقع</h3><div class="rounded-xl overflow-hidden shadow-inner border border-gray-200 mb-6"><iframe width="100%" height="350" frameborder="0" style="border:0" src="https://maps.google.com/maps?q=${encodeURIComponent(e.l)}&output=embed" allowfullscreen></iframe></div>${e.u?`<div class="text-center no-print"><a href="${e.u}" target="_blank" class="bg-primary text-white px-8 py-4 rounded-xl font-black text-lg shadow-lg inline-block w-full"><i class="fa-brands fa-google mr-2"></i> فتح في تطبيق Google Maps</a></div>`:''}</div>`;
-                    } else box.innerHTML="<h2 class='text-center text-red-500 font-bold text-2xl p-10'>Invitation Invalide</h2>";
+                        box.className = "bg-white p-0 rounded-2xl shadow-2xl w-full max-w-2xl border overflow-hidden";
+                        box.innerHTML=`<div class="relative w-full h-96 flex flex-col justify-center items-center text-center p-8" style="background: linear-gradient(rgba(15,23,42,0.8), rgba(15,23,42,0.9)), url('${e.bg||''}'); background-size: cover; background-position: center;"><h1 class="text-5xl font-black text-white mb-6 leading-tight">${e.t}</h1><p class="text-2xl font-bold text-blue-200 mb-2"><i class="fa-regular fa-calendar-check"></i> ${e.d} | ${e.m}</p><p class="text-xl font-bold text-gray-300"><i class="fa-solid fa-location-dot text-red-400"></i> ${e.l}</p></div><div class="p-8"><h3 class="font-black text-xl mb-4 text-center"><i class="fa-solid fa-map-location-dot text-primary"></i> خريطة الموقع</h3><iframe width="100%" height="350" class="rounded-xl border shadow-inner mb-6" src="https://maps.google.com/maps?q=${encodeURIComponent(e.l)}&output=embed"></iframe>${e.u?`<a href="${e.u}" target="_blank" class="block text-center bg-primary text-white py-4 rounded-xl font-black shadow-lg"><i class="fa-brands fa-google"></i> فتح في تطبيق Maps</a>`:''}</div>`;
+                    }
+                } else if(st==='frm') {
+                    let fm = dt.frm.find(x=>x.id===sid);
+                    if(fm) {
+                        window.ansObj = {};
+                        window.subFrm = async (e) => {
+                            e.preventDefault(); dt.res.push({fId:sid, date:new Date().toLocaleString(), ans:window.ansObj});
+                            try { await setDoc(doc(db, "data", "erp"), dt); } catch(err){}
+                            box.innerHTML="<h2 class='text-center text-green-500 p-10 font-bold text-3xl'>تم إرسال الاستمارة بنجاح ✅</h2>";
+                        };
+                        box.className = "bg-white p-10 rounded-2xl shadow-2xl w-full max-w-2xl border";
+                        box.innerHTML=`<h1 class="text-3xl font-black text-brand mb-6 text-center">${fm.t}</h1><form onsubmit="window.subFrm(event)" class="space-y-4">${fm.f.map((f,i)=>`<div><label class="font-bold block mb-2">${f.l}</label><input type="${f.t}" required class="w-full p-4 border rounded-xl" onchange="window.ansObj['${f.l}']=this.value"></div>`).join('')}<button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl text-lg mt-6 shadow-lg">إرسال</button></form>`;
+                    }
                 }
-            } else if (localStorage.getItem('ac_v6_auth')==='1') { document.getElementById('login-screen').remove(); loadData(); }
+            } else if (localStorage.getItem('ac_erp_a')==='1') { document.getElementById('login-screen').remove(); loadData(); }
         };
     </script>
 </body>
