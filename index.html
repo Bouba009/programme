@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>aitchikh consulting | Pro Workspace</title>
     
-    <!-- مكتبات التصميم -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config={theme:{extend:{colors:{p:'#2563EB',b:'#1E3A8A',d:'#0F172A'}}}}</script>
     
-    <!-- الأيقونات والمكتبات الاحترافية -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -33,33 +31,25 @@
 </head>
 <body class="h-screen flex overflow-hidden text-gray-800">
 
-    <!-- شاشة التحميل -->
     <div id="loader" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center">
-        <i class="fa-solid fa-circle-notch fa-spin text-5xl text-p mb-4"></i>
-        <h2 class="text-xl font-bold text-gray-600">جاري الاتصال...</h2>
+        <i class="fa-solid fa-circle-notch fa-spin text-5xl text-p mb-4"></i><h2 class="text-xl font-bold text-gray-600">جاري الاتصال...</h2>
     </div>
 
-    <!-- شاشة الدخول للإدارة -->
     <div id="log" class="fixed inset-0 bg-slate-900 z-[999] flex items-center justify-center hidden">
         <div class="bg-white p-10 rounded-3xl shadow-2xl w-96 text-center border-t-8 border-p">
-            <h1 class="text-4xl font-black text-b mb-2 tracking-widest">aitchikh</h1>
-            <h2 class="text-gray-400 font-bold mb-8 uppercase tracking-widest text-sm">consulting</h2>
+            <h1 class="text-4xl font-black text-b mb-2 tracking-widest">aitchikh</h1><h2 class="text-gray-400 font-bold mb-8 uppercase tracking-widest text-sm">consulting</h2>
             <p class="text-xs font-bold text-gray-500 mb-4" data-i18n="login_desc">بوابة الفريق الآمنة (1077)</p>
             <input type="password" id="pwd" placeholder="كلمة السر..." class="w-full text-center text-xl tracking-widest p-4 bg-gray-50 border-2 rounded-xl mb-4 outline-none focus:border-p transition" onkeypress="if(event.key==='Enter') window.login()">
             <button onclick="window.login()" class="w-full bg-p text-white font-black py-4 rounded-xl hover:bg-blue-700 transition shadow-lg text-lg" data-i18n="login_btn">دخول آمن</button>
         </div>
     </div>
 
-    <!-- نافذة العرض للعملاء (تفتح بدون باسورد للروابط) -->
-    <div id="sh-bg" class="fixed inset-0 bg-gray-100 z-[800] hidden overflow-auto flex justify-center py-10 px-4">
-        <div id="sh" class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl border overflow-hidden relative h-fit pb-10"></div>
-    </div>
+    <div id="sh-bg" class="fixed inset-0 bg-gray-100 z-[800] hidden overflow-auto flex justify-center py-10 px-4"><div id="sh" class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl border overflow-hidden relative h-fit pb-10"></div></div>
 
-    <!-- القائمة الجانبية للإدارة -->
     <aside class="w-64 bg-white border-l hidden md:flex flex-col z-10 shadow-lg transition-all" id="sb">
         <div class="p-6 border-b bg-gray-50 flex justify-between items-center">
             <h1 class="text-2xl font-black text-b leading-tight">aitchikh<br><span class="text-xs font-bold text-gray-500 tracking-widest">consulting</span></h1>
-            <button onclick="window.tgLng()" class="bg-gray-200 text-xs font-bold px-3 py-2 rounded-lg hover:bg-gray-300" id="btn-lang">FR</button>
+            <button onclick="window.tgLng()" class="bg-gray-200 text-xs font-bold px-3 py-1 rounded-lg hover:bg-gray-300" id="btn-lang">FR</button>
         </div>
         <nav class="flex-1 overflow-y-auto py-4 text-sm font-bold text-gray-600">
             <a href="#" onclick="window.nav('dash')" id="n-dash" class="block p-4 act"><i class="fa-solid fa-chart-pie w-6"></i> <span data-i18n="n_dash">الإحصائيات</span></a>
@@ -68,12 +58,13 @@
             <a href="#" onclick="window.nav('frm')" id="n-frm" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-list-check w-6 text-purple-500"></i> <span data-i18n="n_frm">الاستمارات والردود</span></a>
             <a href="#" onclick="window.nav('fin')" id="n-fin" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-vault w-6"></i> <span data-i18n="n_fin">الخزينة المالية</span></a>
             <a href="#" onclick="window.nav('cli')" id="n-cli" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-users w-6"></i> <span data-i18n="n_cli">قاعدة العملاء</span></a>
+            <a href="#" onclick="window.nav('dom')" id="n-dom" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-globe w-6 text-teal-500"></i> <span data-i18n="n_dom">إدارة الدومينات</span></a>
+            <a href="#" onclick="window.nav('prt')" id="n-prt" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-handshake w-6 text-indigo-500"></i> <span data-i18n="n_prt">الشركاء والجهات</span></a>
             <a href="#" onclick="window.nav('notif')" id="n-notif" class="block p-4 hover:bg-gray-50"><i class="fa-solid fa-bell w-6 text-orange-500"></i> <span data-i18n="n_notif">الإشعارات والتذكير</span></a>
         </nav>
-        <div id="sync-status" class="p-4 text-center text-xs font-bold text-gray-500 border-t bg-gray-50"></div>
+        <div id="sync-status" class="p-4 text-center text-xs font-bold border-t bg-gray-50 text-gray-500"></div>
     </aside>
 
-    <!-- المحتوى الرئيسي -->
     <div class="flex-1 flex flex-col h-full w-full bg-gray-50">
         <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm">
             <h2 class="font-bold text-gray-700 text-lg" data-i18n="h_title">لوحة التحكم الإدارية</h2>
@@ -85,7 +76,6 @@
 
         <main class="flex-1 overflow-auto p-8" id="main-views">
             
-            <!-- لوحة القيادة -->
             <div id="v-dash" class="vw block">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border"><p class="text-gray-500 font-bold mb-1" data-i18n="s_rev">الإيرادات</p><h3 class="text-3xl font-black text-green-500" id="s-r" dir="ltr">0</h3></div>
@@ -99,195 +89,74 @@
                 </div>
             </div>
 
-            <!-- الفواتير -->
-            <div id="v-inv" class="vw hidden">
-                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_inv">الفواتير (Factures)</h2><button onclick="window.mo('m-inv')" class="bg-p hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">فاتورة جديدة</span></button></div>
-                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100 text-gray-600"><tr><th class="p-4">N°</th><th class="p-4" data-i18n="t_cli">العميل</th><th class="p-4" data-i18n="t_dat">التاريخ</th><th class="p-4">TTC (DZD)</th><th class="p-4" data-i18n="t_act">إجراءات</th></tr></thead><tbody id="t-inv" class="divide-y"></tbody></table></div>
-            </div>
+            <div id="v-inv" class="vw hidden"><div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_inv">الفواتير</h2><button onclick="window.mo('m-inv')" class="bg-p hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">فاتورة جديدة</span></button></div><div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100 text-gray-600"><tr><th class="p-4">N°</th><th class="p-4" data-i18n="t_cli">العميل</th><th class="p-4" data-i18n="t_dat">التاريخ</th><th class="p-4">TTC (DZD)</th><th class="p-4" data-i18n="t_act">إجراءات</th></tr></thead><tbody id="t-inv" class="divide-y"></tbody></table></div></div>
+            <div id="v-ev" class="vw hidden"><div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_ev">الأحداث والدعوات</h2><button onclick="window.mo('m-ev')" class="bg-p hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">حدث جديد</span></button></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="t-ev"></div></div>
+            <div id="v-frm" class="vw hidden"><div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_frm">الاستمارات الخاصة</h2><button onclick="window.mo('m-frm')" class="bg-p hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">استمارة جديدة</span></button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="t-frm"></div></div>
+            <div id="v-fin" class="vw hidden"><div class="flex justify-between mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_fin">الخزينة المالية</h2><button onclick="window.mo('m-fin')" class="bg-p text-white px-6 py-3 rounded-xl font-bold shadow-lg"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">عملية مالية</span></button></div><div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100 text-gray-600"><tr><th class="p-4" data-i18n="t_dat">التاريخ</th><th class="p-4" data-i18n="t_des">البيان والتفاصيل</th><th class="p-4" data-i18n="t_amt">المبلغ</th><th class="p-4" data-i18n="t_act">إجراء</th></tr></thead><tbody id="t-fin" class="divide-y"></tbody></table></div></div>
+            <div id="v-cli" class="vw hidden"><div class="flex justify-between mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_cli">العملاء</h2><button onclick="window.mo('m-cli')" class="bg-p text-white px-6 py-3 rounded-xl font-bold shadow-lg"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">إضافة عميل</span></button></div><div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100 text-gray-600"><tr><th class="p-4" data-i18n="t_nam">الاسم</th><th class="p-4" data-i18n="t_com">الشركة</th><th class="p-4" data-i18n="t_con">اتصال</th><th class="p-4" data-i18n="t_act">إجراء</th></tr></thead><tbody id="t-cli" class="divide-y"></tbody></table></div></div>
 
-            <!-- الأحداث -->
-            <div id="v-ev" class="vw hidden">
-                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_ev">الأحداث والدعوات</h2><button onclick="window.mo('m-ev')" class="bg-p hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">حدث جديد</span></button></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="t-ev"></div>
-            </div>
+            <!-- DOMAINS & PARTNERS -->
+            <div id="v-dom" class="vw hidden"><div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_dom">الدومينات</h2><button onclick="window.mo('m-dom')" class="bg-teal-500 hover:bg-teal-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fa-solid fa-plus mx-1"></i> إضافة دومين</button></div><div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100 text-gray-600"><tr><th class="p-4">الدومين</th><th class="p-4">الجهة (Registrar)</th><th class="p-4">تاريخ الانتهاء</th><th class="p-4">إجراء</th></tr></thead><tbody id="t-dom" class="divide-y"></tbody></table></div></div>
+            <div id="v-prt" class="vw hidden"><div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_prt">الشركاء والجهات</h2><button onclick="window.mo('m-prt')" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fa-solid fa-plus mx-1"></i> إضافة شريك/جهة</button></div><div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100 text-gray-600"><tr><th class="p-4">الاسم</th><th class="p-4">الصفة</th><th class="p-4">المؤسسة</th><th class="p-4">التواصل</th><th class="p-4">إجراء</th></tr></thead><tbody id="t-prt" class="divide-y"></tbody></table></div></div>
 
-            <!-- الاستمارات -->
-            <div id="v-frm" class="vw hidden">
-                <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_frm">الاستمارات الخاصة</h2><button onclick="window.mo('m-frm')" class="bg-p hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">استمارة جديدة</span></button></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="t-frm"></div>
-            </div>
-
-            <!-- المالية -->
-            <div id="v-fin" class="vw hidden">
-                <div class="flex justify-between mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_fin">الخزينة المالية</h2><button onclick="window.mo('m-fin')" class="bg-p text-white px-6 py-3 rounded-xl font-bold shadow-lg"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">عملية مالية</span></button></div>
-                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100 text-gray-600"><tr><th class="p-4" data-i18n="t_dat">التاريخ</th><th class="p-4" data-i18n="t_des">البيان والتفاصيل</th><th class="p-4" data-i18n="t_amt">المبلغ</th><th class="p-4" data-i18n="t_act">إجراء</th></tr></thead><tbody id="t-fin" class="divide-y"></tbody></table></div>
-            </div>
-
-            <!-- العملاء -->
-            <div id="v-cli" class="vw hidden">
-                <div class="flex justify-between mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_cli">العملاء</h2><button onclick="window.mo('m-cli')" class="bg-p text-white px-6 py-3 rounded-xl font-bold shadow-lg"><i class="fa-solid fa-plus mx-1"></i> <span data-i18n="add">إضافة عميل</span></button></div>
-                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><table class="w-full text-center"><thead class="bg-gray-100 text-gray-600"><tr><th class="p-4" data-i18n="t_nam">الاسم</th><th class="p-4" data-i18n="t_com">الشركة</th><th class="p-4" data-i18n="t_con">اتصال</th><th class="p-4" data-i18n="t_act">إجراء</th></tr></thead><tbody id="t-cli" class="divide-y"></tbody></table></div>
-            </div>
-
-            <!-- الإشعارات والتذكير (الجديد) -->
             <div id="v-notif" class="vw hidden">
                 <div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-black text-b" data-i18n="n_notif">الإشعارات والتذكير التلقائي</h2></div>
-                <div class="bg-white p-6 rounded-2xl border shadow-sm mb-6">
-                    <label class="font-bold block mb-2 text-p">إيميل الإدارة (لتلقي تنبيهات الردود وتذكير الأحداث)</label>
-                    <div class="flex gap-4">
-                        <input type="email" id="admin-eml" class="flex-1 p-4 border-2 rounded-xl outline-none focus:border-p" dir="ltr" placeholder="admin@example.com">
-                        <button onclick="window.svAdminEml()" class="bg-p text-white px-8 py-4 rounded-xl font-black shadow-md hover:bg-blue-700 transition">حفظ الإيميل</button>
-                    </div>
-                    <p class="text-gray-500 text-sm font-bold mt-3">ملاحظة: سيقوم النظام تلقائياً بإرسال رسالة تذكير للمدعوين ولك قبل الحدث بـ 48 ساعة.</p>
-                </div>
-                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
-                    <div class="p-4 bg-gray-100 font-bold text-gray-700 flex justify-between items-center">
-                        <span>سجل إشعارات النظام</span>
-                        <button onclick="window.clrNotifs()" class="text-red-500 text-sm hover:underline">مسح الكل</button>
-                    </div>
-                    <div id="t-notif" class="divide-y max-h-[400px] overflow-y-auto"></div>
-                </div>
+                <div class="bg-white p-6 rounded-2xl border shadow-sm mb-6"><label class="font-bold block mb-2 text-p">إيميل الإدارة (لتلقي تنبيهات الردود وتذكير الأحداث والدومينات)</label><div class="flex gap-4"><input type="email" id="admin-eml" class="flex-1 p-4 border-2 rounded-xl outline-none focus:border-p" dir="ltr" placeholder="admin@example.com"><button onclick="window.svAdminEml()" class="bg-p text-white px-8 py-4 rounded-xl font-black shadow-md hover:bg-blue-700 transition">حفظ الإيميل</button></div><p class="text-gray-500 text-sm font-bold mt-3">سيقوم النظام بإرسال تذكير للأحداث (قبل 48 ساعة) وتذكير للدومينات (قبل 20 يوماً).</p></div>
+                <div class="bg-white rounded-2xl border shadow-sm overflow-hidden"><div class="p-4 bg-gray-100 font-bold text-gray-700 flex justify-between items-center"><span>سجل إشعارات النظام</span><button onclick="window.clrNotifs()" class="text-red-500 text-sm hover:underline">مسح الكل</button></div><div id="t-notif" class="divide-y max-h-[400px] overflow-y-auto"></div></div>
             </div>
-
         </main>
     </div>
 
-    <!-- 🌟 MODALS 🌟 -->
+    <!-- MODALS -->
+    <div id="m-inv" class="mdl"><div class="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-y-auto shadow-2xl"><div class="p-6 border-b flex justify-between bg-gray-50 rounded-t-3xl"><h3 class="font-black text-2xl text-p">إنشاء فاتورة</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div><div class="p-8"><form id="f-inv" class="space-y-6"><div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6"><div><label class="font-bold mb-2 block">العميل</label><select id="i-cli" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></select></div><div><label class="font-bold mb-2 block">التاريخ</label><input type="date" id="i-dat" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div><div class="flex items-end pb-2"><label class="flex items-center cursor-pointer bg-blue-50 p-4 rounded-xl border-2 border-blue-200 w-full hover:bg-blue-100 transition"><input type="checkbox" id="i-tva" checked onchange="window.drwI()" class="w-6 h-6"><span class="font-black mx-3 text-blue-800">TVA 19%</span></label></div></div><div class="border-2 rounded-xl overflow-hidden overflow-x-auto"><table class="w-full text-center"><thead class="bg-b text-white"><tr><th class="p-4 text-start">Désignation</th><th class="p-4 w-24">Qté</th><th class="p-4 w-40">Prix U.</th><th class="p-4 w-32">Remise %</th><th class="p-4 w-40">Total</th><th class="p-4 w-12"></th></tr></thead><tbody id="i-itm" class="divide-y"></tbody></table><button type="button" onclick="window.addI()" class="w-full bg-gray-50 hover:bg-gray-100 p-4 font-black text-p transition">+ إضافة سطر</button></div><div class="flex justify-between items-end mt-8"><div class="w-1/3"><label class="font-bold block mb-2 text-gray-500">Global Remise (%)</label><input type="number" id="i-rem" value="0" onchange="window.drwI()" class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p" max="100"></div><div class="w-80 bg-gray-50 p-6 rounded-2xl border-2 font-bold text-xl" dir="ltr"><div class="flex justify-between mb-3 text-gray-600"><span>HT:</span> <span id="i-h">0</span></div><div class="flex justify-between text-red-500 mb-3"><span>TVA:</span> <span id="i-v">0</span></div><div class="flex justify-between text-green-600 text-3xl font-black border-t-2 pt-4 mt-2"><span>TTC:</span> <span id="i-t">0</span></div></div></div><button type="submit" class="w-full bg-p hover:bg-blue-700 text-white font-black py-5 rounded-xl text-2xl shadow-xl mt-8">حفظ الفاتورة</button></form></div></div></div>
+    <div id="m-ev" class="mdl"><div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"><div class="p-6 border-b flex justify-between bg-gray-50 rounded-t-3xl"><h3 class="font-black text-2xl text-p">دعوة لحدث</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div><form id="f-ev" class="p-8 space-y-6"><div><label class="font-bold block mb-2">عنوان الحدث</label><input type="text" id="e-t" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div><div class="grid grid-cols-2 gap-6"><div><label class="font-bold block mb-2">التاريخ</label><input type="date" id="e-d" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div><div><label class="font-bold block mb-2">التوقيت</label><input type="time" id="e-m" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div></div><div><label class="font-bold block mb-2">المكان</label><input type="text" id="e-l" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div><div><label class="font-bold block mb-2">رابط الخريطة Google Maps</label><input type="url" id="e-u" class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p" dir="ltr" placeholder="https://maps.app.goo.gl/..."></div><div class="bg-blue-50 p-5 rounded-xl border-2 border-blue-100"><label class="font-black block mb-2 text-b">صورة الغلاف</label><input type="file" id="e-img" accept="image/*" class="w-full bg-white p-3 rounded-xl border"></div><div class="border-2 p-5 rounded-xl bg-gray-50"><label class="font-bold text-p block mb-3 text-lg">تحديد المدعوين</label><div id="e-invs" class="grid grid-cols-2 gap-3 max-h-40 overflow-y-auto mb-4 p-2"></div><label class="flex items-center cursor-pointer mt-4 border-t pt-4"><input type="checkbox" id="e-snd" checked class="w-6 h-6 ml-3"><span class="font-bold text-gray-700 text-lg">إرسال دعوة بالإيميل فوراً</span></label></div><button type="submit" class="w-full bg-p hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg mt-4 text-xl transition">حفظ الدعوة</button></form></div></div>
+    <div id="m-frm" class="mdl"><div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"><div class="p-6 border-b flex justify-between bg-gray-50 rounded-t-3xl"><h3 class="font-black text-2xl text-purple-600">بناء استمارة</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div><div class="p-8"><form id="f-frm" class="space-y-6"><div><label class="font-bold block mb-2">عنوان الاستمارة</label><input type="text" id="fm-t" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-purple-500"></div><div class="bg-purple-50 p-5 rounded-xl border-2 border-purple-200"><label class="font-black block mb-2 text-purple-800">صورة أعلى الاستمارة</label><input type="file" id="fm-i" accept="image/*" class="w-full bg-white p-3 rounded-xl border"></div><div class="border-2 rounded-xl p-6 bg-gray-50"><h4 class="font-black mb-4 text-lg">الأسئلة:</h4><div id="fm-flds-box" class="space-y-3 mb-4"></div><button type="button" onclick="window.addFld()" class="bg-purple-200 text-purple-800 px-5 py-3 rounded-xl font-bold hover:bg-purple-300 transition w-full shadow-sm"><i class="fa-solid fa-plus ml-1"></i> إضافة سؤال</button></div><button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black py-4 rounded-xl shadow-lg text-xl transition">نشر وحفظ</button></form></div></div></div>
+    <div id="m-rsp" class="mdl"><div class="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-y-auto shadow-2xl"><div class="p-6 border-b flex justify-between bg-gray-50 rounded-t-3xl"><h3 class="font-black text-2xl text-p">جدول الردود</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div><div class="p-8"><div class="flex justify-end mb-6"><button id="btn-xl-rsp" class="bg-green-500 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-green-600 transition"><i class="fa-solid fa-file-excel ml-1"></i> تحميل Excel</button></div><div class="border-2 rounded-xl overflow-x-auto"><table class="w-full text-center"><thead class="bg-b text-white" id="rsp-th"></thead><tbody id="rsp-tb" class="divide-y"></tbody></table></div></div></div></div>
     
-    <!-- 1. الفاتورة -->
-    <div id="m-inv" class="mdl"><div class="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div class="p-6 border-b flex justify-between bg-gray-50 rounded-t-3xl"><h3 class="font-black text-2xl text-p">إنشاء فاتورة / Facture</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div>
-        <div class="p-8"><form id="f-inv" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div><label class="font-bold mb-2 block">العميل (Client)</label><select id="i-cli" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></select></div>
-                <div><label class="font-bold mb-2 block">التاريخ (Date)</label><input type="date" id="i-dat" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div>
-                <div class="flex items-end pb-2"><label class="flex items-center cursor-pointer bg-blue-50 p-4 rounded-xl border-2 border-blue-200 w-full hover:bg-blue-100"><input type="checkbox" id="i-tva" checked onchange="window.drwI()" class="w-6 h-6"><span class="font-black mx-3 text-blue-800">TVA 19%</span></label></div>
-            </div>
-            <div class="border-2 rounded-xl overflow-hidden overflow-x-auto">
-                <table class="w-full text-center"><thead class="bg-b text-white"><tr><th class="p-4 text-start">Désignation</th><th class="p-4 w-24">Qté</th><th class="p-4 w-40">Prix U.</th><th class="p-4 w-32">Remise %</th><th class="p-4 w-40">Total</th><th class="p-4 w-12"></th></tr></thead><tbody id="i-itm" class="divide-y"></tbody></table>
-                <button type="button" onclick="window.addI()" class="w-full bg-gray-50 hover:bg-gray-100 p-4 font-black text-p transition">+ إضافة سطر / Ajouter Ligne</button>
-            </div>
-            <div class="flex justify-between items-end mt-8">
-                <div class="w-1/3"><label class="font-bold block mb-2 text-gray-500">Global Remise (%)</label><input type="number" id="i-rem" value="0" onchange="window.drwI()" class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p" max="100"></div>
-                <div class="w-80 bg-gray-50 p-6 rounded-2xl border-2 font-bold text-xl" dir="ltr"><div class="flex justify-between mb-3 text-gray-600"><span>HT:</span> <span id="i-h">0</span></div><div class="flex justify-between text-red-500 mb-3"><span>TVA:</span> <span id="i-v">0</span></div><div class="flex justify-between text-green-600 text-3xl font-black border-t-2 pt-4 mt-2"><span>TTC:</span> <span id="i-t">0</span></div></div>
-            </div>
-            <button type="submit" class="w-full bg-p hover:bg-blue-700 text-white font-black py-5 rounded-xl text-2xl shadow-xl mt-8">حفظ الفاتورة / Enregistrer</button>
-        </form></div>
-    </div></div>
-
-    <!-- 2. الحدث (مع الإيميل التلقائي) -->
-    <div id="m-ev" class="mdl"><div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div class="p-6 border-b flex justify-between bg-gray-50 rounded-t-3xl"><h3 class="font-black text-2xl text-p">دعوة لحدث</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div>
-        <form id="f-ev" class="p-8 space-y-6">
-            <div><label class="font-bold block mb-2">عنوان الحدث</label><input type="text" id="e-t" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div>
-            <div class="grid grid-cols-2 gap-6"><div><label class="font-bold block mb-2">التاريخ</label><input type="date" id="e-d" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div><div><label class="font-bold block mb-2">التوقيت</label><input type="time" id="e-m" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div></div>
-            <div><label class="font-bold block mb-2">المكان</label><input type="text" id="e-l" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p"></div>
-            <div><label class="font-bold block mb-2">رابط الخريطة Google Maps</label><input type="url" id="e-u" class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-p" dir="ltr" placeholder="https://maps.app.goo.gl/..."></div>
-            <div class="bg-blue-50 p-5 rounded-xl border-2 border-blue-100"><label class="font-black block mb-2 text-b">صورة الغلاف للحدث</label><input type="file" id="e-img" accept="image/*" class="w-full bg-white p-3 rounded-xl border"></div>
-            <div class="border-2 p-5 rounded-xl bg-gray-50">
-                <label class="font-bold text-p block mb-3 text-lg">تحديد المدعوين (لإرسال إيميل آلي وتذكيرهم لاحقاً)</label>
-                <div id="e-invs" class="grid grid-cols-2 gap-3 max-h-40 overflow-y-auto mb-4 p-2"></div>
-                <label class="flex items-center cursor-pointer mt-4 border-t pt-4"><input type="checkbox" id="e-snd" checked class="w-6 h-6 ml-3"><span class="font-bold text-gray-700 text-lg">إرسال دعوة بالإيميل فوراً عند الحفظ</span></label>
-            </div>
-            <button type="submit" class="w-full bg-p hover:bg-blue-700 text-white font-black py-4 rounded-xl shadow-lg mt-4 text-xl transition">حفظ الحدث والدعوات</button>
-        </form>
-    </div></div>
-
-    <!-- 3. بناء الاستمارات (Form Builder) -->
-    <div id="m-frm" class="mdl"><div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div class="p-6 border-b flex justify-between bg-gray-50 rounded-t-3xl"><h3 class="font-black text-2xl text-purple-600">بناء استمارة</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div>
-        <div class="p-8"><form id="f-frm" class="space-y-6">
-            <div><label class="font-bold block mb-2">عنوان الاستمارة</label><input type="text" id="fm-t" required class="w-full p-4 border-2 rounded-xl outline-none bg-gray-50 focus:border-purple-500"></div>
-            <div class="bg-purple-50 p-5 rounded-xl border-2 border-purple-200"><label class="font-black block mb-2 text-purple-800">صورة أعلى الاستمارة (Header)</label><input type="file" id="fm-i" accept="image/*" class="w-full bg-white p-3 rounded-xl border"></div>
-            <div class="border-2 rounded-xl p-6 bg-gray-50">
-                <h4 class="font-black mb-4 text-lg">الأسئلة / الحقول المطلوبة:</h4>
-                <div id="fm-flds-box" class="space-y-3 mb-4"></div>
-                <button type="button" onclick="window.addFld()" class="bg-purple-200 text-purple-800 px-5 py-3 rounded-xl font-bold hover:bg-purple-300 transition w-full shadow-sm"><i class="fa-solid fa-plus ml-1"></i> إضافة سؤال جديد</button>
-            </div>
-            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black py-4 rounded-xl shadow-lg text-xl transition">نشر وحفظ الاستمارة</button>
-        </form></div>
-    </div></div>
-
-    <!-- 4. جدول الردود (Form Responses) -->
-    <div id="m-rsp" class="mdl"><div class="bg-white rounded-3xl w-full max-w-6xl max-h-[90vh] overflow-y-auto shadow-2xl">
-        <div class="p-6 border-b flex justify-between bg-gray-50 rounded-t-3xl"><h3 class="font-black text-2xl text-p">جدول الردود</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div>
-        <div class="p-8">
-            <div class="flex justify-end mb-6"><button id="btn-xl-rsp" class="bg-green-500 text-white px-6 py-3 rounded-xl font-bold shadow-md hover:bg-green-600 transition"><i class="fa-solid fa-file-excel ml-1"></i> تحميل ملف Excel</button></div>
-            <div class="border-2 rounded-xl overflow-x-auto"><table class="w-full text-center"><thead class="bg-b text-white" id="rsp-th"></thead><tbody id="rsp-tb" class="divide-y"></tbody></table></div>
-        </div>
-    </div></div>
-
-    <!-- 5. الخزينة والعملاء -->
-    <div id="m-fin" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-lg"><h3 class="font-black text-2xl mb-6 text-b">عملية مالية مفصلة</h3><form id="f-fin" class="space-y-4">
-        <select id="f-t" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><option value="r">إيراد (+)</option><option value="e">نفقة (-)</option></select>
-        <input type="number" id="f-a" required placeholder="المبلغ DZD" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p">
-        <input type="text" id="f-s" required placeholder="البيان / الوصف" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p">
-        <div class="grid grid-cols-2 gap-4">
-            <div><label class="font-bold text-sm block mb-1">التصنيف</label><input type="text" id="f-cat" placeholder="تسويق، معدات..." class="w-full p-3 border-2 rounded-xl bg-gray-50 outline-none"></div>
-            <div><label class="font-bold text-sm block mb-1">طريقة الدفع</label><select id="f-pay" class="w-full p-3 border-2 rounded-xl bg-gray-50 outline-none"><option value="نقداً">نقداً</option><option value="شيك">شيك</option><option value="تحويل">تحويل بنكي</option></select></div>
-        </div>
-        <div><label class="font-bold text-sm block mb-1">رقم المرجع أو الفاتورة</label><input type="text" id="f-ref" placeholder="رقم المرجع..." class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"></div>
-        <button type="submit" class="w-full bg-p text-white p-4 rounded-xl font-black text-xl shadow-lg">حفظ العملية</button>
-    </form></div></div>
-
+    <div id="m-fin" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-lg"><h3 class="font-black text-2xl mb-6 text-b">عملية مالية مفصلة</h3><form id="f-fin" class="space-y-4"><select id="f-t" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><option value="r">إيراد (+)</option><option value="e">نفقة (-)</option></select><input type="number" id="f-a" required placeholder="المبلغ DZD" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><input type="text" id="f-s" required placeholder="البيان" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><div class="grid grid-cols-2 gap-4"><div><label class="font-bold text-sm block mb-1">التصنيف</label><input type="text" id="f-cat" placeholder="تسويق، معدات..." class="w-full p-3 border-2 rounded-xl bg-gray-50 outline-none"></div><div><label class="font-bold text-sm block mb-1">الدفع</label><select id="f-pay" class="w-full p-3 border-2 rounded-xl bg-gray-50 outline-none"><option value="نقداً">نقداً</option><option value="شيك">شيك</option><option value="تحويل">تحويل بنكي</option></select></div></div><div><label class="font-bold text-sm block mb-1">رقم المرجع</label><input type="text" id="f-ref" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"></div><button type="submit" class="w-full bg-p text-white p-4 rounded-xl font-black text-xl shadow-lg">حفظ العملية</button></form></div></div>
     <div id="m-cli" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-md"><h3 class="font-black text-2xl mb-6 text-b">إضافة عميل</h3><form id="f-cli" class="space-y-4"><input type="text" id="c-n" required placeholder="الاسم الكامل" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><input type="email" id="c-e" required placeholder="الإيميل" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p" dir="ltr"><input type="text" id="c-c" placeholder="اسم الشركة" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><button type="submit" class="w-full bg-p text-white p-4 rounded-xl font-black text-xl shadow-lg">حفظ العميل</button></form></div></div>
-    
-    <!-- مشاركة وإرسال الإيميلات -->
-    <div id="m-qr" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-sm text-center shadow-2xl"><div class="flex justify-between mb-6"><h3 class="font-black text-2xl text-b">مشاركة الرابط</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div><div id="qr-box" class="bg-white p-4 inline-block border-2 rounded-2xl mb-6"></div><input type="text" id="qr-u" readonly class="w-full p-3 border-2 rounded-xl text-sm mb-4 outline-none text-center bg-gray-50 font-bold" dir="ltr"><button onclick="window.cpyLnk()" class="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-black text-lg shadow-lg transition"><i class="fa-solid fa-copy ml-2"></i> انسخ الرابط</button></div></div>
+    <div id="m-qr" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-sm text-center shadow-2xl"><div class="flex justify-between mb-6"><h3 class="font-black text-2xl text-b">مشاركة الرابط</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div><div id="qr-box" class="bg-white p-4 inline-block border-2 rounded-2xl mb-6"></div><input type="text" id="qr-u" readonly class="w-full p-3 border-2 rounded-xl text-sm mb-4 outline-none text-center bg-gray-50 font-bold" dir="ltr"><button onclick="window.cpyLnk()" class="w-full bg-green-500 hover:bg-green-600 text-white py-4 rounded-xl font-black text-lg shadow-lg transition"><i class="fa-solid fa-copy ml-2"></i> نسخ الرابط</button></div></div>
+    <div id="m-eml" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-md shadow-2xl"><div class="flex justify-between mb-6"><h3 class="font-black text-2xl text-p">إرسال للعميل</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div><form id="f-eml" class="space-y-4"><p class="text-sm text-gray-500 mb-4 font-bold">إرسال رسالة احترافية للعميل. (تأكد أنك تستخدم {{{message}}} في EmailJS).</p><input type="email" id="em-to" required placeholder="إيميل العميل" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p" dir="ltr"><button type="submit" class="w-full bg-p hover:bg-blue-700 text-white p-4 rounded-xl font-black text-lg shadow-lg transition">إرسال البريد <i class="fa-solid fa-paper-plane ml-2"></i></button></form></div></div>
+    <div id="m-dom" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-md"><h3 class="font-black text-2xl mb-6 text-b">إضافة دومين</h3><form id="f-dom" class="space-y-4"><input type="text" id="d-n" required placeholder="اسم الدومين (ex: aitchikh.com)" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p" dir="ltr"><input type="text" id="d-p" required placeholder="الجهة الحاجزة (Registrar/Host)" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><input type="date" id="d-d" required class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><button type="submit" class="w-full bg-teal-500 text-white p-4 rounded-xl font-black text-xl shadow-lg">حفظ</button></form></div></div>
+    <div id="m-prt" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto"><h3 class="font-black text-2xl mb-6 text-b">إضافة شريك/جهة</h3><form id="f-prt" class="space-y-4"><select id="p-t" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><option value="المطورون">المطورون</option><option value="الشركاء المؤسسون">الشركاء المؤسسون</option><option value="مستثمرون">مستثمرون</option><option value="إطارات في دولة">إطارات في دولة</option><option value="أصحاب مؤسسات">أصحاب مؤسسات</option></select><input type="text" id="p-n" required placeholder="اسم المعني" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><input type="text" id="p-c" required placeholder="اسم الشركة أو المؤسسة" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p"><input type="text" id="p-ph" required placeholder="رقم الهاتف" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p" dir="ltr"><input type="text" id="p-wa" placeholder="رقم الواتساب" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p" dir="ltr"><input type="email" id="p-em" placeholder="الإيميل" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p" dir="ltr"><button type="submit" class="w-full bg-indigo-500 text-white p-4 rounded-xl font-black text-xl shadow-lg">حفظ</button></form></div></div>
 
-    <div id="m-eml" class="mdl"><div class="bg-white p-8 rounded-3xl w-full max-w-md shadow-2xl"><div class="flex justify-between mb-6"><h3 class="font-black text-2xl text-p">إرسال نصي للعميل</h3><button onclick="window.cm()" class="text-red-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div><form id="f-eml" class="space-y-4"><p class="text-sm text-gray-500 mb-4 font-bold">سيتم إرسال رسالة احترافية تحتوي على تفاصيل الفاتورة/الدعوة بالإضافة للرابط المباشر. (تأكد من إعداد القالب بـ {{{message}}} في EmailJS).</p><input type="email" id="em-to" required placeholder="إيميل العميل" class="w-full p-4 border-2 rounded-xl bg-gray-50 outline-none focus:border-p" dir="ltr"><button type="submit" class="w-full bg-p hover:bg-blue-700 text-white p-4 rounded-xl font-black text-lg shadow-lg transition">إرسال البريد <i class="fa-solid fa-paper-plane ml-2"></i></button></form></div></div>
-
-    <!-- SCRIPT السكريبت المتكامل 100% -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        
-        // 1. إعدادات السحابة (Firebase)
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         const ap = initializeApp({apiKey:"AIzaSyCePMwR1Ov1Xknj-1m0FJG-IE3pmSItzzU",authDomain:"thwas-b496b.firebaseapp.com",projectId:"thwas-b496b",storageBucket:"thwas-b496b.firebasestorage.app",messagingSenderId:"435409022648",appId:"1:435409022648:web:85ad4d14546f5d2ccb0e4d"});
-        const db = getFirestore(ap); 
-        
-        // 2. إعدادات الإيميل (EmailJS)
-        emailjs.init("y9qpL0BwEGCoU87fX"); const EM_SRV = "service_tl81dab", EM_TPL = "template_c0iobrh";
+        const db = getFirestore(ap); emailjs.init("y9qpL0BwEGCoU87fX"); const EM_SRV = "service_tl81dab", EM_TPL = "template_c0iobrh";
 
-        // 3. دوال عامة
-        const $ = i => document.getElementById(i);
-        window.today = () => new Date().toISOString().split('T')[0];
+        const $ = i => document.getElementById(i); window.today = () => new Date().toISOString().split('T')[0];
         window.toast = (m,c='success') => { let t=document.createElement('div'); t.className=`toast ${c==='error'?'bg-red-500':'bg-green-500'}`; t.innerText=m; document.body.appendChild(t); setTimeout(()=>t.remove(),3500); };
         window.nav = v => { document.querySelectorAll('.vw').forEach(e=>e.classList.add('hidden')); $('v-'+v).classList.remove('hidden'); document.querySelectorAll('aside a').forEach(a=>a.classList.remove('act')); $('n-'+v).classList.add('act'); };
         window.mo = i => { $(i).classList.add('show'); if(i==='m-inv') window.resetInv(); if(i==='m-frm') window.rFld(); if(i==='m-ev') $('e-invs').innerHTML=window.dbState.c.map(c=>`<label class="flex items-center gap-2 text-sm font-bold bg-white p-2 border rounded-lg cursor-pointer hover:bg-blue-50 transition"><input type="checkbox" value="${c.e}" class="e-chk w-5 h-5 text-p"><span>${c.n}</span></label>`).join(''); }; 
         window.cm = () => document.querySelectorAll('.mdl').forEach(e=>e.classList.remove('show'));
 
-        // 4. الترجمة
         const i18n = {
-            ar: { login_desc:"بوابة الفريق الآمنة", login_btn:"دخول آمن", n_dash:"الإحصائيات", n_inv:"إدارة الفواتير", n_ev:"الأحداث والدعوات", n_frm:"الاستمارات والردود", n_fin:"الخزينة المالية", n_cli:"قاعدة العملاء", n_notif:"الإشعارات والتذكير", h_title:"لوحة التحكم الإدارية", logout:"خروج", s_rev:"الإيرادات", s_exp:"النفقات", s_net:"الرصيد الصافي", s_cli:"العملاء النشطون", c_flow:"التدفق المالي الشهري", c_exp:"توزيع النفقات", add:"جديد", t_cli:"العميل", t_dat:"التاريخ", t_act:"إجراءات", t_des:"البيان والتفاصيل", t_amt:"المبلغ", t_nam:"الاسم", t_com:"الشركة", t_con:"اتصال" },
-            fr: { login_desc:"Portail Sécurisé", login_btn:"Connexion Sécurisée", n_dash:"Statistiques", n_inv:"Factures", n_ev:"Événements", n_frm:"Formulaires", n_fin:"Trésorerie", n_cli:"Clients", n_notif:"Notifications", h_title:"Espace d'Administration", logout:"Déconnexion", s_rev:"Revenus", s_exp:"Dépenses", s_net:"Bénéfice Net", s_cli:"Clients Actifs", c_flow:"Flux Mensuel", c_exp:"Dépenses", add:"Nouveau", t_cli:"Client", t_dat:"Date", t_act:"Actions", t_des:"Détails", t_amt:"Montant", t_nam:"Nom", t_com:"Entreprise", t_con:"Contact" }
+            ar: { login_desc:"بوابة الفريق الآمنة", login_btn:"دخول آمن", n_dash:"الإحصائيات", n_inv:"إدارة الفواتير", n_ev:"الأحداث والدعوات", n_frm:"الاستمارات والردود", n_fin:"الخزينة المالية", n_cli:"قاعدة العملاء", n_notif:"الإشعارات والتذكير", n_dom:"إدارة الدومينات", n_prt:"الشركاء والجهات", h_title:"لوحة التحكم الإدارية", logout:"خروج", s_rev:"الإيرادات", s_exp:"النفقات", s_net:"الرصيد الصافي", s_cli:"العملاء", c_flow:"التدفق المالي الشهري", c_exp:"توزيع النفقات", add:"جديد", t_cli:"العميل", t_dat:"التاريخ", t_act:"إجراءات", t_des:"البيان والتفاصيل", t_amt:"المبلغ", t_nam:"الاسم", t_com:"الشركة", t_con:"اتصال" },
+            fr: { login_desc:"Portail Sécurisé", login_btn:"Connexion", n_dash:"Statistiques", n_inv:"Factures", n_ev:"Événements", n_frm:"Formulaires", n_fin:"Trésorerie", n_cli:"Clients", n_notif:"Notifications", n_dom:"Domaines", n_prt:"Partenaires", h_title:"Espace d'Administration", logout:"Déconnexion", s_rev:"Revenus", s_exp:"Dépenses", s_net:"Bénéfice", s_cli:"Clients", c_flow:"Flux Mensuel", c_exp:"Dépenses", add:"Nouveau", t_cli:"Client", t_dat:"Date", t_act:"Actions", t_des:"Détails", t_amt:"Montant", t_nam:"Nom", t_com:"Entreprise", t_con:"Contact" }
         };
 
-        // 5. إدارة البيانات
-        window.dbState = { c:[], f:[], i:[], e:[], fm:[], rs:[], rem:[], notifs:[], lang:'ar', adminEmail:'' };
+        window.dbState = { c:[], f:[], i:[], e:[], fm:[], rs:[], rem:[], notifs:[], dom:[], prt:[], lang:'ar', adminEmail:'' };
         
         window.sv = async () => { 
-            localStorage.setItem('ac_v19', JSON.stringify(window.dbState)); if(!window.isPublic) window.rd(); 
+            localStorage.setItem('ac_v25', JSON.stringify(window.dbState)); if(!window.isPublic) window.rd(); 
             try{ await setDoc(doc(db,"appData","main"), window.dbState); if(!window.isPublic) $('sync-status').innerHTML='<i class="fa-solid fa-wifi text-green-500"></i> متصل بالسحابة'; }catch(e){} 
         };
 
         const loadDb = async () => {
-            try { const s = await getDoc(doc(db,"appData","main")); if(s.exists()) { window.dbState = Object.assign(window.dbState, s.data()); } else { window.dbState = Object.assign(window.dbState, JSON.parse(localStorage.getItem('ac_v19'))||{}); } } catch(e) { window.dbState = Object.assign(window.dbState, JSON.parse(localStorage.getItem('ac_v19'))||{}); }['c','f','i','e','fm','rs','rem','notifs'].forEach(k => { if(!window.dbState[k]) window.dbState[k]=[] });
-            if(!window.dbState.lang) window.dbState.lang = 'ar';
-            if(!window.dbState.adminEmail) window.dbState.adminEmail = '';
+            try { const s = await getDoc(doc(db,"appData","main")); if(s.exists()) { window.dbState = Object.assign(window.dbState, s.data()); } else { window.dbState = Object.assign(window.dbState, JSON.parse(localStorage.getItem('ac_v25'))||{}); } } catch(e) { window.dbState = Object.assign(window.dbState, JSON.parse(localStorage.getItem('ac_v25'))||{}); }['c','f','i','e','fm','rs','rem','notifs','dom','prt'].forEach(k => { if(!window.dbState[k]) window.dbState[k]=[] });
+            if(!window.dbState.lang) window.dbState.lang = 'ar'; if(!window.dbState.adminEmail) window.dbState.adminEmail = '';
             
-            if(window.isPublic) { window.renderShared(); } 
-            else { if(localStorage.getItem('ac_auth_final') === '1') { $('log').remove(); window.initAdmin(); } }
+            if(window.isPublic) { window.renderShared(); } else { if(localStorage.getItem('ac_auth_v25') === '1') { $('log').remove(); window.initAdmin(); } }
         };
 
         window.tgLng = () => { window.dbState.lang = window.dbState.lang==='ar'?'fr':'ar'; window.sv(); window.applyLng(); };
         window.applyLng = () => {
             let l = window.dbState.lang; document.documentElement.lang = l; document.documentElement.dir = l==='ar'?'rtl':'ltr';
-            $('btn-lang').innerText = l==='ar'?'FR':'AR';
-            document.querySelectorAll('[data-i18n]').forEach(el => { const k=el.getAttribute('data-i18n'); if(i18n[l][k]) el.innerText=i18n[l][k]; });
+            $('btn-lang').innerText = l==='ar'?'FR':'AR'; document.querySelectorAll('[data-i18n]').forEach(el => { const k=el.getAttribute('data-i18n'); if(i18n[l][k]) el.innerText=i18n[l][k]; });
         };
 
-        // 6. المخططات (Charts)
         let cb, cp; Chart.defaults.font.family='Cairo';
         window.initCharts = () => {
             if(cb) cb.destroy(); if(cp) cp.destroy();
@@ -295,104 +164,65 @@
             cp=new Chart($('cp').getContext('2d'),{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:['#3B82F6','#EF4444','#10B981','#F59E0B','#8B5CF6']}]},options:{responsive:true,maintainAspectRatio:false}});
         };
 
-        // 7. التذكير التلقائي و الإشعارات (Smart Reminders & Notifications)
         window.checkReminders = () => {
             let todayDate = new Date(); let changed = false;
             window.dbState.e.forEach(ev => {
                 let evDate = new Date(ev.d); let diffDays = Math.ceil((evDate - todayDate) / (1000 * 60 * 60 * 24));
                 if(diffDays <= 2 && diffDays >= 0 && !window.dbState.rem.includes(ev.id)) {
                     let link = `${location.origin}${location.pathname}?s=ev&id=${ev.id}`;
-                    let plainMsg = `تذكير باقتراب موعد الحدث / Rappel d'événement\n\nالحدث: ${ev.t}\nالتاريخ: ${ev.d} | ${ev.m}\nالمكان: ${ev.l}\n\nرابط التفاصيل:\n${link}\n\naitchikh consulting`;
-                    
-                    // إشعار للنظام وللأدمن
-                    window.dbState.notifs.push({id:'n'+Date.now(), t:`اقتراب موعد حدث: ${ev.t} (${ev.d})`, d:window.today(), read:false});
-                    if(window.dbState.adminEmail) emailjs.send(EM_SRV, EM_TPL, {name:"Admin", email:window.dbState.adminEmail, message:`تذكير للنظام:\nاقتراب موعد الحدث: ${ev.t}\nالتاريخ: ${ev.d}`}).catch(e=>{});
-
-                    // إشعار للعملاء
-                    if(ev.inv) { ev.inv.forEach(em => { emailjs.send(EM_SRV, EM_TPL, {name:"Client", email:em, message:plainMsg}).catch(e=>{}); }); }
+                    let plainMsg = `<div style="font-family:Arial,sans-serif;background:#f8fafc;padding:30px;border-radius:15px;text-align:center;border-top:8px solid #2563EB;max-width:600px;margin:0 auto;"><h1 style="color:#1E3A8A;font-size:32px;margin-bottom:0;">aitchikh</h1><h2 style="color:#64748B;font-size:14px;margin-top:0;letter-spacing:3px;margin-bottom:30px;">consulting</h2><h3 style="color:#10B981;font-size:24px;">تذكير بحدث مقترب / Rappel</h3><p style="font-size:20px;color:#1E293B;font-weight:bold;">${ev.t}</p><p style="color:#334155;font-size:18px;">التاريخ: ${ev.d}</p><br><a href="${link}" style="background:#2563EB;color:white;padding:15px 30px;border-radius:8px;text-decoration:none;font-weight:bold;">التفاصيل والخريطة</a></div>`;
+                    window.dbState.notifs.push({id:'n'+Date.now(), t:`اقتراب موعد حدث: ${ev.t}`, d:window.today(), read:false});
+                    if(window.dbState.adminEmail) emailjs.send(EM_SRV, EM_TPL, {name:"Admin", email:window.dbState.adminEmail, message:`تذكير للنظام:\nاقتراب الحدث: ${ev.t}`}).catch(e=>{});
+                    if(ev.inv) ev.inv.forEach(em => emailjs.send(EM_SRV, EM_TPL, {name:"Client", email:em, message:plainMsg}).catch(e=>{}) );
                     window.dbState.rem.push(ev.id); changed = true;
                 }
             });
-            if(changed) window.sv();
-            window.rdNotifs();
+            window.dbState.dom.forEach(dm => {
+                let dmDate = new Date(dm.d); let diffDays = Math.ceil((dmDate - todayDate) / (1000 * 60 * 60 * 24));
+                if(diffDays <= 20 && diffDays >= 0 && !window.dbState.rem.includes('dom_'+dm.id)) {
+                    let msg = `<div style="font-family:Arial,sans-serif;background:#f8fafc;padding:30px;border-radius:15px;text-align:center;border-top:8px solid #EF4444;max-width:600px;margin:0 auto;"><h1 style="color:#1E3A8A;font-size:32px;margin-bottom:0;">aitchikh</h1><h2 style="color:#64748B;font-size:14px;margin-top:0;letter-spacing:3px;margin-bottom:30px;">consulting</h2><h3 style="color:#EF4444;font-size:24px;">تنبيه: اقتراب انتهاء صلاحية دومين</h3><p style="font-size:20px;color:#1E293B;font-weight:bold;">${dm.n}</p><p style="color:#334155;font-size:18px;">الجهة: ${dm.p}</p><p style="color:#EF4444;font-size:18px;font-weight:bold;">تاريخ الانتهاء: ${dm.d}</p><p style="color:#555;">يرجى تجديد الدومين قبل انقضاء المدة (${diffDays} يوم متبقي).</p></div>`;
+                    window.dbState.notifs.push({id:'n'+Date.now(), t:`تنبيه دومين: ${dm.n} ينتهي بعد ${diffDays} يوم`, d:window.today(), read:false});
+                    if(window.dbState.adminEmail) emailjs.send(EM_SRV, EM_TPL, {name:"Admin", email:window.dbState.adminEmail, message:msg}).catch(e=>{});
+                    window.dbState.rem.push('dom_'+dm.id); changed = true;
+                }
+            });
+            if(changed) window.sv(); window.rdNotifs();
         };
 
-        window.svAdminEml = () => { window.dbState.adminEmail = $('admin-eml').value; window.sv(); window.toast('تم حفظ إيميل الإدارة بنجاح'); };
+        window.svAdminEml = () => { window.dbState.adminEmail = $('admin-eml').value; window.sv(); window.toast('تم حفظ الإيميل'); };
         window.clrNotifs = () => { window.dbState.notifs =[]; window.sv(); window.rdNotifs(); };
         window.mkRd = (id) => { let n=window.dbState.notifs.find(x=>x.id===id); if(n){n.read=true; window.sv();} };
-
         window.rdNotifs = () => {
             $('admin-eml').value = window.dbState.adminEmail || '';
             let unread = window.dbState.notifs.filter(n=>!n.read).length;
             if(unread > 0) { $('bell-badge').innerText=unread; $('bell-badge').classList.remove('hidden'); } else { $('bell-badge').classList.add('hidden'); }
-            $('t-notif').innerHTML = window.dbState.notifs.slice().reverse().map(n=>`
-                <div class="p-4 ${n.read?'bg-white':'bg-blue-50'} hover:bg-gray-50 cursor-pointer transition flex justify-between items-center" onclick="window.mkRd('${n.id}')">
-                    <div><p class="font-bold ${n.read?'text-gray-600':'text-brand'}">${n.t}</p><p class="text-xs text-gray-400 mt-1" dir="ltr">${n.d}</p></div>
-                    ${!n.read ? `<span class="w-3 h-3 bg-p rounded-full"></span>` : ''}
-                </div>
-            `).join('') || '<div class="p-6 text-center text-gray-500 font-bold">لا توجد إشعارات جديدة</div>';
+            $('t-notif').innerHTML = window.dbState.notifs.slice().reverse().map(n=>`<div class="p-4 ${n.read?'bg-white':'bg-blue-50'} hover:bg-gray-50 cursor-pointer transition flex justify-between items-center" onclick="window.mkRd('${n.id}')"><div><p class="font-bold ${n.read?'text-gray-600':'text-brand'}">${n.t}</p><p class="text-xs text-gray-400 mt-1" dir="ltr">${n.d}</p></div>${!n.read ? `<span class="w-3 h-3 bg-p rounded-full"></span>` : ''}</div>`).join('') || '<div class="p-6 text-center text-gray-500 font-bold">لا توجد إشعارات</div>';
         };
 
-        // 8. العرض الإداري
         window.rd = () => {
-            if(window.isPublic) return;
-            let d = window.dbState; window.rdNotifs();
+            if(window.isPublic) return; let d = window.dbState; window.rdNotifs();
             let r=0, e=0, ec={}; let br=Array(12).fill(0), be=Array(12).fill(0);
             d.f.forEach(x => { let m=parseInt(x.d.split('-')[1])-1; if(x.t==='r'){r+=x.a; if(!isNaN(m))br[m]+=x.a;} else {e+=x.a; if(!isNaN(m))be[m]+=x.a; ec[x.cat||x.s]=(ec[x.cat||x.s]||0)+x.a;} });
             $('s-r').innerText=r.toLocaleString()+' DZD'; $('s-e').innerText=e.toLocaleString()+' DZD'; $('s-n').innerText=(r-e).toLocaleString()+' DZD'; $('s-c').innerText=d.c.length;
-            if(cb) { cb.data.datasets[0].data=br; cb.data.datasets[1].data=be; cb.update(); }
-            if(cp) { cp.data.labels=Object.keys(ec); cp.data.datasets[0].data=Object.values(ec); cp.update(); }
-            
-            $('i-cli').innerHTML = d.c.map(x=>`<option value="${x.id}">${x.n}</option>`).join('');
+            if(cb) { cb.data.datasets[0].data=br; cb.data.datasets[1].data=be; cb.update(); } if(cp) { cp.data.labels=Object.keys(ec); cp.data.datasets[0].data=Object.values(ec); cp.update(); }
             
             $('t-cli').innerHTML = d.c.map(x=>`<tr class="border-b"><td class="p-4 font-bold text-gray-700">${x.n}</td><td class="p-4 font-bold text-gray-600">${x.c}</td><td class="p-4 font-bold text-gray-500" dir="ltr">${x.e}</td><td class="p-4"><button onclick="window.del('c','${x.id}')" class="bg-red-50 text-red-500 p-3 rounded-xl hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
             $('t-fin').innerHTML = d.f.map(x=>`<tr class="border-b"><td class="p-4 font-bold text-gray-500">${x.d}</td><td class="p-4 font-bold text-gray-800">${x.s}<br><span class="text-xs text-gray-400 font-bold bg-gray-100 px-2 py-1 rounded-lg mt-1 inline-block">${x.cat||'عام'} | ${x.pay||'-'} | Ref:${x.ref||'-'}</span></td><td class="p-4 font-black text-lg ${x.t==='r'?'text-green-500':'text-red-500'}">${x.a.toLocaleString()} DZD</td><td class="p-4"><button onclick="window.del('f','${x.id}')" class="bg-red-50 text-red-500 p-3 rounded-xl hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
             
-            $('t-inv').innerHTML = d.i.map(x=>{
-                let c=d.c.find(y=>y.id===x.c)||{}; 
-                return `<tr class="border-b"><td class="p-4 font-black text-brand text-lg">${x.id}</td><td class="p-4 font-bold text-gray-700">${c.n||''}</td><td class="p-4 font-bold text-gray-500">${x.d}</td><td class="p-4 font-black text-green-600 text-lg">${x.t.toLocaleString()} DZD</td>
-                <td class="p-4">
-                    <button onclick="window.pEm('inv','${x.id}','${c.e||''}')" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg font-bold hover:bg-blue-200 transition" title="إرسال إيميل نصي"><i class="fa-solid fa-envelope"></i></button>
-                    <button onclick="window.shr('inv','${x.id}')" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg font-bold hover:bg-gray-200 mx-1 transition"><i class="fa-solid fa-link"></i></button>
-                    <button onclick="window.del('i','${x.id}')" class="text-red-500 bg-red-50 p-2 rounded-lg hover:bg-red-100"><i class="fa-solid fa-trash"></i></button>
-                </td></tr>`;
-            }).join('');
+            $('t-inv').innerHTML = d.i.map(x=>{ let c=d.c.find(y=>y.id===x.c)||{}; return `<tr class="border-b"><td class="p-4 font-black text-brand text-lg">${x.id}</td><td class="p-4 font-bold text-gray-700">${c.n||''}</td><td class="p-4 font-bold text-gray-500">${x.d}</td><td class="p-4 font-black text-green-600 text-lg">${x.t.toLocaleString()} DZD</td><td class="p-4"><button onclick="window.pEm('inv','${x.id}','${c.e||''}')" class="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg font-bold hover:bg-blue-200 transition" title="إرسال إيميل"><i class="fa-solid fa-envelope"></i></button><button onclick="window.shr('inv','${x.id}')" class="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg font-bold hover:bg-gray-200 mx-1 transition"><i class="fa-solid fa-link"></i></button><button onclick="window.del('i','${x.id}')" class="text-red-500 bg-red-50 p-2 rounded-lg hover:bg-red-100"><i class="fa-solid fa-trash"></i></button></td></tr>`; }).join('');
+            $('t-ev').innerHTML = d.e.map(x=>`<div class="bg-white rounded-3xl border shadow-sm flex flex-col overflow-hidden"><div class="p-8 text-white bg-cover bg-center h-40 flex items-center justify-center text-center" style="background: linear-gradient(rgba(30,58,138,0.8), rgba(0,0,0,0.8)), url('${x.bg||''}');"><h3 class="font-black text-2xl z-10">${x.t}</h3></div><div class="p-6 bg-white flex-1 border-b"><p class="font-bold text-gray-600 mb-2"><i class="fa-regular fa-clock text-primary"></i> ${x.d} | ${x.m}</p><p class="font-bold text-gray-600"><i class="fa-solid fa-location-dot text-red-500"></i> ${x.l}</p></div><div class="p-4 bg-gray-50 flex gap-2"><button onclick="window.pEm('ev','${x.id}','')" class="bg-p text-white px-3 py-2 rounded-lg font-bold flex-1 transition hover:bg-blue-700" title="دعوة إيميل"><i class="fa-solid fa-envelope"></i> دعوة</button><button onclick="window.shr('ev','${x.id}')" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-lg font-bold flex-1 transition hover:bg-gray-300"><i class="fa-solid fa-link"></i> رابط</button><button onclick="window.del('e','${x.id}')" class="text-red-500 bg-red-50 px-3 py-2 rounded-lg font-bold hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></div></div>`).join('');
+            $('t-frm').innerHTML = d.fm.map(x=>`<div class="bg-white rounded-3xl border p-6 shadow-sm"><div class="h-32 bg-cover bg-center rounded-2xl mb-4 shadow-inner" style="background-image:url('${x.bg}')"></div><h3 class="font-black text-2xl text-brand mb-2">${x.t}</h3><p class="font-bold text-purple-600 mb-4 bg-purple-50 inline-block px-4 py-2 rounded-xl text-sm">الردود: ${d.rs.filter(r=>r.f===x.id).length}</p><div class="flex flex-wrap gap-2"><button onclick="window.vRsp('${x.id}')" class="bg-b text-white px-3 py-3 rounded-xl font-bold flex-1 hover:bg-blue-900 transition"><i class="fa-solid fa-table ml-1"></i> الردود</button><button onclick="window.shr('frm','${x.id}')" class="bg-gray-200 text-gray-800 px-3 py-3 rounded-xl font-bold transition hover:bg-gray-300"><i class="fa-solid fa-link"></i> رابط</button><button onclick="window.del('fm','${x.id}')" class="text-red-500 bg-red-50 px-3 py-3 rounded-xl hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></div></div>`).join('');
             
-            $('t-ev').innerHTML = d.e.map(x=>`
-            <div class="bg-white rounded-3xl border shadow-sm flex flex-col overflow-hidden">
-                <div class="p-8 text-white relative bg-cover bg-center h-40 flex items-center justify-center text-center" style="background: linear-gradient(rgba(30,58,138,0.8), rgba(0,0,0,0.8)), url('${x.bg||''}');">
-                    <h3 class="font-black text-2xl z-10">${x.t}</h3>
-                </div>
-                <div class="p-6 bg-white flex-1 border-b"><p class="font-bold text-gray-600 mb-2"><i class="fa-regular fa-clock text-primary"></i> ${x.d} | ${x.m}</p><p class="font-bold text-gray-600"><i class="fa-solid fa-location-dot text-red-500"></i> ${x.l}</p><p class="text-xs text-green-600 font-bold bg-green-50 inline-block px-2 py-1 rounded mt-2">تمت دعوة: ${x.inv?x.inv.length:0} عميل</p></div>
-                <div class="p-4 bg-gray-50 flex gap-2">
-                    <button onclick="window.pEm('ev','${x.id}','')" class="bg-p text-white px-3 py-2 rounded-lg font-bold flex-1 transition hover:bg-blue-700" title="دعوة إيميل"><i class="fa-solid fa-envelope"></i> دعوة</button>
-                    <button onclick="window.shr('ev','${x.id}')" class="bg-gray-200 text-gray-800 px-3 py-2 rounded-lg font-bold flex-1 transition hover:bg-gray-300"><i class="fa-solid fa-link"></i> رابط</button>
-                    <button onclick="window.del('e','${x.id}')" class="text-red-500 bg-red-50 px-3 py-2 rounded-lg font-bold hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            </div>`).join('');
-
-            $('t-frm').innerHTML = d.fm.map(x=>`
-            <div class="bg-white rounded-3xl border p-6 shadow-sm">
-                <div class="h-32 bg-cover bg-center rounded-2xl mb-4 shadow-inner" style="background-image:url('${x.bg}')"></div>
-                <h3 class="font-black text-2xl text-brand mb-2">${x.t}</h3>
-                <p class="font-bold text-purple-600 mb-4 bg-purple-50 inline-block px-4 py-2 rounded-xl text-sm">الردود المسجلة: ${d.rs.filter(r=>r.f===x.id).length}</p>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="window.vRsp('${x.id}')" class="bg-b text-white px-3 py-3 rounded-xl font-bold flex-1 hover:bg-blue-900 transition"><i class="fa-solid fa-table ml-1"></i> الردود</button>
-                    <button onclick="window.shr('frm','${x.id}')" class="bg-gray-200 text-gray-800 px-3 py-3 rounded-xl font-bold transition hover:bg-gray-300"><i class="fa-solid fa-link"></i> رابط</button>
-                    <button onclick="window.del('fm','${x.id}')" class="text-red-500 bg-red-50 px-3 py-3 rounded-xl hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button>
-                </div>
-            </div>`).join('');
+            // Domains & Partners
+            $('t-dom').innerHTML = d.dom.map(x=>`<tr class="border-b"><td class="p-4 font-bold text-gray-700" dir="ltr">${x.n}</td><td class="p-4 font-bold text-gray-600">${x.p}</td><td class="p-4 font-bold text-red-500" dir="ltr">${x.d}</td><td class="p-4"><button onclick="window.del('dom','${x.id}')" class="bg-red-50 text-red-500 p-3 rounded-xl hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
+            $('t-prt').innerHTML = d.prt.map(x=>`<tr class="border-b"><td class="p-4 font-bold text-gray-700">${x.n}</td><td class="p-4 font-bold text-blue-600"><span class="bg-blue-50 px-3 py-1 rounded-lg">${x.t}</span></td><td class="p-4 font-bold text-gray-600">${x.c}</td><td class="p-4 font-bold text-gray-500" dir="ltr"><div class="text-xs space-y-1"><i class="fa-solid fa-phone"></i> ${x.ph}<br><i class="fa-brands fa-whatsapp text-green-500"></i> ${x.wa||'-'}<br><i class="fa-solid fa-envelope text-red-500"></i> ${x.em||'-'}</div></td><td class="p-4"><button onclick="window.del('prt','${x.id}')" class="bg-red-50 text-red-500 p-3 rounded-xl hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></td></tr>`).join('');
         };
+        window.del = (col,id) => { if(confirm('تأكيد الحذف نهائياً؟')){ window.dbState[col]=window.dbState[col].filter(x=>x.id!==id); window.sv(); window.toast('تم الحذف'); } };
 
-        window.del = (col,id) => { if(confirm('هل أنت متأكد من الحذف نهائياً؟')){ window.dbState[col]=window.dbState[col].filter(x=>x.id!==id); window.sv(); window.toast('تم الحذف بنجاح'); } };
-
-        // 9. بناء الاستمارات (Form Builder)
+        // Form Builder
         window.flds = ['الاسم الكامل', 'رقم الهاتف'];
-        window.rFld = () => {
-            $('fm-flds-box').innerHTML = window.flds.map((f,i)=>`<div class="flex gap-3 mb-3"><input type="text" value="${f}" onchange="window.flds[${i}]=this.value" class="flex-1 p-4 border-2 border-purple-100 bg-white rounded-xl outline-none focus:border-purple-500 font-bold text-lg"><button type="button" onclick="window.flds.splice(${i},1);window.rFld()" class="bg-red-50 text-red-500 px-5 rounded-xl font-bold hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></div>`).join('');
-        };
+        window.rFld = () => { $('fm-flds-box').innerHTML = window.flds.map((f,i)=>`<div class="flex gap-3 mb-3"><input type="text" value="${f}" onchange="window.flds[${i}]=this.value" class="flex-1 p-4 border-2 border-purple-100 bg-white rounded-xl outline-none focus:border-purple-500 font-bold text-lg"><button type="button" onclick="window.flds.splice(${i},1);window.rFld()" class="bg-red-50 text-red-500 px-5 rounded-xl font-bold hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></div>`).join(''); };
         window.addFld = () => { window.flds.push('سؤال جديد'); window.rFld(); };
-
         window.vRsp = (id) => {
             let f=window.dbState.fm.find(x=>x.id===id); let r=window.dbState.rs.filter(x=>x.f===id);
             $('btn-xl-rsp').setAttribute('onclick', `window.xlFrm('${id}')`);
@@ -401,84 +231,68 @@
             window.mo('m-rsp');
         };
 
-        // 10. الفواتير 
-        window.iA=[]; 
-        window.resetInv = () => { window.iA=[{s:'',q:1,p:0,r:0}]; $('f-inv').reset(); $('i-dat').value=window.today(); window.drwI(); };
-        window.addI = () => { window.iA.push({s:'',q:1,p:0,r:0}); window.drwI(); }; 
-        window.upI = (i,f,v) => { window.iA[i][f] = f==='s'?v:Number(v)||0; window.drwI(); };
-        window.drwI = () => {
+        // Invoice
+        window.iA=[]; window.resetInv=()=>{window.iA=[{s:'',q:1,p:0,r:0}]; $('f-inv').reset(); $('i-dat').value=window.today(); window.drwI(); };
+        window.addI=()=>{window.iA.push({s:'',q:1,p:0,r:0}); window.drwI(); }; window.upI=(i,f,v)=>{window.iA[i][f]=f==='s'?v:Number(v)||0; window.drwI(); };
+        window.drwI=()=>{
             let h=0, tv=$('i-tva').checked, gr=Number($('i-rem').value)||0;
             $('i-itm').innerHTML = window.iA.map((x,i)=>{ let t=x.q*x.p*(1-x.r/100); h+=t; return `<tr><td class="p-3"><input type="text" onchange="window.upI(${i},'s',this.value)" value="${x.s}" class="w-full border-2 p-3 rounded-xl outline-none focus:border-p font-bold bg-white" placeholder="البيان"></td><td class="p-3"><input type="number" onchange="window.upI(${i},'q',this.value)" value="${x.q}" class="w-full border-2 p-3 rounded-xl text-center outline-none focus:border-p font-bold bg-white"></td><td class="p-3"><input type="number" onchange="window.upI(${i},'p',this.value)" value="${x.p}" class="w-full border-2 p-3 rounded-xl text-center outline-none focus:border-p font-bold bg-white"></td><td class="p-3"><input type="number" onchange="window.upI(${i},'r',this.value)" value="${x.r}" class="w-full border-2 p-3 rounded-xl text-center outline-none focus:border-p font-bold bg-white" placeholder="%"></td><td class="p-3 font-black text-gray-700 text-xl">${t.toLocaleString()}</td><td class="p-3"><button type="button" onclick="window.iA.splice(${i},1);window.drwI()" class="text-red-500 bg-red-50 p-4 rounded-xl hover:bg-red-100 transition"><i class="fa-solid fa-trash"></i></button></td></tr>`; }).join('');
             let fh=h*(1-gr/100); let v=tv?fh*0.19:0; let tc=fh+v;
             $('i-h').innerText=fh.toLocaleString(); $('i-v').innerText=v.toLocaleString(); $('i-t').innerText=tc.toLocaleString();
         };
 
-        // 11. ضغط الصور 
-        const cmpImg = f => new Promise((res) => { 
-            const r=new FileReader(); r.onload=e=>{ 
-                let img=new Image(); img.onload=()=>{ 
-                    let c=document.createElement('canvas'), ctx=c.getContext('2d'); 
-                    let MAX=1000; let w=img.width, h=img.height; if(w>h){if(w>MAX){h*=MAX/w;w=MAX;}}else{if(h>MAX){w*=MAX/h;h=MAX;}} 
-                    c.width=w; c.height=h; ctx.drawImage(img,0,0,w,h); res(c.toDataURL('image/jpeg',0.6)); 
-                }; img.src=e.target.result; 
-            }; r.readAsDataURL(f); 
-        });
+        const cmpImg = f => new Promise((res) => { const r=new FileReader(); r.onload=e=>{ let img=new Image(); img.onload=()=>{ let c=document.createElement('canvas'), ctx=c.getContext('2d'); let MAX=1000; let w=img.width, h=img.height; if(w>h){if(w>MAX){h*=MAX/w;w=MAX;}}else{if(h>MAX){w*=MAX/h;h=MAX;}} c.width=w; c.height=h; ctx.drawImage(img,0,0,w,h); res(c.toDataURL('image/jpeg',0.6)); }; img.src=e.target.result; }; r.readAsDataURL(f); });
 
-        // 12. الحفظ (Submits)
-        $('f-cli').onsubmit=e=>{e.preventDefault(); window.dbState.c.push({id:'c'+Date.now(), n:$('c-n').value, e:$('c-e').value, c:$('c-c').value}); window.sv(); window.cm(); window.toast('تم حفظ العميل ✅');};
-        $('f-fin').onsubmit=e=>{e.preventDefault(); window.dbState.f.push({id:'f'+Date.now(), t:$('f-t').value, a:Number($('f-a').value), s:$('f-s').value, cat:$('f-cat').value, pay:$('f-pay').value, ref:$('f-ref').value, d:window.today()}); window.sv(); window.cm(); window.toast('تم حفظ العملية المالية ✅');};
-        $('f-inv').onsubmit=e=>{e.preventDefault(); let h=window.iA.reduce((s,x)=>s+(x.q*x.p*(1-x.r/100)),0); let gr=Number($('i-rem').value)||0; let fh=h*(1-gr/100); let tv=$('i-tva').checked; let v=tv?fh*0.19:0; window.dbState.i.push({id:'F-'+Date.now().toString().slice(-4), c:$('i-cli').value, d:$('i-dat').value, r:window.iA, gr:gr, h:fh, v:v, t:fh+v, tv:tv}); window.sv(); window.cm(); window.toast('تم إنشاء الفاتورة ✅');};
+        // Submits
+        $('f-cli').onsubmit=e=>{e.preventDefault(); window.dbState.c.push({id:'c'+Date.now(), n:$('c-n').value, e:$('c-e').value, c:$('c-c').value}); window.sv(); window.cm(); window.toast('تم الحفظ');};
+        $('f-fin').onsubmit=e=>{e.preventDefault(); window.dbState.f.push({id:'f'+Date.now(), t:$('f-t').value, a:Number($('f-a').value), s:$('f-s').value, cat:$('f-cat').value, pay:$('f-pay').value, ref:$('f-ref').value, d:window.today()}); window.sv(); window.cm(); window.toast('تم الحفظ');};
+        $('f-inv').onsubmit=e=>{e.preventDefault(); let h=window.iA.reduce((s,x)=>s+(x.q*x.p*(1-x.r/100)),0); let gr=Number($('i-rem').value)||0; let fh=h*(1-gr/100); let tv=$('i-tva').checked; let v=tv?fh*0.19:0; window.dbState.i.push({id:'F-'+Date.now().toString().slice(-4), c:$('i-cli').value, d:$('i-dat').value, r:window.iA, gr:gr, h:fh, v:v, t:fh+v, tv:tv}); window.sv(); window.cm(); window.toast('تم الحفظ');};
+        $('f-dom').onsubmit=e=>{e.preventDefault(); window.dbState.dom.push({id:'d'+Date.now(), n:$('d-n').value, p:$('d-p').value, d:$('d-d').value}); window.sv(); window.cm(); window.toast('تم حفظ الدومين');};
+        $('f-prt').onsubmit=e=>{e.preventDefault(); window.dbState.prt.push({id:'p'+Date.now(), t:$('p-t').value, n:$('p-n').value, c:$('p-c').value, ph:$('p-ph').value, wa:$('p-wa').value, em:$('p-em').value}); window.sv(); window.cm(); window.toast('تم الحفظ');};
         
         $('f-ev').onsubmit=async e=>{
             e.preventDefault(); let f=$('e-img').files[0]; let bg = f ? await cmpImg(f) : '';
             let invs = Array.from(document.querySelectorAll('.e-chk:checked')).map(x=>x.value);
             let evId = 'e'+Date.now(), ti=$('e-t').value, dt=$('e-d').value, loc=$('e-l').value;
             window.dbState.e.push({id:evId, t:ti, d:dt, m:$('e-m').value, l:loc, u:$('e-u').value, bg:bg, inv:invs});
-            
             if($('e-snd').checked && invs.length>0) {
                 invs.forEach(em => {
                     let link = `${location.origin}${location.pathname}?s=ev&id=${evId}`;
-                    // رسالة نصية عادية منسقة (بدون أكواد HTML مزعجة لضمان وصولها بشكل طبيعي)
-                    let msg = `aitchikh consulting\n\nدعوة لحدث احترافي / Invitation\n\nالعنوان: ${ti}\nالتاريخ: ${dt}\nالمكان: ${loc}\n\nرابط التفاصيل وتأكيد الحضور والخريطة:\n${link}\n\nشكراً لكم.`;
+                    let msg = `<div style="font-family:Arial,sans-serif;background:#f8fafc;padding:30px;border-radius:15px;text-align:center;border-top:8px solid #2563EB;max-width:600px;margin:0 auto;"><h1 style="color:#1E3A8A;font-size:32px;margin-bottom:0;">aitchikh</h1><h2 style="color:#64748B;font-size:14px;margin-top:0;letter-spacing:3px;margin-bottom:30px;">consulting</h2><h3 style="color:#10B981;font-size:24px;">دعوة لحدث احترافي / Invitation</h3><p style="font-size:20px;color:#1E293B;font-weight:bold;">${ti}</p><p style="color:#334155;font-size:18px;">التاريخ: ${dt}</p><p style="color:#334155;font-size:18px;">المكان: ${loc}</p><br><a href="${link}" style="background:#2563EB;color:white;padding:15px 30px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:18px;display:inline-block;margin-top:20px;">عرض الدعوة والخريطة</a></div>`;
                     emailjs.send(EM_SRV, EM_TPL, {name:"Client", email:em, message:msg}).catch(e=>{});
                 });
             }
-            window.sv(); window.cm(); window.toast('تم الحفظ بنجاح ✅');
+            window.sv(); window.cm(); window.toast('تم الحفظ');
         };
 
         $('f-frm').onsubmit=async e=>{
             e.preventDefault(); let f=$('fm-i').files[0]; let bg = f ? await cmpImg(f) : '';
-            window.dbState.fm.push({id:'fm'+Date.now(), t:$('fm-t').value, flds:window.flds, bg:bg}); window.sv(); window.cm(); window.toast('تم إنشاء الاستمارة ونشرها ✅');
+            window.dbState.fm.push({id:'fm'+Date.now(), t:$('fm-t').value, flds:window.flds, bg:bg}); window.sv(); window.cm(); window.toast('تم نشر الاستمارة');
         };
 
-        // 13. الروابط ونسخها
         window.shr = (typ, id) => { let u=`${location.origin}${location.pathname}?s=${typ}&id=${id}`; $('qr-u').value=u; $('qr-box').innerHTML=''; new QRCode($('qr-box'), {text:u,width:180,height:180}); window.mo('m-qr'); };
         window.cpyLnk = () => { 
             let u=$('qr-u').value; 
-            if(navigator.clipboard) { navigator.clipboard.writeText(u).then(()=>window.toast('تم نسخ الرابط بنجاح ✅')).catch(()=>{ $('qr-u').select(); document.execCommand('copy'); window.toast('تم النسخ ✅'); }); }
+            if(navigator.clipboard) { navigator.clipboard.writeText(u).then(()=>window.toast('تم النسخ ✅')).catch(()=>{ $('qr-u').select(); document.execCommand('copy'); window.toast('تم النسخ ✅'); }); }
             else { $('qr-u').select(); document.execCommand('copy'); window.toast('تم النسخ ✅'); }
         };
 
-        // 14. الإيميلات اليدوية (رسائل نصية عادية لتجنب ظهور كود HTML)
+        // Emails 
         window.emObj={}; window.pEm = (typ, id, em) => { window.emObj={t:typ, id:id}; $('em-to').value=em; window.mo('m-eml'); };
         $('f-eml').onsubmit = e => {
             e.preventDefault(); let btn=e.target.querySelector('button'); btn.innerText="جاري الإرسال...";
             let to=$('em-to').value, u=`${location.origin}${location.pathname}?s=${window.emObj.t}&id=${window.emObj.id}`, msg="";
-            
             if(window.emObj.t==='inv') {
                 let i=window.dbState.i.find(x=>x.id===window.emObj.id);
-                msg = `aitchikh consulting\n\nFacture / فاتورة\n\nN° ${i.id}\nDate: ${i.d}\nTotal: ${i.t.toLocaleString()} DZD\n\nعرض الفاتورة كاملة (PDF/Excel) عبر الرابط:\n${u}\n\nMerci pour votre confiance.`;
+                msg = `<div style="font-family:Arial,sans-serif;background:#f8fafc;padding:30px;border-radius:15px;text-align:center;border-top:8px solid #2563EB;max-width:600px;margin:0 auto;"><h1 style="color:#1E3A8A;font-size:32px;margin-bottom:0;">aitchikh</h1><h2 style="color:#64748B;font-size:14px;margin-top:0;letter-spacing:3px;margin-bottom:30px;">consulting</h2><h3 style="color:#10B981;font-size:24px;">Facture / فاتورة</h3><p style="font-size:20px;color:#1E293B;font-weight:bold;">N° ${i.id}</p><p style="color:#334155;font-size:18px;">Date: ${i.d}</p><p style="color:#10B981;font-size:28px;font-weight:bold;">Total: ${i.t.toLocaleString()} DZD</p><br><a href="${u}" style="background:#2563EB;color:white;padding:15px 30px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:18px;display:inline-block;margin-top:20px;">عرض الفاتورة و PDF</a></div>`;
             } else if(window.emObj.t==='ev') {
                 let ev=window.dbState.e.find(x=>x.id===window.emObj.id);
-                msg = `aitchikh consulting\n\nدعوة لحدث احترافي / Invitation\n\nالعنوان: ${ev.t}\nالتاريخ: ${ev.d}\nالمكان: ${ev.l}\n\nرابط التفاصيل والخريطة:\n${u}\n\nنتشرف بحضوركم.`;
+                msg = `<div style="font-family:Arial,sans-serif;background:#f8fafc;padding:30px;border-radius:15px;text-align:center;border-top:8px solid #2563EB;max-width:600px;margin:0 auto;"><h1 style="color:#1E3A8A;font-size:32px;margin-bottom:0;">aitchikh</h1><h2 style="color:#64748B;font-size:14px;margin-top:0;letter-spacing:3px;margin-bottom:30px;">consulting</h2><h3 style="color:#10B981;font-size:24px;">دعوة لحدث احترافي / Invitation</h3><p style="font-size:20px;color:#1E293B;font-weight:bold;">${ev.t}</p><p style="color:#334155;font-size:18px;">التاريخ: ${ev.d}</p><br><a href="${u}" style="background:#2563EB;color:white;padding:15px 30px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:18px;display:inline-block;margin-top:20px;">عرض الدعوة والخريطة</a></div>`;
             }
-            
-            emailjs.send(EM_SRV, EM_TPL, {name: "Client", email: to, message: msg})
-            .then(()=>{window.toast('تم إرسال الإيميل بنجاح ✅'); window.cm(); btn.innerHTML="إرسال البريد <i class='fa-solid fa-paper-plane ml-2'></i>";})
-            .catch(()=>{window.toast('خطأ! تأكد من اتصالك','error'); btn.innerHTML="إرسال البريد <i class='fa-solid fa-paper-plane ml-2'></i>";});
+            emailjs.send(EM_SRV, EM_TPL, {name: "Client", email: to, message: msg}).then(()=>{window.toast('تم الإرسال ✅'); window.cm(); btn.innerHTML="إرسال البريد";}).catch(()=>{window.toast('خطأ!','error'); btn.innerHTML="إرسال البريد";});
         };
 
-        // 15. تصدير Excel
+        // Export Excel
         window.xlInv = (id) => {
             let i=window.dbState.i.find(x=>x.id===id); if(!i)return;
             let xd=[["Désignation","Qté","Prix U.","Remise(%)","Total"]]; i.r.forEach(x=>xd.push([x.s,x.q,x.p,x.r,x.q*x.p*(1-x.r/100)])); xd.push([]); xd.push(["","","","Sous-total HT",i.h]); if(i.tv)xd.push(["","","","TVA 19%",i.v]); xd.push(["","","","Total TTC",i.t]);
@@ -490,36 +304,21 @@
             let s=XLSX.utils.aoa_to_sheet(xd); let b=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(b,s,"Reponses"); XLSX.writeFile(b,`Form_${f.t}.xlsx`);
         };
 
-        // 16. إرسال الاستمارة (العميل Public)
+        // Form Submit (Public)
         window.sbFrm = async e => {
             e.preventDefault(); 
-            let fid=$('sf-id').value;
-            // جلب الداتا الحديثة قبل الإضافة لعدم الكتابة فوق ردود الآخرين
             try { const snap = await getDoc(doc(db,"appData","main")); if(snap.exists()){ window.dbState = Object.assign(window.dbState, snap.data()); } } catch(err){}
-
-            let f=window.dbState.fm.find(x=>x.id===fid); if(!f) return;
-            let dt={}; f.flds.forEach((fd,i)=>dt[fd]=$(`sf-i-${i}`).value);
-            if(!window.dbState.rs) window.dbState.rs=[];
-            window.dbState.rs.push({f:fid, d:window.today(), data:dt}); 
-            
-            // إشعار للأدمن باستقبال رد جديد
-            if(!window.dbState.notifs) window.dbState.notifs=[];
-            window.dbState.notifs.push({id:'n'+Date.now(), t:`رد جديد على استمارة: ${f.t}`, d:window.today(), read:false});
-
-            localStorage.setItem('ac_v18', JSON.stringify(window.dbState));
-            try{ await setDoc(doc(db,"appData","main"), window.dbState); }catch(err){}
-
+            let fid=$('sf-id').value, f=window.dbState.fm.find(x=>x.id===fid), dt={}; f.flds.forEach((fd,i)=>dt[fd]=$(`sf-i-${i}`).value);
+            if(!window.dbState.rs) window.dbState.rs=[]; window.dbState.rs.push({f:fid, d:window.today(), data:dt}); 
+            if(!window.dbState.notifs) window.dbState.notifs=[]; window.dbState.notifs.push({id:'n'+Date.now(), t:`رد جديد على استمارة: ${f.t}`, d:window.today(), read:false});
+            localStorage.setItem('ac_v25', JSON.stringify(window.dbState)); try{ await setDoc(doc(db,"appData","main"), window.dbState); }catch(err){}
             if(window.dbState.adminEmail) { emailjs.send(EM_SRV, EM_TPL, {name:"Admin", email:window.dbState.adminEmail, message:`إشعار نظام aitchikh consulting:\nتم تلقي رد جديد على الاستمارة: ${f.t}`}).catch(e=>{}); }
-
-            $('sh-bg').innerHTML=`<div class="bg-white p-12 rounded-3xl text-center shadow-2xl mt-20 border-t-8 border-green-500"><i class="fa-solid fa-circle-check text-green-500 text-7xl mb-6"></i><h2 class="text-4xl font-black text-gray-800 mb-4">تم إرسال بياناتك بنجاح!</h2><p class="text-gray-500 font-bold text-lg">شكراً لتواصلك مع aitchikh consulting</p></div>`;
+            $('sh-bg').innerHTML=`<div class="bg-white p-12 rounded-3xl text-center shadow-2xl mt-20 border-t-8 border-green-500"><i class="fa-solid fa-circle-check text-green-500 text-7xl mb-6"></i><h2 class="text-4xl font-black text-gray-800 mb-4">تم الإرسال بنجاح!</h2><p class="text-gray-500 font-bold text-lg">شكراً لتواصلك مع aitchikh consulting</p></div>`;
         };
 
-        // 17. نظام الدخول وتهيئة الصفحة
         window.login = () => { if(btoa($('pwd').value)==='MTA3Nw=='){ localStorage.setItem('ac_auth_final','1'); $('log').remove(); window.initAdmin(); }else window.toast('كلمة السر خاطئة ❌','error'); };
         
-        const p = new URLSearchParams(location.search); window.urlType = p.get('s'); window.urlId = p.get('id');
-        window.isPublic = window.urlType && window.urlId;
-
+        const p = new URLSearchParams(location.search); window.urlType = p.get('s'); window.urlId = p.get('id'); window.isPublic = window.urlType && window.urlId;
         window.initAdmin = () => { $('sb').classList.remove('hidden'); window.initCharts(); window.applyLng(); window.rd(); window.checkReminders(); };
 
         window.renderShared = () => {
@@ -537,15 +336,13 @@
                 </div>
                 <div class="p-10 pt-0 bg-white flex justify-center gap-6 np rounded-b-2xl"><button onclick="window.print()" class="bg-b hover:bg-blue-900 text-white px-10 py-5 rounded-2xl font-black text-xl shadow-xl transition w-full"><i class="fa-solid fa-print ml-2"></i> طباعة الفاتورة / حفظ PDF</button><button onclick="window.xlInv('${i.id}')" class="bg-green-600 hover:bg-green-700 text-white px-10 py-5 rounded-2xl font-black text-xl shadow-xl transition w-full"><i class="fa-solid fa-file-excel ml-2"></i> تحميل كملف Excel</button></div>`;
                 else bx.innerHTML="<div class='p-10 text-center text-red-500 font-black text-3xl mt-20'>الفاتورة غير موجودة أو تم حذفها</div>";
-            }
-            else if(window.urlType === 'ev') {
+            } else if(window.urlType === 'ev') {
                 let e=window.dbState.e.find(x=>x.id===window.urlId);
                 if(e) bx.innerHTML=`
                 <div class="relative w-full h-[500px] flex flex-col justify-center items-center text-center p-10 shadow-inner rounded-t-2xl" style="background: linear-gradient(rgba(15,23,42,0.8), rgba(15,23,42,0.9)), url('${e.bg||''}'); background-size: cover; background-position: center;"><h1 class="text-6xl font-black text-white mb-6 drop-shadow-2xl leading-tight">${e.t}</h1><p class="text-3xl font-bold text-blue-200 mb-3 drop-shadow-lg"><i class="fa-regular fa-calendar-check ml-2"></i> ${e.d} | ${e.m}</p><p class="text-2xl font-bold text-gray-300 drop-shadow-lg"><i class="fa-solid fa-location-dot text-red-400 ml-2"></i> ${e.l}</p></div>
                 <div class="p-10 bg-white rounded-b-2xl"><h3 class="font-black text-3xl text-b text-center mb-8"><i class="fa-solid fa-map-location-dot ml-2 text-p"></i> خريطة الموقع</h3><iframe width="100%" height="450" src="https://maps.google.com/maps?q=${encodeURIComponent(e.l)}&output=embed" class="border-4 border-gray-200 rounded-3xl shadow-inner mb-6"></iframe>${e.u?`<a href="${e.u}" target="_blank" class="block text-center bg-p hover:bg-blue-700 text-white p-6 rounded-2xl font-black text-2xl shadow-xl transition np w-full">افتح في تطبيق Google Maps <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i></a>`:''}</div>`;
                 else bx.innerHTML="<div class='p-10 text-center text-red-500 font-black text-3xl mt-20'>الدعوة غير موجودة</div>";
-            }
-            else if(window.urlType === 'frm') {
+            } else if(window.urlType === 'frm') {
                 let f=window.dbState.fm.find(x=>x.id===window.urlId);
                 if(f) bx.innerHTML=`
                 <div class="h-80 bg-cover bg-center rounded-t-2xl shadow-inner" style="background-image:url('${f.bg||''}')"></div>
