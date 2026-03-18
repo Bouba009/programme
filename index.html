@@ -38,7 +38,7 @@
     <div id="log" class="fixed inset-0 bg-slate-900 z-[999] flex items-center justify-center hidden">
         <div class="bg-white p-10 rounded-3xl shadow-2xl w-96 text-center border-t-8 border-p">
             <h1 class="text-4xl font-black text-b mb-2 tracking-widest">aitchikh</h1><h2 class="text-gray-400 font-bold mb-8 uppercase tracking-widest text-sm">consulting</h2>
-            <p class="text-xs font-bold text-gray-500 mb-4" data-i18n="login_desc">بوابة الفريق الآمنة (1077)</p>
+            <p class="text-xs font-bold text-gray-500 mb-4" data-i18n="login_desc">بوابة الفريق الآمنة 
             <input type="password" id="pwd" placeholder="كلمة السر..." class="w-full text-center text-xl tracking-widest p-4 bg-gray-50 border-2 rounded-xl mb-4 outline-none focus:border-p transition" onkeypress="if(event.key==='Enter') window.login()">
             <button onclick="window.login()" class="w-full bg-p text-white font-black py-4 rounded-xl hover:bg-blue-700 transition shadow-lg text-lg" data-i18n="login_btn">دخول آمن</button>
         </div>
@@ -178,12 +178,41 @@
                 }
             });
             window.dbState.dom.forEach(dm => {
-                let dmDate = new Date(dm.d); let diffDays = Math.ceil((dmDate - todayDate) / (1000 * 60 * 60 * 24));
-                if(diffDays <= 20 && diffDays >= 0 && !window.dbState.rem.includes('dom_'+dm.id)) {
-                    let msg = `<div style="font-family:Arial,sans-serif;background:#f8fafc;padding:30px;border-radius:15px;text-align:center;border-top:8px solid #EF4444;max-width:600px;margin:0 auto;"><h1 style="color:#1E3A8A;font-size:32px;margin-bottom:0;">aitchikh</h1><h2 style="color:#64748B;font-size:14px;margin-top:0;letter-spacing:3px;margin-bottom:30px;">consulting</h2><h3 style="color:#EF4444;font-size:24px;">تنبيه: اقتراب انتهاء صلاحية دومين</h3><p style="font-size:20px;color:#1E293B;font-weight:bold;">${dm.n}</p><p style="color:#334155;font-size:18px;">الجهة: ${dm.p}</p><p style="color:#EF4444;font-size:18px;font-weight:bold;">تاريخ الانتهاء: ${dm.d}</p><p style="color:#555;">يرجى تجديد الدومين قبل انقضاء المدة (${diffDays} يوم متبقي).</p></div>`;
-                    window.dbState.notifs.push({id:'n'+Date.now(), t:`تنبيه دومين: ${dm.n} ينتهي بعد ${diffDays} يوم`, d:window.today(), read:false});
-                    if(window.dbState.adminEmail) emailjs.send(EM_SRV, EM_TPL, {name:"Admin", email:window.dbState.adminEmail, message:msg}).catch(e=>{});
-                    window.dbState.rem.push('dom_'+dm.id); changed = true;
+    let dmDate = new Date(dm.d);
+    let diffDays = Math.ceil((dmDate - todayDate) / (1000 * 60 * 60 * 24));
+
+    if(diffDays <= 20 && diffDays >= 0 && !window.dbState.rem.includes('dom_'+dm.id)) {
+
+        let msg =
+`aitchikh consulting
+
+تنبيه: اقتراب انتهاء صلاحية دومين
+
+الدومين: ${dm.n}
+الجهة: ${dm.p}
+تاريخ الانتهاء: ${dm.d}
+
+يرجى تجديد الدومين قبل انقضاء المدة (${diffDays} يوم متبقي).`;
+
+        window.dbState.notifs.push({
+            id:'n'+Date.now(),
+            t:`تنبيه دومين: ${dm.n} ينتهي بعد ${diffDays} يوم`,
+            d:window.today(),
+            read:false
+        });
+
+        if(window.dbState.adminEmail) {
+            emailjs.send(EM_SRV, EM_TPL, {
+                name: "Admin",
+                email: window.dbState.adminEmail,
+                message: msg
+            }).catch(e=>{});
+        }
+
+        window.dbState.rem.push('dom_'+dm.id);
+        changed = true;
+    }
+});
                 }
             });
             if(changed) window.sv(); window.rdNotifs();
