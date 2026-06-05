@@ -8,7 +8,7 @@
     "build": "electron-builder --win --publish never"
   },
   "devDependencies": {
-    "electron": "^37.0.0",
-    "electron-builder": "^26.0.0"
+    "electron": "^22.3.27",
+    "electron-builder": "^24.13.3"
   }
 }
