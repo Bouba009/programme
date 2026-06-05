@@ -2,8 +2,10 @@
   "name": "my-app",
   "version": "1.0.0",
   "main": "main.js",
+  "description": "My Electron Desktop Application",
+  "author": "Bouba009",
   "scripts": {
-    "build": "electron-builder --win"
+    "build": "electron-builder --win --publish never"
   },
   "devDependencies": {
     "electron": "^37.0.0",
